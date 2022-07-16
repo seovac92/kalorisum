@@ -4,7 +4,18 @@
     <router-link to="/about">About</router-link>
   </nav>
   <router-view/>
+  <RegistrationForm></RegistrationForm>
 </template>
+
+<script>
+import RegistrationForm from './components/RegistrationForm.vue'
+
+export default{
+  components:{
+    RegistrationForm
+  }
+}
+</script>
 
 <style>
 #app {
