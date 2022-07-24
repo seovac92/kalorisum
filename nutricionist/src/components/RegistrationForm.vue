@@ -44,6 +44,7 @@
 
 <script>
 import axios from 'axios'
+import {mapActions} from 'vuex'
 export default {
     data:function(){
         return{
@@ -62,10 +63,11 @@ export default {
         }
     },
     methods:{
+        ...mapActions(["setUserStatus"]),
         async sendRegistrationForm(){
             this.msg=""
             if(!this.user.name.trim() || !this.user.email.trim() || !this.user.password || !this.user.repeatPassword
-            || !this.user.birthday || !this.user.activityLevel || !this.user.weight.trim() || !this.user.height.trim()
+            || !this.user.birthday || !this.user.activityLevel || !this.user.weight || !this.user.height
             || !this.user.gender){
                 this.msg="Sva polja moraju biti popunjena pri registraciji"
                 return
@@ -94,7 +96,10 @@ export default {
                 this.user.weight=null
                 this.user.height=null
                 this.user.gender=null
-                console.log(result)    
+                console.log(result)
+                localStorage.setItem("sid",result.data.res.sid)
+                this.setUserStatus(true)
+                this.$router.push({name:"home"}) 
             } catch (error) {
                 console.log(error)    
             }
@@ -115,6 +120,10 @@ export default {
     padding: 15px;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+    position: fixed;
+    top: 20vh;
+    left: 20vw;
+    background-color: #eee;
 }
 .activity-wrapper,.gender-wrapper{
     width: 100%;
@@ -129,7 +138,7 @@ export default {
     text-align: end;
 }
 .input{
-    width: 30%;
+    width: 80%;
     height: 30px;
     border-radius: 30px;
     margin: 10px 0 0;

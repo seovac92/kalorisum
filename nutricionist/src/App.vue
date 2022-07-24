@@ -1,24 +1,27 @@
 <template>
   <div class="app-wrapper">  
     <nav>
-      <router-link to="/">Home</router-link>
+      <router-link class="link" to="/">Home</router-link>
     </nav>
-    <router-view/>
-    <div class="registration-wrapper">
+    <div class="registration-wrapper" v-if="!userStatus">
       <div class="btns-wrapper">
         <button class="btn-open-form" @click="openRegistrationForm()" v-if="!registrationStatus">Registruj se</button>
         <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus">Prijavi se</button>
-      </div>  
+      </div>    
       <RegistrationForm v-if="registrationStatus" @closeRegistrationForm="handleCloseRegistrationForm"></RegistrationForm>
       <LoginForm v-if="loginStatus" @closeLoginForm="handleCloseLoginForm"></LoginForm>
-    </div>  
+    </div>
+    <div class="btn-logout-wrapper" v-if="userStatus">
+      <button class="btn-open-form" @click="logout()">Odjavi se</button>
+    </div>
+    <router-view/>  
   </div>  
 </template>
 
 <script>
 import RegistrationForm from './components/RegistrationForm.vue'
 import LoginForm from './components/LoginForm.vue'
-import checkSession from './JS/checkSession.js'
+import {mapState,mapActions} from 'vuex'
 
 export default{
   components:{
@@ -32,6 +35,7 @@ export default{
     }
   },
   methods:{
+    ...mapActions(["setUserStatus"]),
     openRegistrationForm(){
       if(!this.registrationStatus){
         this.registrationStatus=true
@@ -50,15 +54,17 @@ export default{
     handleCloseLoginForm(){
       this.loginStatus=false
     },
-    checkUserSession(){
-      checkSession().then(res=>{
-        console.log(res.data.res)
-        //uraditi vuex za status korisnika
-      })
+    logout(){
+      if(this.userStatus){
+        this.setUserStatus(false)
+        this.registrationStatus=false
+        this.loginStatus=false
+        localStorage.removeItem("sid")
+      }  
     }
   },
-  mounted(){
-    this.checkUserSession()
+  computed:{
+    ...mapState(["userStatus"])
   }
 }
 </script>

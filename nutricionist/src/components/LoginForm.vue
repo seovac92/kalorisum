@@ -19,6 +19,7 @@
 
 <script>
 import axios from 'axios'
+import {mapState,mapActions} from 'vuex'
 export default {
     data:function(){
         return{
@@ -28,6 +29,7 @@ export default {
         }
     },
     methods:{
+        ...mapActions(["setUserStatus"]),
         async sendLoginForm(){
             this.msg=""
             if(!this.email.trim() || !this.password){
@@ -40,6 +42,7 @@ export default {
                     "usr_password":this.password
                 })
                 localStorage.setItem("sid",result.data.res.sid)
+                this.setUserStatus(true)
             } catch (error) {
                 console.log(error)
             }
@@ -47,6 +50,9 @@ export default {
         closeLoginForm(){
             this.$emit("closeLoginForm")
         }
+    },
+    computed:{
+        ...mapState(["userStatus"])
     }
 }
 </script>
