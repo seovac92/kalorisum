@@ -1,19 +1,21 @@
 <template>
   <div class="wrapper">
-    <div class="form-wrapper">
-        <div class="btn-exit-wrapper">
-            <p class="btn-exit" @click="closeLoginForm()">X</p>
+    <div class="blurred-wrapper">
+        <div class="form-wrapper">
+            <div class="btn-exit-wrapper">
+                <p class="btn-exit" @click="closeLoginForm()">X</p>
+            </div>
+            <h2 class="title">Prijava</h2>
+            <input class="input" type="text" v-model="email" placeholder="Korisnicki email">
+            <input class="input" type="text" v-model="password" placeholder="Korisnicka sifra" @keypress="sendLoginForm()">
+            <div class="btn-registration-wrapper">
+                <button @click="sendLoginForm()" class="btn-registration">Prijavi se</button>    
+            </div> 
+            <div class="msg-wrapper">
+                <p class="message">{{msg}}</p>
+            </div>
         </div>
-        <h2 class="title">Prijava</h2>
-        <input class="input" type="text" v-model="email" placeholder="Korisnicki email">
-        <input class="input" type="text" v-model="password" placeholder="Korisnicka sifra">
-        <div class="btn-registration-wrapper">
-            <button @click="sendLoginForm()" class="btn-registration">Prijavi se</button>    
-        </div> 
-        <div class="msg-wrapper">
-            <p class="message">{{msg}}</p>
-        </div>
-    </div>
+    </div>    
   </div>
 </template>
 
@@ -49,7 +51,7 @@ export default {
         },
         closeLoginForm(){
             this.$emit("closeLoginForm")
-        }
+        },
     },
     computed:{
         ...mapState(["userStatus"])

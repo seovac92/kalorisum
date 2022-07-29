@@ -1,44 +1,46 @@
 <template>
   <div class="wrapper">
-    <div class="form-wrapper">
-        <div class="btn-exit-wrapper">
-            <p class="btn-exit" @click="closeRegistrationForm()">X</p>
+    <div class="blurred-wrapper">
+        <div class="form-wrapper">
+            <div class="btn-exit-wrapper">
+                <p class="btn-exit" @click="closeRegistrationForm()">X</p>
+            </div>
+            <h2 class="title">Registracija</h2>  
+            <input class="input" type="text" v-model="user.name" placeholder="Korisnicko ime">
+            <input class="input" type="text" v-model="user.email" placeholder="Korisnicki email">
+            <input class="input" type="text" v-model="user.password" placeholder="Korisnicka sifra">
+            <input class="input" type="text" v-model="user.repeatPassword" placeholder="Ponovite sifru">
+            <input class="input" type="number" v-model="user.weight" placeholder="Tezina(kg)">
+            <input class="input" type="number" v-model="user.height" placeholder="Visina(cm)">
+            <div class="birthday-wrapper">
+                <label for="date">Unesite datum rodjenja</label>
+                <input id="date" type="date" v-model="user.birthday">
+            </div>
+            <div class="activity-wrapper">
+                <label for="activity">Izaberite nivo aktivnosti</label>   
+                <select id="activity" class="input" v-model="user.activityLevel">
+                    <option value="1">Minimalna aktivnost</option>
+                    <option value="2">Slaba aktivnost</option>
+                    <option value="3">Srednja aktivnost</option>
+                    <option value="4">Visoka aktivnost</option>
+                    <option value="5">Ekstra-visoka aktivnost</option>
+                </select>
+            </div>
+            <div class="gender-wrapper">
+                <label for="gender">Izaberite pol</label>  
+                <select id="gender" class="input" v-model="user.gender">
+                    <option value="male">Muski</option>
+                    <option value="female">Zenski</option>
+                </select>
+            </div>  
+            <div class="btn-registration-wrapper">
+                <button @click="sendRegistrationForm()" class="btn-registration">Registruj se</button>    
+            </div> 
+            <div class="msg-wrapper">
+                <p class="message">{{msg}}</p>
+            </div>
         </div>
-        <h2 class="title">Registracija</h2>  
-        <input class="input" type="text" v-model="user.name" placeholder="Korisnicko ime">
-        <input class="input" type="text" v-model="user.email" placeholder="Korisnicki email">
-        <input class="input" type="text" v-model="user.password" placeholder="Korisnicka sifra">
-        <input class="input" type="text" v-model="user.repeatPassword" placeholder="Ponovite sifru">
-        <input class="input" type="number" v-model="user.weight" placeholder="Tezina(kg)">
-        <input class="input" type="number" v-model="user.height" placeholder="Visina(cm)">
-        <div class="birthday-wrapper">
-            <label for="date">Unesite datum rodjenja</label>
-            <input id="date" type="date" v-model="user.birthday">
-        </div>
-        <div class="activity-wrapper">
-            <label for="activity">Izaberite nivo aktivnosti</label>   
-            <select id="activity" class="input" v-model="user.activityLevel">
-                <option value="1">Minimalna aktivnost</option>
-                <option value="2">Slaba aktivnost</option>
-                <option value="3">Srednja aktivnost</option>
-                <option value="4">Visoka aktivnost</option>
-                <option value="5">Ekstra-visoka aktivnost</option>
-            </select>
-        </div>
-        <div class="gender-wrapper">
-            <label for="gender">Izaberite pol</label>  
-            <select id="gender" class="input" v-model="user.gender">
-                <option value="male">Muski</option>
-                <option value="female">Zenski</option>
-            </select>
-        </div>  
-        <div class="btn-registration-wrapper">
-            <button @click="sendRegistrationForm()" class="btn-registration">Registruj se</button>    
-        </div> 
-        <div class="msg-wrapper">
-            <p class="message">{{msg}}</p>
-        </div>
-    </div>
+    </div>    
   </div>
 </template>
 
@@ -113,16 +115,23 @@ export default {
 </script>
 
 <style>
+.blurred-wrapper{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
 .form-wrapper{
+    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 15px;
+    margin: 0 auto;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
-    position: fixed;
-    top: 20vh;
-    left: 20vw;
     background-color: #eee;
 }
 .activity-wrapper,.gender-wrapper{
@@ -171,5 +180,20 @@ export default {
 }
 .message{
     font-size: 20px;
+}
+@media screen and (min-width: 768px){
+    .form-wrapper{
+        width: 50%;
+    }
+}
+@media screen and (min-width: 992px){
+    .form-wrapper{
+        width: 30%;
+    }
+}
+@media screen and (min-width: 1200px){
+    .form-wrapper{
+        width: 25%;
+    }
 }
 </style>
