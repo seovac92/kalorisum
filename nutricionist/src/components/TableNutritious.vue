@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="table-wrapper">
       <table class="table-nutritious">
         <thead>
           <tr class="row-1">
@@ -86,7 +86,7 @@ export default {
 <style scoped>
 .table-nutritious{
   width: 100vw;
-  margin: 20px 0;
+  margin: 20px auto;
   border-collapse: collapse;
 }
 .row-1{

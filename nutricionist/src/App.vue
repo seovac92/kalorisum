@@ -2,22 +2,34 @@
   <div class="app-wrapper">  
     <nav class="nav-menu-wrapper">
       <div class="navigation">
-          <button class="btn-open-form" @click="openRegistrationForm()" v-if="!registrationStatus && !userStatus">Registruj se</button>
-          <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="toggleMenu()"/>
-          <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus">Prijavi se</button>
+          <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="toggleMenu()" v-if="!registrationStatus && !loginStatus"/>
+          <div class="img-wrapper"><h2>LOGO</h2></div>
+          <ul class="nav-menu-device nav-menu">
+            <li class="link-wrapper"><router-link to="/" class="link">Home</router-link></li>
+            <li class="link-wrapper">
+              <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
+              <router-link to="/nutritious" class="link" v-else>Tablica kalorija</router-link>
+            </li>
+            <li class="link-wrapper"><router-link to="/" class="link">Admin</router-link></li>
+          </ul>
+          <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijavi se</button>
           <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjavi se</button>
       </div>
       <transition name="menu">  
-        <ul class="nav-menu-opened" v-if="menuStatus">
+        <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
+          <li><font-awesome-icon class="btn-exit" @click="closePhoneMenu()" icon="fa-solid fa-circle-xmark" /></li>
           <li class="link-wrapper"><router-link to="/" class="link">Home</router-link></li>
-          <li class="link-wrapper"><router-link to="/" class="link">Nutrition plan</router-link></li>
-          <li class="link-wrapper"><router-link to="/" class="link">Profile</router-link></li>
+          <li class="link-wrapper">
+            <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
+            <router-link to="/nutritious" class="link" v-else>Tablica kalorija</router-link>
+          </li>
+          <li class="link-wrapper"><router-link to="/" class="link">Admin</router-link></li>
         </ul>
       </transition>  
     </nav>
     <div class="registration-wrapper" v-if="!userStatus"> 
-      <RegistrationForm v-if="registrationStatus" @closeRegistrationForm="handleCloseRegistrationForm"></RegistrationForm>
-      <LoginForm v-if="loginStatus" @closeLoginForm="handleCloseLoginForm"></LoginForm>
+      <RegistrationForm v-if="registrationStatus" @closeRegistrationForm="handleCloseRegistrationForm" @changeForm="handleChangeForm"></RegistrationForm>
+      <LoginForm v-if="loginStatus" @closeLoginForm="handleCloseLoginForm" @changeForm="handleChangeForm"></LoginForm>
     </div>
     <router-view/>
   </div>  
@@ -43,16 +55,14 @@ export default{
   methods:{
     ...mapActions(["setUserStatus"]),
     openRegistrationForm(){
-      if(!this.registrationStatus){
-        this.registrationStatus=true
-        this.loginStatus=false
-      }
+      this.registrationStatus=true
+      this.loginStatus=false
+      this.menuStatus=false
     },
     openLoginForm(){
-      if(!this.loginStatus){
-        this.loginStatus=true
-        this.registrationStatus=false
-      }
+      this.loginStatus=true
+      this.registrationStatus=false
+      this.menuStatus=false
     },
     handleCloseRegistrationForm(){
       this.registrationStatus=false
@@ -60,16 +70,24 @@ export default{
     handleCloseLoginForm(){
       this.loginStatus=false
     },
+    handleChangeForm(){
+      this.loginStatus=!this.loginStatus
+      this.registrationStatus=!this.registrationStatus
+    },
     logout(){
       if(this.userStatus){
         this.setUserStatus(false)
         this.registrationStatus=false
         this.loginStatus=false
+        this.menuStatus=false
         localStorage.removeItem("sid")
       }  
     },
     toggleMenu(){
       this.menuStatus=!this.menuStatus
+    },
+    closePhoneMenu(){
+      this.menuStatus=false
     }
   },
   computed:{
@@ -91,18 +109,17 @@ body{
 
 </style>
 <style scoped>
-.btns-wrapper{
-  display: flex;
-  justify-content: space-between;
-}
 .btn-open-form{
   background-color: #5B5BE4;
-  height: 55px;
   border: transparent;
   border-radius: 10px;
   color: whitesmoke;
   font-size: 20px;
   font-weight: 600;
+  cursor: pointer;
+}
+.nav-menu-wrapper{
+  margin-bottom: 20px;
 }
 .navigation{
   display: flex;
@@ -114,10 +131,13 @@ body{
 .menu-opener{
   font-size: 60px;
 }
-.nav-menu-opened{
+.nav-menu-device{
+  display: none;
+}
+.nav-menu{
   list-style: none;
   padding: 0;
-  margin: 0 0 20px;
+  margin: 0 0;
 }
 /*menu enter classes*/ 
 .menu-enter-from{
@@ -144,11 +164,13 @@ body{
   transition: all 0.3s ease;
 }
 .link-wrapper{
-  padding: 20px 0;
   font-weight: 600;
   background-color: #5B5BE4;
 }
 .link{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
   color:whitesmoke;
   text-decoration: none;
   font-size: 20px;
@@ -163,7 +185,47 @@ body{
 .lin-wrapper:active{
   background-color: darkblue;
 }
-@media screen and(min-width:768px) {
-  
+@media screen and (min-width:768px) {
+  .menu-opener{
+    display: none;
+  }
+  .nav-menu-mobile{
+    display: none;
+  }
+  .nav-menu-wrapper{
+    border-bottom: 1px solid #5B5BE4;
+  }
+  .navigation{
+    justify-content: space-between;
+  }
+  .nav-menu-device{
+    display: flex;
+    justify-content: flex-start;
+    width: 60vw;
+  }
+  .link-wrapper{
+    background-color: white;
+    padding: 20px 30px;
+  }
+  .link-wrapper:hover{
+    background-color: white;
+  }
+  .link{
+    color: #5B5BE4;
+  }
+  .link:hover{
+    text-decoration: underline;
+  }
+  .btn-open-form{
+    margin-right: 5vw;
+  }
+  .img-wrapper{
+    margin: 0 auto;
+  }
+}
+@media screen and (min-width:1200px){
+  router-view{
+    width: 70vw;
+  }
 }
 </style>

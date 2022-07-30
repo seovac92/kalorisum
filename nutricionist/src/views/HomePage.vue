@@ -1,19 +1,27 @@
 <template>
   <div class="wrapper">
-    <TableNutritious></TableNutritious>
+    <h1>Home page</h1>
   </div>
 </template>
 
 <script>
-import TableNutritious from '../components/TableNutritious.vue'
 export default {
-  components:{
-    TableNutritious
-  }//home nece imati tablicu,vec samo uvodni deo,sta sve aplikacija radi itd
-  //tablica ce biti na posebnoj strani gde User pravi nova jela i ubacuje ih u svoj plan ishrane
+  //ZA GOSTA I ZA USERA
+  //objasnjenje o potrosnji kalorija, objasnjenje o radu sajta i njegovim mogucnostima
 }
 </script>
 
 <style>
-
+@media screen and (min-width:992px){
+  .wrapper{
+    width: 80vw;
+    margin: 0 auto;
+  }
+}
+@media screen and (min-width:1200px){
+  .wrapper{
+    width: 70vw;
+    margin: 0 auto;
+  }
+}
 </style>

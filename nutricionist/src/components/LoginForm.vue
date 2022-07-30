@@ -1,15 +1,18 @@
 <template>
-  <div class="wrapper">
+  <div class="login-wrapper">
     <div class="blurred-wrapper">
         <div class="form-wrapper">
             <div class="btn-exit-wrapper">
-                <p class="btn-exit" @click="closeLoginForm()">X</p>
+                <font-awesome-icon class="btn-exit" @click="closeLoginForm()" icon="fa-solid fa-circle-xmark" />
             </div>
             <h2 class="title">Prijava</h2>
             <input class="input" type="text" v-model="email" placeholder="Korisnicki email">
-            <input class="input" type="text" v-model="password" placeholder="Korisnicka sifra" @keypress="sendLoginForm()">
+            <input class="input" type="text" v-model="password" placeholder="Korisnicka sifra" @keydown.enter="sendLoginForm()">
             <div class="btn-registration-wrapper">
                 <button @click="sendLoginForm()" class="btn-registration">Prijavi se</button>    
+            </div>
+            <div class="btn-change-form">
+                <button class="btn-switch" @click="changeForm()">Registruj se</button>  
             </div> 
             <div class="msg-wrapper">
                 <p class="message">{{msg}}</p>
@@ -45,6 +48,7 @@ export default {
                 })
                 localStorage.setItem("sid",result.data.res.sid)
                 this.setUserStatus(true)
+                this.closeLoginForm()
             } catch (error) {
                 console.log(error)
             }
@@ -52,6 +56,9 @@ export default {
         closeLoginForm(){
             this.$emit("closeLoginForm")
         },
+        changeForm(){
+            this.$emit("changeForm")
+        }
     },
     computed:{
         ...mapState(["userStatus"])

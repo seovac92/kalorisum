@@ -1,9 +1,9 @@
 <template>
-  <div class="wrapper">
+  <div class="registration-wrapper">
     <div class="blurred-wrapper">
         <div class="form-wrapper">
             <div class="btn-exit-wrapper">
-                <p class="btn-exit" @click="closeRegistrationForm()">X</p>
+                <font-awesome-icon class="btn-exit" @click="closeRegistrationForm()" icon="fa-solid fa-circle-xmark" />
             </div>
             <h2 class="title">Registracija</h2>  
             <input class="input" type="text" v-model="user.name" placeholder="Korisnicko ime">
@@ -35,6 +35,9 @@
             </div>  
             <div class="btn-registration-wrapper">
                 <button @click="sendRegistrationForm()" class="btn-registration">Registruj se</button>    
+            </div>
+            <div class="btn-change-form">
+                <button class="btn-switch" @click="changeForm()">Prijavi se</button>    
             </div> 
             <div class="msg-wrapper">
                 <p class="message">{{msg}}</p>
@@ -101,6 +104,7 @@ export default {
                 console.log(result)
                 localStorage.setItem("sid",result.data.res.sid)
                 this.setUserStatus(true)
+                this.closeRegistrationForm()
                 this.$router.push({name:"home"}) 
             } catch (error) {
                 console.log(error)    
@@ -109,6 +113,9 @@ export default {
         },
         closeRegistrationForm(){
             this.$emit("closeRegistrationForm")
+        },
+        changeForm(){
+            this.$emit("changeForm")
         }
     }
 }
@@ -155,11 +162,11 @@ export default {
 }
 .btn-exit{
     display: inline;
-    font-size: 15px;
+    font-size: 25px;
     font-weight: 800;
     margin: 0;
     padding: 5px;
-    border: 1px solid black;
+    cursor: pointer;
 }
 .btn-registration-wrapper{
     padding: 5px;
@@ -172,6 +179,21 @@ export default {
     color: whitesmoke;
     font-size: 20px;
     font-weight: 600;
+    cursor: pointer;
+}
+.btn-change-form{
+    margin: 10px 0;
+}
+.btn-switch{
+    height: 40px;
+    border-radius: 10px;
+    border: transparent;
+    cursor: pointer;
+}
+.btn-switch:hover{
+    background-color: #5B5BE4;
+    color: whitesmoke;
+    text-decoration: underline;
 }
 .birthday-wrapper{
     display: flex;
