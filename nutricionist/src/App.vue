@@ -15,15 +15,18 @@
           <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijavi se</button>
           <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjavi se</button>
       </div>
-      <transition name="menu">  
-        <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
-          <li class="link-wrapper"><router-link to="/" class="link">Home</router-link></li>
-          <li class="link-wrapper">
-            <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
-            <router-link to="/nutritious" class="link" v-else>Tablica kalorija</router-link>
-          </li>
-          <li class="link-wrapper"><router-link to="/" class="link">Admin</router-link></li>
-        </ul>
+      <transition name="menu">
+        <div class="mobile-nav-blocker" v-if="menuStatus">
+          <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
+            <li><font-awesome-icon class="btn-exit" @click="closePhoneMenu()" icon="fa-solid fa-circle-xmark" /></li>
+            <li class="link-wrapper"><router-link to="/" class="link">Home</router-link></li>
+            <li class="link-wrapper">
+              <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
+              <router-link to="/nutritious" class="link" v-else>Tablica kalorija</router-link>
+            </li>
+            <li class="link-wrapper"><router-link to="/" class="link">Admin</router-link></li>
+          </ul>
+        </div>  
       </transition>  
     </nav>
     <div class="registration-wrapper" v-if="!userStatus"> 
@@ -56,12 +59,10 @@ export default{
     openRegistrationForm(){
       this.registrationStatus=true
       this.loginStatus=false
-      this.menuStatus=false
     },
     openLoginForm(){
       this.loginStatus=true
       this.registrationStatus=false
-      this.menuStatus=false
     },
     handleCloseRegistrationForm(){
       this.registrationStatus=false
@@ -78,12 +79,11 @@ export default{
         this.setUserStatus(false)
         this.registrationStatus=false
         this.loginStatus=false
-        this.menuStatus=false
         localStorage.removeItem("sid")
       }  
     },
     toggleMenu(){
-      this.menuStatus=!this.menuStatus
+      this.menuStatus=true
     },
     closePhoneMenu(){
       this.menuStatus=false
@@ -108,6 +108,10 @@ body{
 
 </style>
 <style scoped>
+.app-wrapper{
+  position: absolute;
+  width: 100vw;
+}
 .btn-open-form{
   background-color: #5B5BE4;
   border: transparent;
@@ -134,15 +138,21 @@ body{
 .nav-menu-device{
   display: none;
 }
+.mobile-nav-blocker{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
 .nav-menu{
   width: 70vw;
   list-style: none;
   padding: 20px 30px 20px 0;
   margin: 0 0;
   position: fixed;
-  background-color: rgba(255, 255, 255, 0.4);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(1px);
 }
 /*menu enter classes*/ 
 .menu-enter-from{
@@ -198,15 +208,13 @@ body{
   }
   .nav-menu{
     position: unset;
+    padding: 0;
   }
   .nav-menu-mobile{
     display: none;
   }
   .nav-menu-wrapper{
     border-bottom: 1px solid #5B5BE4;
-  }
-  .nav-menu{
-    padding: 0;
   }
   .navigation{
     justify-content: space-between;
@@ -219,6 +227,7 @@ body{
   .link-wrapper{
     background-color: white;
     padding: 20px 30px;
+    margin: 0;
   }
   .link-wrapper:hover{
     background-color: white;

@@ -1,7 +1,7 @@
 <template>
   <div class="table-wrapper">
     <div class="search-box-wrapper">
-      <input type="text" v-model="nutritionString" @keyup="filterByString()" placeholder="Pretraga">
+      <input class="input" type="text" v-model="nutritionString" @keyup="filterByString()" placeholder="Pretraga">
     </div>
     <table class="table-nutritious">
       <thead>
@@ -23,6 +23,9 @@
           <td class="column-2" colspan="2">{{one.ntr_kcal}}</td>
           <td class="column-3" colspan="2">{{one.ntt_name}}</td>
         </tr>
+        <tr v-if="nutritious.length===0">
+          <td class="message-table" colspan="6">{{msg}}</td>
+        </tr>
       </tbody>
     </table>
     <div class="navigate-wrapper">
@@ -43,7 +46,8 @@ export default {
         return{
           nutritious:[],
           currentPage:null,
-          nutritionString:""
+          nutritionString:"",
+          msg:""
         }
     },
     methods:{
@@ -81,17 +85,22 @@ export default {
           }
         },
         async filterByString(){
+          this.msg=""
           if(this.nutritionString.length>1){
+            this.nutritious=[]
             try {
               let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/search",{
                 params:{
                   "string":this.nutritionString
                 }
               })
-              console.log(result)//odavde nastaviti;vraca rezultat,samo jos da se renderuje u tabeli!!!
+              this.nutritious=result.data.res
             } catch (error) {
-              console.log(error)
+              this.msg=error.response.data.message
             }
+          }
+          if(this.nutritionString.length<1){
+            this.getTenNutritious()
           }   
         }
     },
@@ -102,6 +111,11 @@ export default {
 </script>
 
 <style scoped>
+.table-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .table-nutritious{
   width: 100vw;
   margin: 20px auto;
@@ -116,6 +130,13 @@ export default {
   padding: 15px;
   font-size: 1.3em;
   overflow: hidden;
+}
+.message-table{
+  text-align: start;
+  padding: 10px;
+  font-size: 25px;
+  background-color: grey;
+  color: whitesmoke
 }
 .row{
   border-bottom: 1px solid #ddd;
@@ -154,16 +175,20 @@ export default {
 @media screen and (min-width: 768px){
     .table-nutritious{
         width: 90%;
+        margin-left: 0;
+    }
+    .input{
+      width: 20vw;
     }
 }
 @media screen and (min-width: 992px){
     .table-nutritious{
-        width: 50%;
+        width: 70%;
     }
 }
 @media screen and (min-width: 1200px){
     .table-nutritious{
-        width: 35%;
+        width: 50%;
     }
 }
 </style>
