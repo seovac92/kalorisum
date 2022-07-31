@@ -1,35 +1,38 @@
 <template>
   <div class="table-wrapper">
-      <table class="table-nutritious">
-        <thead>
-          <tr class="row-1">
-            <th class="column-1" colspan="2">
-              Namirnica (100 g)
-            </th>
-            <th class="column-2" colspan="2">
-              kCal
-            </th>
-            <th class="column-3" colspan="2">
-              Vrsta
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="row" v-for="one in nutritious" :key="one.ntr_id">
-            <td class="column-1" colspan="2">{{one.ntr_name}}</td>
-            <td class="column-2" colspan="2">{{one.ntr_kcal}}</td>
-            <td class="column-3" colspan="2">{{one.ntt_name}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="navigate-wrapper">
-        <div class="btn-back-wrapper" @click="getPreviousTen()" v-if="currentPage">
-          <font-awesome-icon class="btn-back" icon="fa-solid fa-angle-left" />  
-        </div>
-        <div class="btn-next-wrapper" @click="getNextTen()" v-if="nutritious.length===10">
-          <font-awesome-icon class="btn-next" icon="fa-solid fa-angle-right" />
-        </div>  
+    <div class="search-box-wrapper">
+      <input type="text" v-model="nutritionString" @keyup="filterByString()" placeholder="Pretraga">
+    </div>
+    <table class="table-nutritious">
+      <thead>
+        <tr class="row-1">
+          <th class="column-1" colspan="2">
+            Namirnica (100 g)
+          </th>
+          <th class="column-2" colspan="2">
+            kCal
+          </th>
+          <th class="column-3" colspan="2">
+            Vrsta
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row" v-for="one in nutritious" :key="one.ntr_id">
+          <td class="column-1" colspan="2">{{one.ntr_name}}</td>
+          <td class="column-2" colspan="2">{{one.ntr_kcal}}</td>
+          <td class="column-3" colspan="2">{{one.ntt_name}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="navigate-wrapper">
+      <div class="btn-back-wrapper" @click="getPreviousTen()" v-if="currentPage">
+        <font-awesome-icon class="btn-back" icon="fa-solid fa-angle-left" />  
+      </div>
+      <div class="btn-next-wrapper" @click="getNextTen()" v-if="nutritious.length===10">
+        <font-awesome-icon class="btn-next" icon="fa-solid fa-angle-right" />
       </div>  
+    </div>  
   </div>
 </template>
 
@@ -39,7 +42,8 @@ export default {
     data:function(){
         return{
           nutritious:[],
-          currentPage:null
+          currentPage:null,
+          nutritionString:""
         }
     },
     methods:{
@@ -75,6 +79,20 @@ export default {
           } catch (error) {
             console.log(error)
           }
+        },
+        async filterByString(){
+          if(this.nutritionString.length>1){
+            try {
+              let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/search",{
+                params:{
+                  "string":this.nutritionString
+                }
+              })
+              console.log(result)//odavde nastaviti;vraca rezultat,samo jos da se renderuje u tabeli!!!
+            } catch (error) {
+              console.log(error)
+            }
+          }   
         }
     },
     mounted(){

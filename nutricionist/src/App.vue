@@ -17,7 +17,6 @@
       </div>
       <transition name="menu">  
         <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
-          <li><font-awesome-icon class="btn-exit" @click="closePhoneMenu()" icon="fa-solid fa-circle-xmark" /></li>
           <li class="link-wrapper"><router-link to="/" class="link">Home</router-link></li>
           <li class="link-wrapper">
             <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
@@ -130,19 +129,25 @@ body{
 }
 .menu-opener{
   font-size: 60px;
+  cursor: pointer;
 }
 .nav-menu-device{
   display: none;
 }
 .nav-menu{
+  width: 70vw;
   list-style: none;
-  padding: 0;
+  padding: 20px 30px 20px 0;
   margin: 0 0;
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(1px);
 }
 /*menu enter classes*/ 
 .menu-enter-from{
   opacity: 1;
-  transform: translateX(-3000px);
+  transform: translateX(-500px);
 }
 .menu-enter-to{
   opacity: 1;
@@ -158,7 +163,7 @@ body{
 }
 .menu-leave-to{
   opacity: 1;
-  transform: translateX(1500px);
+  transform: translateX(-500px);
 }
 .menu-leave-active{
   transition: all 0.3s ease;
@@ -166,6 +171,8 @@ body{
 .link-wrapper{
   font-weight: 600;
   background-color: #5B5BE4;
+  border-radius: 20px;
+  margin: 20px 0;
 }
 .link{
   display: flex;
@@ -189,11 +196,17 @@ body{
   .menu-opener{
     display: none;
   }
+  .nav-menu{
+    position: unset;
+  }
   .nav-menu-mobile{
     display: none;
   }
   .nav-menu-wrapper{
     border-bottom: 1px solid #5B5BE4;
+  }
+  .nav-menu{
+    padding: 0;
   }
   .navigation{
     justify-content: space-between;
