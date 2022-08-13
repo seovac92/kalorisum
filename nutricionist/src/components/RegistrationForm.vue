@@ -16,16 +16,6 @@
                 <label for="date">Unesite datum rodjenja</label>
                 <input id="date" type="date" v-model="user.birthday">
             </div>
-            <div class="activity-wrapper">
-                <label for="activity">Izaberite nivo aktivnosti</label>   
-                <select id="activity" class="input" v-model="user.activityLevel">
-                    <option value="1">Minimalna aktivnost</option>
-                    <option value="2">Slaba aktivnost</option>
-                    <option value="3">Srednja aktivnost</option>
-                    <option value="4">Visoka aktivnost</option>
-                    <option value="5">Ekstra-visoka aktivnost</option>
-                </select>
-            </div>
             <div class="gender-wrapper">
                 <label for="gender">Izaberite pol</label>  
                 <select id="gender" class="input" v-model="user.gender">
@@ -59,7 +49,6 @@ export default {
                 password:"",
                 repeatPassword:"",
                 birthday:null,
-                activityLevel:null,
                 weight:null,
                 height:null,
                 gender:null
@@ -72,13 +61,17 @@ export default {
         async sendRegistrationForm(){
             this.msg=""
             if(!this.user.name.trim() || !this.user.email.trim() || !this.user.password || !this.user.repeatPassword
-            || !this.user.birthday || !this.user.activityLevel || !this.user.weight || !this.user.height
+            || !this.user.birthday || !this.user.weight || !this.user.height
             || !this.user.gender){
                 this.msg="Sva polja moraju biti popunjena pri registraciji"
                 return
             }
             if(this.user.password!==this.user.repeatPassword){
                 this.msg="Sifre se ne poklapaju"
+                return
+            }
+            if(this.user.weight<40 || this.user.height<100){
+                this.msg="Unesite realne vrednosti"
                 return
             }
             try {
@@ -89,15 +82,13 @@ export default {
                 "usr_birthday":this.user.birthday,
                 "usr_current_weight":this.user.weight,
                 "usr_height":this.user.height,
-                "usr_gender":this.user.gender,
-                "acl_id":this.user.activityLevel
+                "usr_gender":this.user.gender
                 })
                 this.user.name=""
                 this.user.email=""
                 this.user.password=""
                 this.user.repeatPassword=""
                 this.user.birthday=null
-                this.user.activityLevel=null
                 this.user.weight=null
                 this.user.height=null
                 this.user.gender=null
@@ -129,6 +120,7 @@ export default {
     background-color: rgba(255, 255, 255, 0.4);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
+    top: 0;
 }
 .form-wrapper{
     width: 80%;
@@ -141,7 +133,7 @@ export default {
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     background-color: #eee;
 }
-.activity-wrapper,.gender-wrapper{
+.gender-wrapper{
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -202,6 +194,7 @@ export default {
 }
 .message{
     font-size: 20px;
+    color: red;
 }
 @media screen and (min-width: 768px){
     .form-wrapper{

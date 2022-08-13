@@ -1,9 +1,9 @@
 import axios from 'axios'
-export default function(){
+export default async function(){
     let sid=localStorage.getItem("sid")
     if(sid){
         try {
-            let result= axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/user/checkSession",{
+            let result=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/user/checkSession",{
                 "sid":sid
             })
             return result

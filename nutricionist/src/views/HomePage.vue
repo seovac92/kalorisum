@@ -14,14 +14,10 @@ export default {
 <style>
 @media screen and (min-width:992px){
   .wrapper{
-    width: 80vw;
+    width: 90vw;
     margin: 0 auto;
   }
 }
 @media screen and (min-width:1200px){
-  .wrapper{
-    width: 70vw;
-    margin: 0 auto;
-  }
 }
 </style>

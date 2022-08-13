@@ -5,26 +5,30 @@
           <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="toggleMenu()" v-if="!registrationStatus && !loginStatus"/>
           <div class="img-wrapper"><h2>LOGO</h2></div>
           <ul class="nav-menu-device nav-menu">
-            <li class="link-wrapper"><router-link to="/" class="link">Home</router-link></li>
+            <li class="link-wrapper"><router-link to="/" class="link">Pocetna</router-link></li>
             <li class="link-wrapper">
               <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
               <router-link to="/nutritious" class="link" v-else>Tablica kalorija</router-link>
             </li>
             <li class="link-wrapper"><router-link to="/" class="link">Admin</router-link></li>
           </ul>
-          <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijavi se</button>
-          <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjavi se</button>
+          <div class="btn-wrapper">
+            <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijavi se</button>
+            <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjavi se</button>
+          </div>  
       </div>
       <transition name="menu">
         <div class="mobile-nav-blocker" v-if="menuStatus">
           <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
             <li><font-awesome-icon class="btn-exit" @click="closePhoneMenu()" icon="fa-solid fa-circle-xmark" /></li>
-            <li class="link-wrapper"><router-link to="/" class="link">Home</router-link></li>
+            <li class="link-wrapper"><router-link to="/" class="link" @click="closePhoneMenu()">Pocetna</router-link></li>
             <li class="link-wrapper">
-              <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
-              <router-link to="/nutritious" class="link" v-else>Tablica kalorija</router-link>
+              <router-link to="/profile" class="link" v-if="userStatus" @click="closePhoneMenu()">Profil</router-link>
             </li>
-            <li class="link-wrapper"><router-link to="/" class="link">Admin</router-link></li>
+            <li class="link-wrapper">
+              <router-link to="/nutritious" class="link" @click="closePhoneMenu()">Tablica kalorija</router-link>
+            </li>
+            <li class="link-wrapper"><router-link to="/" class="link" @click="closePhoneMenu()">Admin</router-link></li>
           </ul>
         </div>  
       </transition>  
@@ -41,6 +45,7 @@
 import RegistrationForm from './components/RegistrationForm.vue'
 import LoginForm from './components/LoginForm.vue'
 import {mapState,mapActions} from 'vuex'
+import checkSession from './JS/checkSession.js'
 
 export default{
   components:{
@@ -55,7 +60,15 @@ export default{
     }
   },
   methods:{
-    ...mapActions(["setUserStatus"]),
+    ...mapActions(["setUserStatus","setUserLevel"]),
+    async checkUser(){
+      let res=await checkSession()
+      if(res){
+        this.setUserStatus(true)
+        this.setUserLevel(res.data.res.level)
+        localStorage.setItem("sid",res.data.res.sid)
+      }
+    },
     openRegistrationForm(){
       this.registrationStatus=true
       this.loginStatus=false
@@ -90,7 +103,10 @@ export default{
     }
   },
   computed:{
-    ...mapState(["userStatus"])
+    ...mapState(["userStatus","userLevel"])
+  },
+  mounted(){
+    this.checkUser()
   }
 }
 </script>
@@ -117,7 +133,7 @@ body{
   border: transparent;
   border-radius: 10px;
   color: whitesmoke;
-  font-size: 20px;
+  font-size: 1.3rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -153,6 +169,10 @@ body{
   padding: 20px 30px 20px 0;
   margin: 0 0;
   position: fixed;
+}
+.btn-wrapper{
+  display: flex;
+  flex-basis: 15%;
 }
 /*menu enter classes*/ 
 .menu-enter-from{

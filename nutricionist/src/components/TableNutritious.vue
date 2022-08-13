@@ -116,8 +116,10 @@ export default {
   flex-direction: column;
   align-items: flex-start;
 }
+.search-box-wrapper{
+  width: 60%;
+}
 .table-nutritious{
-  width: 100vw;
   margin: 20px auto;
   border-collapse: collapse;
 }
@@ -173,22 +175,20 @@ export default {
   color: whitesmoke;
 }
 @media screen and (min-width: 768px){
-    .table-nutritious{
-        width: 90%;
-        margin-left: 0;
-    }
-    .input{
-      width: 20vw;
-    }
+  .search-box-wrapper{
+    width: 40%;
+  }
 }
 @media screen and (min-width: 992px){
-    .table-nutritious{
-        width: 70%;
-    }
+  .table-wrapper{
+    width: 70vw;
+    margin: 0 auto;
+  }
 }
 @media screen and (min-width: 1200px){
-    .table-nutritious{
-        width: 50%;
-    }
+  .table-wrapper{
+    width: 50vw;
+    margin: 0 auto;
+  }
 }
 </style>
