@@ -183,11 +183,11 @@ body{
 /*menu enter classes*/ 
 .menu-enter-from{
   opacity: 1;
-  transform: translateX(-500px);
+  transform: translateX(-100vw);
 }
 .menu-enter-to{
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0vh);
 }
 .menu-enter-active{
   transition: all 0.3s ease;
@@ -199,7 +199,7 @@ body{
 }
 .menu-leave-to{
   opacity: 1;
-  transform: translateX(-500px);
+  transform: translateX(-100vw);
 }
 .menu-leave-active{
   transition: all 0.3s ease;
