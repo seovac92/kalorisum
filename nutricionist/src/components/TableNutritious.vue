@@ -173,6 +173,7 @@ export default {
 .btn-next{
   font-size: 30px;
   color: whitesmoke;
+  cursor: pointer;
 }
 @media screen and (min-width: 768px){
   .search-box-wrapper{

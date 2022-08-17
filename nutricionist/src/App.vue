@@ -1,34 +1,34 @@
 <template>
   <div class="app-wrapper">  
     <nav class="nav-menu-wrapper">
-      <div class="navigation">
+      <div class="navigation"><!--navigation for other devices-->
           <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="toggleMenu()" v-if="!registrationStatus && !loginStatus"/>
           <div class="img-wrapper"><h2>LOGO</h2></div>
           <ul class="nav-menu-device nav-menu">
             <li class="link-wrapper"><router-link to="/" class="link">Pocetna</router-link></li>
             <li class="link-wrapper">
-              <router-link to="/profile" class="link" v-if="userStatus">Profil</router-link>
-              <router-link to="/nutritious" class="link" v-else>Tablica kalorija</router-link>
+              <router-link to="/nutritious" class="link">Tablica kalorija</router-link>
             </li>
-            <li class="link-wrapper"><router-link to="/" class="link">Admin</router-link></li>
+            <li class="link-wrapper" v-if="userStatus"><router-link to="/profile" class="link">Profil</router-link></li>
+            <li class="link-wrapper" v-if="userLevel===1"><router-link to="/" class="link">Admin</router-link></li>
           </ul>
           <div class="btn-wrapper">
             <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijavi se</button>
             <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjavi se</button>
           </div>  
       </div>
-      <transition name="menu">
+      <transition name="menu"><!--navigation for mobile-->
         <div class="mobile-nav-blocker" v-if="menuStatus">
           <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
             <li><font-awesome-icon class="btn-exit" @click="closePhoneMenu()" icon="fa-solid fa-circle-xmark" /></li>
             <li class="link-wrapper"><router-link to="/" class="link" @click="closePhoneMenu()">Pocetna</router-link></li>
-            <li class="link-wrapper">
-              <router-link to="/profile" class="link" v-if="userStatus" @click="closePhoneMenu()">Profil</router-link>
+            <li class="link-wrapper" v-if="userStatus">
+              <router-link to="/profile" class="link"  @click="closePhoneMenu()">Profil</router-link>
             </li>
             <li class="link-wrapper">
               <router-link to="/nutritious" class="link" @click="closePhoneMenu()">Tablica kalorija</router-link>
             </li>
-            <li class="link-wrapper"><router-link to="/" class="link" @click="closePhoneMenu()">Admin</router-link></li>
+            <li class="link-wrapper" v-if="userLevel===1"><router-link to="/" class="link" @click="closePhoneMenu()">Admin</router-link></li>
           </ul>
         </div>  
       </transition>  
@@ -37,7 +37,10 @@
       <RegistrationForm v-if="registrationStatus" @closeRegistrationForm="handleCloseRegistrationForm" @changeForm="handleChangeForm"></RegistrationForm>
       <LoginForm v-if="loginStatus" @closeLoginForm="handleCloseLoginForm" @changeForm="handleChangeForm"></LoginForm>
     </div>
-    <router-view/>
+    <router-view class="page"/>
+    <footer>
+      <p class="footer-text">COPYWRITE BY <span class="producer"> <a href="https://www.linkedin.com/in/marko-seovac-758a75199">MARKO SEOVAC</a></span></p>
+    </footer>
   </div>  
 </template>
 
@@ -126,7 +129,7 @@ body{
 <style scoped>
 .app-wrapper{
   position: absolute;
-  width: 100vw;
+  width: 100%;
 }
 .btn-open-form{
   background-color: #5B5BE4;
@@ -138,7 +141,7 @@ body{
   cursor: pointer;
 }
 .nav-menu-wrapper{
-  margin-bottom: 20px;
+  background-color: lightsteelblue;
 }
 .navigation{
   display: flex;
@@ -162,6 +165,7 @@ body{
   background-color: rgba(255, 255, 255, 0.4);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
+  z-index: 1;
 }
 .nav-menu{
   width: 70vw;
@@ -173,6 +177,8 @@ body{
 .btn-wrapper{
   display: flex;
   flex-basis: 15%;
+  align-items: center;
+  justify-content: center;
 }
 /*menu enter classes*/ 
 .menu-enter-from{
@@ -199,6 +205,7 @@ body{
   transition: all 0.3s ease;
 }
 .link-wrapper{
+  align-self: center;
   font-weight: 600;
   background-color: #5B5BE4;
   border-radius: 20px;
@@ -222,6 +229,31 @@ body{
 .lin-wrapper:active{
   background-color: darkblue;
 }
+.page{
+  min-height: 90vh;
+}
+footer{
+  background-color: lightsteelblue;
+  padding: 10px 0;
+}
+footer p{
+  margin: 0;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.producer a:link,
+.producer a:visited{
+  color: #fff;
+}
+.producer a:hover{
+  color: #5B5BE4;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.producer a:active{
+  color: #5B5BE4;
+}
 @media screen and (min-width:768px) {
   .menu-opener{
     display: none;
@@ -230,7 +262,7 @@ body{
     position: unset;
     padding: 0;
   }
-  .nav-menu-mobile{
+  .mobile-nav-blocker{
     display: none;
   }
   .nav-menu-wrapper{
@@ -245,8 +277,9 @@ body{
     width: 60vw;
   }
   .link-wrapper{
-    background-color: white;
-    padding: 20px 30px;
+    background-color: lightsteelblue;
+    color: #fff;
+    padding: 0 30px;
     margin: 0;
   }
   .link-wrapper:hover{
@@ -258,15 +291,12 @@ body{
   .link:hover{
     text-decoration: underline;
   }
-  .btn-open-form{
-    margin-right: 5vw;
-  }
   .img-wrapper{
     margin: 0 auto;
   }
 }
 @media screen and (min-width:1200px){
-  router-view{
+  .page{
     width: 70vw;
   }
 }

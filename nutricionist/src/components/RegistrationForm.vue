@@ -121,6 +121,7 @@ export default {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     top: 0;
+    z-index: 1;
 }
 .form-wrapper{
     width: 80%;
