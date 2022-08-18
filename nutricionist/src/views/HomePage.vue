@@ -30,20 +30,43 @@
     </div>
     <main>
       <article class="first">
-        <h2>Sta nudimo?</h2>
-        <p>Za pocetak se upoznajte sa pojmovima poput BMR-a i TDEE-a, saznajte nesto vise o nacinu funkcionisanja ljudskog organizma, odakle dolaze kalorije koje su izvor energije koja pokrece ceo organizam i sve njegove funkcije.</p>
-        <p>BMR (Basal metabolic rate)  je minimalna dnevna količina energije koja je potrebna za obavljanje vitalnih funkcija organizma u stanju mirovanja.</p>
-        <p>TDEE (Total daily energy expenditure) je količina kalorija koja je potrebna za obavljanje svakodnevnih aktivnosti.</p>
-        <p>Kalorije, koje nose energiju neophodnu za odrzanje i normalno funkcionisanje organizma, </p>
+        <h2 class="title-h2">Saznajte</h2>
+          <p><span class="key-words">BMR (Basal metabolic rate)</span>  je minimalna dnevna količina energije koja je potrebna za obavljanje vitalnih funkcija organizma u stanju mirovanja.</p>
+          
+        <p><span class="key-words">TDEE (Total daily energy expenditure)</span> je količina kalorija koja je potrebna za obavljanje svakodnevnih aktivnosti.</p>
       </article>  
     </main>
+    <aside>
+      <article class="bmr-calculator">
+        <BMRCalculator></BMRCalculator>
+      </article>
+      <article class="tdee-calculator">
+        <TDEECalculator></TDEECalculator>
+      </article>
+      <article class="first">
+        <h2 class="title-h2">Cilj</h2>
+        <p>Na osnovu proracuna kalkulatora ste saznali koliko je vasem organizmu potrebno kalorija kako bi na dnevnom nivou funkcionisao i odrzao istu telesnu masu.</p>
+        <p>Ukoliko je vas cilj <span class="key-words">mrsavljenje</span>,najbezbedniji nacin je da smanjite dnevni unos kalorija za 250Kcal i za isto toliko povecate potrosnju kalorija kroz aktivnosti, sto bi vas dovelo do nedeljnog gubitka 0,5kg</p>
+        <p>Napravite svoj <span class="key-words interactive-word" @click="openLoginForm()">nalog</span> i pravite sami svoje <span class="key-words">obroke</span> koje cete zajedno sa mnogobrojnim aktivnostima koristiti u vasem <span class="key-words">nedeljnom planu.</span></p>
+        <p class="special-msg">Uz dobar plan sve je mnogo lakse!</p>
+      </article>
+    </aside>
   </div>
 </template>
 
 <script>
+import BMRCalculator from '../components/BMRCalculator.vue'
+import TDEECalculator from '../components/TDEECalculator.vue'
 export default {
-  //ZA GOSTA I ZA USERA
-  //objasnjenje o potrosnji kalorija, objasnjenje o radu sajta i njegovim mogucnostima
+  components:{
+    BMRCalculator,
+    TDEECalculator
+  },
+  methods:{
+    openLoginForm(){
+      this.$emit("openLoginForm")
+    }
+  }
 }
 </script>
 
@@ -90,9 +113,33 @@ export default {
   font-size: 1.3rem;
   font-weight: 600;
 }
+aside{
+  margin-bottom: 200px;
+}
 .key-words{
   font-size: 1.5rem;
-  color: #5B5BE4;
+  color: #c50000;
+}
+.first{
+  font-weight: 600;
+  text-align: left;
+}
+.title-h2{
+  font-size: 1.7rem;
+  padding: 10px;
+  margin: 0;
+  background-color: #212529;
+  color: whitesmoke;
+}
+.first p{
+  padding-left: 10px;
+}
+.special-msg{
+  font-size: 2rem;
+  font-style: italic;
+}
+.interactive-word{
+  cursor: pointer;
 }
 @media screen and (min-width:992px){
   .wrapper{

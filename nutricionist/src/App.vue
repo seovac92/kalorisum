@@ -37,7 +37,7 @@
       <RegistrationForm v-if="registrationStatus" @closeRegistrationForm="handleCloseRegistrationForm" @changeForm="handleChangeForm"></RegistrationForm>
       <LoginForm v-if="loginStatus" @closeLoginForm="handleCloseLoginForm" @changeForm="handleChangeForm"></LoginForm>
     </div>
-    <router-view class="page"/>
+    <router-view class="page" @openLoginForm="openLoginForm()"/>
     <footer>
       <p class="footer-text">COPYWRITE BY <span class="producer"> <a href="https://www.linkedin.com/in/marko-seovac-758a75199">MARKO SEOVAC</a></span></p>
     </footer>
@@ -234,7 +234,7 @@ body{
 }
 footer{
   background-color: lightsteelblue;
-  padding: 10px 0;
+  padding: 30px 0;
 }
 footer p{
   margin: 0;
@@ -254,7 +254,7 @@ footer p{
 .producer a:active{
   color: #5B5BE4;
 }
-@media screen and (min-width:768px) {
+@media screen and (min-width:992px) {
   .menu-opener{
     display: none;
   }
@@ -273,7 +273,7 @@ footer p{
   }
   .nav-menu-device{
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-around;
     width: 60vw;
   }
   .link-wrapper{
@@ -297,7 +297,11 @@ footer p{
 }
 @media screen and (min-width:1200px){
   .page{
-    width: 70vw;
+    width: 80vw;
+  }
+  .navigation{
+    width: 80vw;
+    margin: 0 auto;
   }
 }
 </style>

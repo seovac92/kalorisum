@@ -122,6 +122,7 @@ export default {
 .table-nutritious{
   margin: 20px auto;
   border-collapse: collapse;
+  min-height: 90vh;
 }
 .row-1{
   background-color: #212529;
