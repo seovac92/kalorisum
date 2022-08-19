@@ -51,10 +51,18 @@ export default {
 }
 .tdee-result-wrapper{
     width: 80vw;
+    min-height: 16vh;
     margin: 10px auto;
     display: flex;
+    flex-direction: column;
 }
 .tdee-result-wrapper .inputs-wrapper{
     min-height: 10vh;
+}
+@media screen and (min-width: 768px){
+    .tdee-result-wrapper{
+        flex-direction: row;
+        min-height: fit-content;
+    }
 }
 </style>

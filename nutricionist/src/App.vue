@@ -165,7 +165,7 @@ body{
   background-color: rgba(255, 255, 255, 0.4);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  z-index: 1;
+  z-index: 2;
 }
 .nav-menu{
   width: 70vw;

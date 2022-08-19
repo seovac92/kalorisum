@@ -121,7 +121,7 @@ export default {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     top: 0;
-    z-index: 1;
+    z-index: 2;
 }
 .form-wrapper{
     width: 80%;
@@ -152,6 +152,8 @@ export default {
     border-radius: 30px;
     margin: 10px 0 0;
     padding: 5px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+    font-size: 1rem;
 }
 .btn-exit{
     display: inline;

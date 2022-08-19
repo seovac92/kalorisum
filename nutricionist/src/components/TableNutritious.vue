@@ -19,7 +19,7 @@
       </thead>
       <tbody>
         <tr class="row" v-for="one in nutritious" :key="one.ntr_id">
-          <td class="column-1" colspan="2">{{one.ntr_name}}</td>
+          <td class="column-1" colspan="2" @click="pickANutrition(one)">{{one.ntr_name}}</td>
           <td class="column-2" colspan="2">{{one.ntr_kcal}}</td>
           <td class="column-3" colspan="2">{{one.ntt_name}}</td>
         </tr>
@@ -102,6 +102,9 @@ export default {
           if(this.nutritionString.length<1){
             this.getTenNutritious()
           }   
+        },
+        pickANutrition(one){
+          this.$emit("pickANutrition",one)
         }
     },
     mounted(){
@@ -122,7 +125,6 @@ export default {
 .table-nutritious{
   margin: 20px auto;
   border-collapse: collapse;
-  min-height: 90vh;
 }
 .row-1{
   background-color: #212529;

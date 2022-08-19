@@ -63,8 +63,10 @@ export default {
     }
     .bmr-result-wrapper{
         width: 80vw;
+        min-height: 30vh;
         margin: 10px auto;
         display: flex;
+        flex-direction: column;
     }
     .inputs-wrapper{
         display: flex;
@@ -89,10 +91,17 @@ export default {
         font-size: 3rem;
         font-weight: 600;
         box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+        background-color: #eee;
     }
     .msg-instruction{
         color: #c50000;
         font-size: 1rem;
+    }
+    @media screen and (min-width: 768px){
+        .bmr-result-wrapper{
+            flex-direction: row;
+            min-height: fit-content;
+        }
     }
     @media screen and (min-width: 1200px){
         .inputs-wrapper{
