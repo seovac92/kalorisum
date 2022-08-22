@@ -14,7 +14,8 @@
         <p class="nutrition-title">{{nutrition.ntr_name}} {{nutrition.ntr_kcal}}Kcal</p>
         <div class="input-wrapper">
           <label for="quantity" class="msg-instruction" v-show="quantity<100 || quantity>1000">Unesite vrednost izmedju 100 i 1000.</label>
-          <input id="quantity" class="calculator-input" type="number" v-model="quantity" placeholder="Kolicina u g/ml">
+          <input id="quantity" class="calculator-input" type="number" v-model="quantity" placeholder="Kolicina u g/ml" @keydown.enter="pushIntoPot()">
+          <label for="quantity" class="msg-instruction">{{msg}}</label>
         </div>
         <div class="btn-wrapper">
           <button class="btn-registration confirm" @click="pushIntoPot()">Potvrdi</button>
@@ -22,34 +23,48 @@
       </div>
       <div class="meal-opener-wrapper" @click="openMealForm()">
         <font-awesome-icon class="icon" icon="fa-solid fa-bowl-food" />
+        <div class="number-wrapper">
+          <p class="number-nutrition">{{nutritions.length}}</p>
+        </div>  
       </div>
       <div class="meal-form-wrapper" v-if="mealFormStatus">
         <div class="btn-exit-wrapper">
             <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeMealForm()"/>
         </div>
         <ul class="meal-form">
-          <li class="msg-instruction nutrition" v-if="nutritions.length===0"><p>Broj dozvoljenih namirnica {{nutritionCounter}}</p></li>
-          <li class="nutrition" v-for="nutrition in nutritions" :key="nutrition.id">
-            <p>{{nutrition.name}} | {{nutrition.quantity}}g(ml) | {{nutrition.kcalSum}}Kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" />
+          <li class="msg-instruction nutrition" v-if="nutritions.length===0"><p>Broj dozvoljenih namirnica je 10.</p></li>
+          <li class="nutrition" v-for="(nutrition,index) in nutritions" :key="nutrition.id">
+            <p>{{nutrition.name}} | {{nutrition.quantity}}g(ml) | {{nutrition.kcalSum}}Kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeNutrition(index)"/>
           </li>
-          <li class="msg-instruction" v-if="nutritions.length>0"><p>Broj dozvoljenih namirnica {{nutritionCounter}}</p></li>
+          <li class="msg-instruction" v-if="nutritions.length>0"><p>Broj dozvoljenih namirnica {{10-nutritions.length}}</p></li>
           <li class="total"><p>{{mealSum}}Kcal</p></li>
           <li class="meal-name">
-            <input class="input" type="text" placeholder="Naziv obroka" v-model="mealName" v-show="nutritions.length>0">
+            <label for="name" class="msg-instruction" v-show="mealName.length<1 || mealName.length>15">Naziv mora imati izmedju 1 i 15 karaktera.</label>
+            <input id="name" class="input" type="text" placeholder="Naziv obroka" v-model="mealName" >
+            <label for="name" class="msg-instruction">{{msg}}</label>
           </li>
           <li>
             <div class="btn-wrapper">
-              <button class="btn-registration confirm">Potvrdi</button>
+              <button class="btn-registration confirm" @click="makeAMeal()">Potvrdi</button>
             </div>
           </li>
         </ul>
       </div>
-    </main>  
+    </main>
+    <aside>
+      <article class="food-wrapper">
+        <img class="img-article" src="../assets/food.jpg" alt="food">
+        <p class="special-msg">Zdrava ishrana je stvar odluke!</p>
+      </article>  
+    </aside>  
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import TableNutritious from '../components/TableNutritious.vue'
+import axios from 'axios'
+import checkSession from '../JS/checkSession.js'
 
 class Nutrition{
   constructor(id,name,kcal,type,quantity){
@@ -60,6 +75,14 @@ class Nutrition{
     this.quantity=quantity
     this.kcalSum=Math.round(this.kcal/100*this.quantity)
   }
+}
+function checkId(obj,array){
+  for(let i=0;i<array.length;i++){
+    if(array[i].id===obj.ntr_id){
+      return true
+    }
+  }
+  return false
 }
 
 export default {
@@ -75,8 +98,8 @@ export default {
       quantity:null,
       nutritions:[],
       mealFormStatus:false,
-      nutritionCounter:15,
-      mealName:""
+      mealName:"",
+      msg:""
     }
   },
   methods:{
@@ -85,16 +108,25 @@ export default {
       this.mealFormStatus=false
     },
     closeTheWindow(){
+      this.quantity=null
       this.nutrition=null
+      this.msg=""
     },
     pushIntoPot(){
+      this.msg=""
       if(this.quantity<100 || this.quantity>1000){
         return
       }
       let newNutrition=new Nutrition(this.nutrition.ntr_id,this.nutrition.ntr_name,this.nutrition.ntr_kcal,this.nutrition.ntt_name,this.quantity)
+      if(this.nutritions.length===10){
+        let result=checkId(this.nutrition,this.nutritions)
+        if(!result){
+          this.msg="Maksimalan broj namirnica u jelu je 10."
+          return
+        }
+      }
       if(!this.nutritions){
         this.nutritions.push(newNutrition)
-        this.nutritionCounter--
         this.quantity=null
         this.closeTheWindow()
         return
@@ -109,19 +141,70 @@ export default {
         }
       }
       this.nutritions.push(newNutrition)
-      this.nutritionCounter--
       this.quantity=null
       this.closeTheWindow()
+      this.setStoredNutritions()
     },
     openMealForm(){
-      this.mealFormStatus=true
+      this.mealFormStatus=!this.mealFormStatus
       this.nutrition=null
     },
     closeMealForm(){
+      this.mealName=""
       this.mealFormStatus=false
+    },
+    removeNutrition(nutritionIndex){
+      this.nutritions.splice(nutritionIndex,1)
+      this.setStoredNutritions()
+    },
+    async makeAMeal(){
+      this.msg=""
+      if(!this.userStatus){
+        this.$emit("openLoginForm")
+        return
+      }
+      if(!this.mealName || this.mealName.length>15){
+        return
+      }
+      if(this.nutritions.length===0){
+        this.msg="Morate dodati barem jednu namirnicu."
+        return
+      }
+      let user=await checkSession()
+      try {
+        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/meal/newMeal",{
+          "user_id":user.data.res.id,
+          "meal_name":this.mealName,
+          "ingredients":this.nutritions
+        })
+        this.closeMealForm()
+        this.nutritions=[]
+        this.clearStoredNutritions()
+      } catch (error) {
+        this.msg=error.response.data.message
+      }
+    },
+    getStoredNutritions(){
+      let storedNutritions=sessionStorage.getItem("nutritions")
+      if(storedNutritions){
+        this.nutritions=JSON.parse(storedNutritions)
+      }
+    },
+    setStoredNutritions(){
+      let storedNutritions=sessionStorage.getItem("nutritions")
+      if(!storedNutritions){
+        sessionStorage.setItem("nutritions",JSON.stringify(this.nutritions))
+        return
+      }
+      sessionStorage.removeItem("nutritions")
+      sessionStorage.setItem("nutritions",JSON.stringify(this.nutritions))
+    },
+    clearStoredNutritions(){
+      sessionStorage.removeItem("nutritions")
     }
   },
   computed:{
+    ...mapState(["userStatus"]),
     mealSum(){
       let mealKcal=0
       if(this.nutritions){
@@ -131,14 +214,14 @@ export default {
       }
       return mealKcal
     }
+  },
+  mounted(){
+    this.getStoredNutritions()
   }
 }
 </script>
 
 <style>
-main{
-  margin-bottom: 50px;
-}
 .introduction-wrapper{
   margin-bottom: 50px;
 }
@@ -177,6 +260,17 @@ main{
   cursor: pointer;
   z-index: 0;
 }
+.number-wrapper{
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  text-align: center;
+  width: 100%;
+}
+.number-nutrition{
+  margin: 0;
+  font-weight: 700;
+}
 .meal-opener-wrapper:hover .icon{
   color: #c50000;
 }
@@ -187,7 +281,7 @@ main{
 .meal-form-wrapper{
   width: 80vw;
   position: fixed;
-  top: 20vh;
+  top: 10vh;
   left: 8vw;
   background-color: #eee;
   text-align: left;
@@ -234,10 +328,19 @@ main{
   text-align: center;
 }
 .meal-name{
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 1.5rem;
-  width: 60%;
-  margin: 0 auto;
+}
+.meal-name .input{
+  width: 50%;
+}
+.meal-name .msg-instruction{
+  margin-top: 15px;
+}
+.img-article{
+  width: 90%;
 }
 @media screen and (min-width: 768px){
   .nutrition-quantity-wrapper{
@@ -251,8 +354,11 @@ main{
     width: 70vw;
     left: 15vw;
   }
-  .meal-name{
-    width: 50%;
+  .meal-name .input{
+    width: 40%;
+  }
+  .img-article{
+    width: 60%;
   }
 }
 @media screen and (min-width: 992px){
@@ -267,6 +373,9 @@ main{
     width: 60vw;
     left: 20vw;
   }
+  .img-article{
+    width: 45%;
+  }
 }
 @media screen and (min-width: 1200px){
   .nutrition-quantity-wrapper{
@@ -277,8 +386,8 @@ main{
     width: 50%;
   }
   .meal-form-wrapper{
-    width: 50vw;
-    left: 25vw;
+    width: 40vw;
+    left: 30vw;
   }
 }
 </style>

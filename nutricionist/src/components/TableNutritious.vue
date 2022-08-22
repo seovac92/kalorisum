@@ -99,7 +99,7 @@ export default {
               this.msg=error.response.data.message
             }
           }
-          if(this.nutritionString.length<1){
+          if(this.nutritionString.length<=1){
             this.getTenNutritious()
           }   
         },
@@ -118,6 +118,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  min-height: 80vh;
 }
 .search-box-wrapper{
   width: 60%;

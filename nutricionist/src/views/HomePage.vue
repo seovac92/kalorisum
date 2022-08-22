@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import BMRCalculator from '../components/BMRCalculator.vue'
 import TDEECalculator from '../components/TDEECalculator.vue'
 export default {
@@ -64,8 +65,13 @@ export default {
   },
   methods:{
     openLoginForm(){
-      this.$emit("openLoginForm")
+      if(!this.userStatus){
+        this.$emit("openLoginForm")
+      }  
     }
+  },
+  computed:{
+    ...mapState(["userStatus"])
   }
 }
 </script>
@@ -113,9 +119,6 @@ export default {
   font-size: 1.3rem;
   font-weight: 600;
 }
-aside{
-  margin-bottom: 200px;
-}
 .key-words{
   font-size: 1.5rem;
   color: #c50000;
@@ -137,6 +140,7 @@ aside{
 .special-msg{
   font-size: 2rem;
   font-style: italic;
+  margin-bottom: 0;
 }
 .interactive-word{
   cursor: pointer;

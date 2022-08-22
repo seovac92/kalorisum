@@ -18,7 +18,7 @@ const routes = [
     path: '/nutritious',
     name: 'nutritious',
     component: AboutNutritious
-  },
+  }
 ]
 
 const router = createRouter({

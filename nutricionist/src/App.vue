@@ -130,6 +130,7 @@ body{
 .app-wrapper{
   position: absolute;
   width: 100%;
+  background-color: #eee;
 }
 .btn-open-form{
   background-color: #5B5BE4;
@@ -231,6 +232,8 @@ body{
 }
 .page{
   min-height: 90vh;
+  padding-bottom: 40px;
+  background-color: #fff;
 }
 footer{
   background-color: lightsteelblue;
