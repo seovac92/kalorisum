@@ -135,7 +135,7 @@ export default {
   color: whitesmoke;
 }
 .first p{
-  padding-left: 10px;
+  padding: 0 10px;
 }
 .special-msg{
   font-size: 2rem;

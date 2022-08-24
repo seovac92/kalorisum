@@ -10,6 +10,7 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { faCircleXmark } from  '@fortawesome/free-solid-svg-icons'
 import { faBowlFood} from  '@fortawesome/free-solid-svg-icons'
 import { faTrash} from  '@fortawesome/free-solid-svg-icons'
+import { faWeightHanging} from  '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars)
 library.add(faAngleLeft)
@@ -17,5 +18,6 @@ library.add(faAngleRight)
 library.add(faCircleXmark)
 library.add(faBowlFood)
 library.add(faTrash)
+library.add(faWeightHanging)
 
 createApp(App).use(store).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app')

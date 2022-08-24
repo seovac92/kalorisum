@@ -113,7 +113,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .table-wrapper{
   display: flex;
   flex-direction: column;
@@ -126,6 +126,7 @@ export default {
 .table-nutritious{
   margin: 20px auto;
   border-collapse: collapse;
+  width: 100%;
 }
 .row-1{
   background-color: #212529;

@@ -34,7 +34,7 @@ export default {
         }
     },
     methods:{
-        ...mapActions(["setUserStatus"]),
+        ...mapActions(["setUserStatus","setUserLevel"]),
         async sendLoginForm(){
             this.msg=""
             if(!this.email.trim() || !this.password){
@@ -48,7 +48,9 @@ export default {
                 })
                 localStorage.setItem("sid",result.data.res.sid)
                 this.setUserStatus(true)
+                this.setUserLevel(result.data.res.level)
                 this.closeLoginForm()
+                console.log(result)
             } catch (error) {
                 console.log(error)
             }

@@ -86,9 +86,6 @@ function checkId(obj,array){
 }
 
 export default {
-  //sve moze i gost...samo ne moze da konacno napravi jelo...dovrsiti pravljenje jela,napraviti api 
-  //koji ce za tog korisnika da ubaci jelo u tabelu
-  //eventualno dovrsiti stranu sa stilizacijom!!!
   components:{
     TableNutritious
   },
@@ -172,14 +169,16 @@ export default {
       }
       let user=await checkSession()
       try {
-        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/meal/newMeal",{
+        let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/meal/newMeal",{
           "user_id":user.data.res.id,
-          "meal_name":this.mealName,
+          "meal_name":this.trainingName,
+          "meal_sum":this.mealSum,
           "ingredients":this.nutritions
         })
         this.closeMealForm()
         this.nutritions=[]
         this.clearStoredNutritions()
+        console.log(res)
       } catch (error) {
         this.msg=error.response.data.message
       }
@@ -217,6 +216,13 @@ export default {
   },
   mounted(){
     this.getStoredNutritions()
+  },
+  watch:{
+    userStatus(newStatus){
+      if(!newStatus){
+        this.nutritions=[]
+      }
+    }
   }
 }
 </script>
@@ -257,6 +263,7 @@ export default {
   padding: 10px;
   background-color: #212529;
   border-radius: 10px 0 0 10px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
   cursor: pointer;
   z-index: 0;
 }

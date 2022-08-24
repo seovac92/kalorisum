@@ -57,7 +57,7 @@ export default {
         }
     },
     methods:{
-        ...mapActions(["setUserStatus"]),
+        ...mapActions(["setUserStatus","setUserLevel"]),
         async sendRegistrationForm(){
             this.msg=""
             if(!this.user.name.trim() || !this.user.email.trim() || !this.user.password || !this.user.repeatPassword
@@ -95,6 +95,7 @@ export default {
                 console.log(result)
                 localStorage.setItem("sid",result.data.res.sid)
                 this.setUserStatus(true)
+                this.setUserLevel(result.data.res.level)
                 this.closeRegistrationForm()
                 this.$router.push({name:"home"}) 
             } catch (error) {
