@@ -12,7 +12,7 @@
         <div class="btn-exit-wrapper">
             <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
         </div>
-        <p class="nutrition-title">{{activity.act_name}} {{activity.act_kcal}}Kcal</p>
+        <p class="title-h2">{{activity.act_name}} {{activity.act_kcal}}Kcal</p>
         <div class="input-wrapper">
           <label for="quantity" class="msg-instruction" v-show="time<10 || time>240">Unesite vrednost izmedju 10 i 240.</label>
           <input id="quantity" class="calculator-input" type="number" v-model="time" placeholder="Vreme trajanja u min" @keydown.enter="pushIntoPlan()">

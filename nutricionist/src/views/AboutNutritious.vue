@@ -11,7 +11,7 @@
         <div class="btn-exit-wrapper">
             <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
         </div>
-        <p class="nutrition-title">{{nutrition.ntr_name}} {{nutrition.ntr_kcal}}Kcal</p>
+        <p class="title-h2">{{nutrition.ntr_name}} {{nutrition.ntr_kcal}}Kcal</p>
         <div class="input-wrapper">
           <label for="quantity" class="msg-instruction" v-show="quantity<100 || quantity>1000">Unesite vrednost izmedju 100 i 1000.</label>
           <input id="quantity" class="calculator-input" type="number" v-model="quantity" placeholder="Kolicina u g/ml" @keydown.enter="pushIntoPot()">
@@ -169,7 +169,7 @@ export default {
       }
       let user=await checkSession()
       try {
-        let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/meal/newMeal",{
+        let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/newDish",{
           "user_id":user.data.res.id,
           "meal_name":this.trainingName,
           "meal_sum":this.mealSum,

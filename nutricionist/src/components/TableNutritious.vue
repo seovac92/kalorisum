@@ -147,7 +147,6 @@ export default {
 }
 .row{
   border-bottom: 1px solid #ddd;
-  cursor: pointer;
 }
 .row .column-1{
   font-weight: 600;
@@ -155,6 +154,7 @@ export default {
 }
 .row .column-1:hover{
   color: #000;
+  cursor: pointer;
 }
 .row:hover{
   background-color: #eee;
