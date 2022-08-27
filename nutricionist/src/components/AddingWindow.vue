@@ -3,7 +3,7 @@
     <div class="btn-exit-wrapper">
         <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
     </div>
-    <slot></slot>
+    <slot name="title"></slot>
     <div class="select-dish" v-if="dishs">
         <select class="input" v-model="dish">
             <option value=null selected disabled>Izaberi obrok</option>
@@ -27,6 +27,7 @@
         <option value=7>Nedelja</option>
     </select>
     <p class="msg-instruction">{{msg}}</p>
+    <slot name="msg"></slot>
     <div class="btn-wrapper">
         <button class="btn-registration confirm" @click="sendItemToPlan()">Potvrdi</button>
     </div>
@@ -71,12 +72,30 @@ export default {
 .adding-wrapper{
     width: 60vw;
     position: fixed;
-    top: 20vh;
+    top: 25vh;
     left: 20vw;
     padding: 10px;
     background-color: #eee;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     z-index: 1;
+}
+@media screen and (min-width: 768px) {
+    .adding-wrapper{
+        width: 50vw;
+        left: 25vw;
+    }
+}
+@media screen and (min-width: 992px) {
+    .adding-wrapper{
+        width: 40vw;
+        left: 30vw;
+    }
+}
+@media screen and (min-width: 1200px) {
+    .adding-wrapper{
+        width: 30vw;
+        left: 35vw;
+    }
 }
 </style>

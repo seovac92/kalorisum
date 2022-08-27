@@ -45,7 +45,7 @@
     </div>
     <router-view class="page" @openLoginForm="openLoginForm()"/>
     <footer>
-      <p class="footer-text">COPYWRITE BY <span class="producer"> <a href="https://www.linkedin.com/in/marko-seovac-758a75199">MARKO SEOVAC</a></span></p>
+      <p class="footer-text">COPYRIGHT <span class="producer"> <a href="https://www.linkedin.com/in/marko-seovac-758a75199">MARKO SEOVAC</a></span></p>
     </footer>
   </div>  
 </template>

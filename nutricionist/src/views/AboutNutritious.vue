@@ -171,7 +171,7 @@ export default {
       try {
         let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/newDish",{
           "user_id":user.data.res.id,
-          "meal_name":this.trainingName,
+          "meal_name":this.mealName,
           "meal_sum":this.mealSum,
           "ingredients":this.nutritions
         })

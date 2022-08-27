@@ -14,23 +14,23 @@
       <ChartWeight class="chart"></ChartWeight>
     </div>
     <div class="day-plan">
-      <DayPlan class="day-plan" :plan="week[0]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity"><h2 class="title-h2">Ponedeljak</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[0]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Ponedeljak</h2></DayPlan>
 
-      <DayPlan class="day-plan" :plan="week[1]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity"><h2 class="title-h2">Utorak</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[1]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Utorak</h2></DayPlan>
 
-      <DayPlan class="day-plan" :plan="week[2]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity"><h2 class="title-h2">Sreda</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[2]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Sreda</h2></DayPlan>
 
-      <DayPlan class="day-plan" :plan="week[3]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity"><h2 class="title-h2">Cetvrtak</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[3]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Cetvrtak</h2></DayPlan>
 
-      <DayPlan class="day-plan" :plan="week[4]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity"><h2 class="title-h2">Petak</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[4]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Petak</h2></DayPlan>
 
-      <DayPlan class="day-plan" :plan="week[5]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity"><h2 class="title-h2">Subota</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[5]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Subota</h2></DayPlan>
 
-      <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity"><h2 class="title-h2">Nedelja</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Nedelja</h2></DayPlan>
     </div>
     <DeletingWindow v-if="deleteStatus" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>
-    <AddingWindow class="adding-window" v-if="addDishStatus" :dishs="user.dishs" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><p class="title">Dodavanje obroka</p></AddingWindow>
-    <AddingWindow class="adding-window" v-if="addTrainingStatus" :trainings="user.trainings" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><p class="title">Dodavanje treninga</p></AddingWindow>
+    <AddingWindow class="adding-window" v-if="addDishStatus" :dishs="user.dishs" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje obroka</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
+    <AddingWindow class="adding-window" v-if="addTrainingStatus" :trainings="user.trainings" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje treninga</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
     <div class="adding-dish-opener-wrapper" @click="openAddDishForm()">
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Obrok</p>
@@ -38,6 +38,46 @@
     <div class="adding-training-opener-wrapper" @click="openAddTrainingForm()">
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Trening</p>
+    </div>
+    <div class="item-details-wrapper" v-if="dishDetails">
+      <div class="btn-exit-wrapper">
+        <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
+      </div>
+      <table class="item-details">
+        <tr class="row-1"><th class="column-1" colspan="2">{{dishDetails.dsh_name}}</th></tr>
+        <tr class="row">
+          <th class="column-2">
+            Sastojak
+          </th>
+          <th class="column-2">
+            Kolicina
+          </th>
+        </tr>
+        <tr class="row" v-for="nutrition in dishDetails.details" :key="nutrition.ntr_id">
+          <td class="column-1">{{nutrition.ntr_name}}</td>
+          <td class="column-2">{{nutrition.ntr_quantity}}g</td>
+        </tr>
+      </table>
+    </div>
+    <div class="item-details-wrapper" v-if="trainingDetails">
+      <div class="btn-exit-wrapper">
+        <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
+      </div>
+      <table class="item-details">
+        <tr class="row-1"><th class="column-1" colspan="2">{{trainingDetails.trn_name}}</th></tr>
+        <tr class="row">
+          <th class="column-2">
+            Aktivnost
+          </th>
+          <th class="column-2">
+            Vreme
+          </th>
+        </tr>
+        <tr class="row" v-for="activity in trainingDetails.details" :key="activity.act_id">
+          <td class="column-1">{{activity.act_name}}</td>
+          <td class="column-2">{{activity.tra_time}}min</td>
+        </tr>
+      </table>
     </div>
   </div>
 </template>
@@ -87,6 +127,9 @@ export default {
       deletingItem:null,
       addDishStatus:false,
       addTrainingStatus:false,
+      dishDetails:null,
+      trainingDetails:null,
+      msg:""
     }
   },
   methods:{
@@ -208,6 +251,7 @@ export default {
       }
     },
     async openAddDishForm(){
+      this.msg=""
       this.addDishStatus=!this.addDishStatus
       if(this.addTrainingStatus){
         this.addTrainingStatus=false
@@ -220,12 +264,13 @@ export default {
             })
             this.user.dishs=dishs.data.dishs
           } catch (error) {
-            console.log(error)
+            this.msg=error.response.data.message
           }
         }  
       }
     },
     async openAddTrainingForm(){
+      this.msg=""
       this.addTrainingStatus=!this.addTrainingStatus
       if(this.addDishStatus){
         this.addDishStatus=false
@@ -238,7 +283,7 @@ export default {
             })
             this.user.trainings=trainings.data.trainings
           } catch (error) {
-            console.log(error)
+            this.msg=error.response.data.message
           }
         }  
       }
@@ -260,6 +305,48 @@ export default {
         this.getUserPlan()
       } catch (error) {
         console.log(error)
+      }
+    },
+    async handleDishDetails(dish){
+      if(this.trainingDetails){
+        this.trainingDetails=null
+      }
+      try {
+        let res=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/:dsh_id",{
+          params:{
+            "dsh_id":dish.dsh_id
+          }
+        })
+        this.dishDetails=res.data.details[0]
+        console.log(this.dishDetails)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async handleTrainingDetails(training){
+      if(this.dishDetails){
+        this.dishDetails=null
+      }
+      try {
+        let res=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/training/:trn_id",{
+          params:{
+            "trn_id":training.trn_id
+          }
+        })
+        this.trainingDetails=res.data.details[0]
+        console.log(this.trainingDetails)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    closeTheWindow(){
+      if(this.trainingDetails){
+        this.trainingDetails=null
+        return
+      }
+      if(this.dishDetails){
+        this.dishDetails=null
+        return
       }
     }
   },
@@ -333,6 +420,20 @@ export default {
 .adding-window .title{
   font-size: 1.5rem;
   margin: 0;
+}
+.item-details-wrapper{
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+  background-color: #eee;
+  position: fixed;
+  top: 5vh;
+  left: 20vw;
 }
 @media screen and (min-width: 768px) {
   .user-bio-wrapper{

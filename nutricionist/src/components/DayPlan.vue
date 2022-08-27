@@ -7,7 +7,7 @@
                     <table>
                         <tr><th class="title column-2" colspan="3">OBROCI</th></tr>
                         <tr class="row" v-for="dish in plan.dishs" :key="dish.id">
-                            <td class="column-1">{{dish.name}}</td>
+                            <td class="column-1" @click="getDishDetails(dish)">{{dish.name}}</td>
                             <td class="column-2">{{dish.kcal}}kcal</td>
                             <td><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="sendDish(plan.day_id,dish)"/></td>
                         </tr>
@@ -17,7 +17,7 @@
                     <table>
                         <tr><th class="title column-2" colspan="3">AKTIVNOSTI</th></tr>
                         <tr class="row" v-for="activity in plan.training" :key="activity.id">
-                            <td class="column-1">{{activity.name}}</td>
+                            <td class="column-1" @click="getTrainingDetails(activity)">{{activity.name}}</td>
                             <td class="column-2">{{activity.kcal}}kcal</td>
                             <td><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="sendActivity(plan.day_id,activity)"/></td>
                         </tr>
@@ -68,6 +68,12 @@ export default {
             activity.day_id=id
             activity.type="training"
             this.$emit("deleteActivity",activity)
+        },
+        getDishDetails(dish){
+            this.$emit("getDishDetails",dish)
+        },
+        getTrainingDetails(training){
+            this.$emit("getTrainingDetails",training)
         }
     },
     computed:{
