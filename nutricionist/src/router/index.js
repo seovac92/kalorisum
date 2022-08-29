@@ -3,6 +3,7 @@ import HomePage from '../views/HomePage.vue'
 import UserProfile from '../views/UserProfile.vue'
 import AboutNutritious from '../views/AboutNutritious.vue'
 import AboutActivities from '../views/AboutActivities.vue'
+import AdminPage from '../views/AdminPage.vue'
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/activities',
     name: 'activities',
     component: AboutActivities
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminPage
   }
 ]
 

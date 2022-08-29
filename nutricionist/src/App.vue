@@ -13,7 +13,7 @@
               <router-link to="/activities" class="link">Tablica aktivnosti</router-link>
             </li>
             <li class="link-wrapper" v-if="userStatus"><router-link to="/profile" class="link">Profil</router-link></li>
-            <li class="link-wrapper" v-if="userLevel===1"><router-link to="/" class="link">Admin</router-link></li>
+            <li class="link-wrapper" v-if="userLevel===1"><router-link to="/admin" class="link">Admin</router-link></li>
           </ul>
           <div class="btn-wrapper">
             <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijavi se</button>
@@ -34,7 +34,7 @@
             <li class="link-wrapper">
               <router-link to="/activities" class="link" @click="closePhoneMenu()">Tablica aktivnosti</router-link>
             </li>
-            <li class="link-wrapper" v-if="userLevel===1"><router-link to="/" class="link" @click="closePhoneMenu()">Admin</router-link></li>
+            <li class="link-wrapper" v-if="userLevel===1"><router-link to="/admin" class="link" @click="closePhoneMenu()">Admin</router-link></li>
           </ul>
         </div>  
       </transition>  

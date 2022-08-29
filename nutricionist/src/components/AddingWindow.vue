@@ -1,5 +1,5 @@
 <template>
-  <div class="adding-wrapper">
+  <div class="adding-wrapper window-position window-style">
     <div class="btn-exit-wrapper">
         <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
     </div>
@@ -69,31 +69,26 @@ export default {
 </script>
 
 <style>
-.adding-wrapper{
-    width: 60vw;
+.window-position{
+    width: 50vw;
     position: fixed;
-    top: 25vh;
-    left: 20vw;
-    padding: 10px;
+    top: 10vh;
+    left: 25vw;
+    z-index: 1;
+}
+.window-style{
     background-color: #eee;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
-    z-index: 1;
-}
-@media screen and (min-width: 768px) {
-    .adding-wrapper{
-        width: 50vw;
-        left: 25vw;
-    }
 }
 @media screen and (min-width: 992px) {
-    .adding-wrapper{
+    .window-position{
         width: 40vw;
         left: 30vw;
     }
 }
 @media screen and (min-width: 1200px) {
-    .adding-wrapper{
+    .window-position{
         width: 30vw;
         left: 35vw;
     }

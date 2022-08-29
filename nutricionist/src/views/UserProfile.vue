@@ -3,15 +3,18 @@
     <div class="user-bio-wrapper">
       <div class="bio-wrapper">
         <h1 class="title-h2">{{user.name}}</h1>
-        <p>Datum rodjenja {{user.birthday}}</p>
-        <p>Visina: {{user.height}}cm</p>
-        <p>Tezina: {{user.weight}}kg</p>
-        <p>Pol: {{user.gender}}</p>
+        <p class="info">Datum rodjenja: {{user.birthday}}</p>
+        <p class="info">Visina: {{user.height}}cm</p>
+        <div class="weight-wrapper">
+          <p class="info">Tezina: {{user.weight}}kg</p>
+          <font-awesome-icon class="weight-icon" icon="fa-solid fa-weight-scale" @click="openUpdateWeightWindow()"/>
+        </div>  
+        <p class="info">Pol: {{user.gender}}</p>
         <div class="result">
           <p class="sum">BMR: {{user.bmr}}Kcal</p>
         </div>   
       </div>  
-      <ChartWeight class="chart"></ChartWeight>
+      <ChartWeight class="chart" :updateChart="updateChart"></ChartWeight>
     </div>
     <div class="day-plan">
       <DayPlan class="day-plan" :plan="week[0]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Ponedeljak</h2></DayPlan>
@@ -28,9 +31,9 @@
 
       <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Nedelja</h2></DayPlan>
     </div>
-    <DeletingWindow v-if="deleteStatus" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>
-    <AddingWindow class="adding-window" v-if="addDishStatus" :dishs="user.dishs" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje obroka</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
-    <AddingWindow class="adding-window" v-if="addTrainingStatus" :trainings="user.trainings" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje treninga</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
+    <DeletingWindow v-if="status[0].switch" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>
+    <AddingWindow class="adding-window" v-if="status[1].switch" :dishs="user.dishs" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje obroka</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
+    <AddingWindow class="adding-window" v-if="status[2].switch" :trainings="user.trainings" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje treninga</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
     <div class="adding-dish-opener-wrapper" @click="openAddDishForm()">
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Obrok</p>
@@ -39,46 +42,8 @@
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Trening</p>
     </div>
-    <div class="item-details-wrapper" v-if="dishDetails">
-      <div class="btn-exit-wrapper">
-        <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
-      </div>
-      <table class="item-details">
-        <tr class="row-1"><th class="column-1" colspan="2">{{dishDetails.dsh_name}}</th></tr>
-        <tr class="row">
-          <th class="column-2">
-            Sastojak
-          </th>
-          <th class="column-2">
-            Kolicina
-          </th>
-        </tr>
-        <tr class="row" v-for="nutrition in dishDetails.details" :key="nutrition.ntr_id">
-          <td class="column-1">{{nutrition.ntr_name}}</td>
-          <td class="column-2">{{nutrition.ntr_quantity}}g</td>
-        </tr>
-      </table>
-    </div>
-    <div class="item-details-wrapper" v-if="trainingDetails">
-      <div class="btn-exit-wrapper">
-        <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
-      </div>
-      <table class="item-details">
-        <tr class="row-1"><th class="column-1" colspan="2">{{trainingDetails.trn_name}}</th></tr>
-        <tr class="row">
-          <th class="column-2">
-            Aktivnost
-          </th>
-          <th class="column-2">
-            Vreme
-          </th>
-        </tr>
-        <tr class="row" v-for="activity in trainingDetails.details" :key="activity.act_id">
-          <td class="column-1">{{activity.act_name}}</td>
-          <td class="column-2">{{activity.tra_time}}min</td>
-        </tr>
-      </table>
-    </div>
+    <ItemDetailsWindow :dishDetails="dishDetails" :trainingDetails="trainingDetails" @closeDetailsWindow="handleCloseDetailsWindow" v-if="status[3].switch"></ItemDetailsWindow>
+    <UpdateWeightWindow v-if="status[4].switch" :msg="msg" @closeUpdateWeight="handleCloseUpdateWeight" @allowUpdateWeight="handleAllowUpdateWeight"></UpdateWeightWindow>
   </div>
 </template>
 
@@ -87,6 +52,8 @@ import ChartWeight from '../components/ChartWeight.vue'
 import DayPlan from '../components/DayPlan.vue'
 import DeletingWindow from '../components/DeletingWindow.vue'
 import AddingWindow from '../components/AddingWindow.vue'
+import ItemDetailsWindow from '../components/ItemDetailsWindow.vue'
+import UpdateWeightWindow from '../components/UpdateWeightWindow.vue'
 import checkSession from '../JS/checkSession.js'
 import axios from 'axios'
 
@@ -96,7 +63,9 @@ export default {
     ChartWeight,
     DayPlan,
     DeletingWindow,
-    AddingWindow
+    AddingWindow,
+    ItemDetailsWindow,
+    UpdateWeightWindow
   },
   //ZA USERA!!!
   //napraviti izmenjivu tezinu(jednom u 7 dana minimum!),plan za svaki dan posebno,kartice za dodavanje jela u dan i treninge,proracuni za svaki dan...jela i treninzi su gotovi,samo bira u koji dan ih smesta...to su dva nova prozora koji se otvaraju preko kartica sa strane nan kojima bira jelo/trening i dan//API radi INSERT novog jela/treninga u taj dan za tog korisnika,radi brisanje jela/treninga i radi SELECT za tog korisnika za taj dan!!!
@@ -122,13 +91,18 @@ export default {
         {"day_id":5,"dishs":[],"training":[]},
         {"day_id":6,"dishs":[],"training":[]},
         {"day_id":7,"dishs":[],"training":[]},
-      ],  
-      deleteStatus:false,
+      ],
       deletingItem:null,
-      addDishStatus:false,
-      addTrainingStatus:false,
       dishDetails:null,
       trainingDetails:null,
+      status:[
+        {switch:false,name:"deleteStatus"},
+        {switch:false,name:"addDishStatus"},
+        {switch:false,name:"addTrainingStatus"},
+        {switch:false,name:"itemDetailsStatus"},
+        {switch:false,name:"updateWeightStatus"}
+      ],
+      updateChart:false,
       msg:""
     }
   },
@@ -224,18 +198,16 @@ export default {
     },
     handleDeleteDish(dish){
       this.deletingItem=dish
-      this.deleteStatus=true
+      this.setStatusSwitchOn("deleteStatus")
     },
     handleDeleteActivity(activity){
       this.deletingItem=activity
-      this.deleteStatus=true
+      this.setStatusSwitchOn("deleteStatus")
     },
     handleCloseTheWindow(){
-      this.deleteStatus=false
+      this.setStatusSwitchOff("deleteStatus")
     },
     async handleAllowDeleting(){
-      console.log(this.deletingItem)
-      console.log(this.user.id)
       try {
         await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/plan/deleteItem",{
           "usr_id":this.user.id,
@@ -245,18 +217,15 @@ export default {
         })
         this.getUserPlan()
         this.searchAndSplice(this.deletingItem,this.week)
-        this.deleteStatus=false
+        this.setStatusSwitchOff("deleteStatus")
       } catch (error) {
         console.log(error)
       }
     },
     async openAddDishForm(){
       this.msg=""
-      this.addDishStatus=!this.addDishStatus
-      if(this.addTrainingStatus){
-        this.addTrainingStatus=false
-      }
-      if(this.addDishStatus){
+      this.setStatusSwitchOn("addDishStatus")
+      if(this.status[1].switch){
         if(this.user.dishs.length===0){//povuci jela usera
           try {
             let dishs=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/getDishs",{
@@ -271,11 +240,8 @@ export default {
     },
     async openAddTrainingForm(){
       this.msg=""
-      this.addTrainingStatus=!this.addTrainingStatus
-      if(this.addDishStatus){
-        this.addDishStatus=false
-      }
-      if(this.addTrainingStatus){
+      this.setStatusSwitchOn("addTrainingStatus")
+      if(this.status[2].switch){
         if(this.user.trainings.length===0){//povuci treninge usera
           try {
             let trainings=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/training/getTrainings",{
@@ -289,12 +255,12 @@ export default {
       }
     },
     handleCloseTheAddForm(){
-      this.addDishStatus=false
-      this.addTrainingStatus=false
+      this.setStatusSwitchOff("addDishStatus")
+      this.setStatusSwitchOff("addTrainingStatus")
     },
     async handleItemToPlan(item,day,type){
-      this.addDishStatus=false
-      this.addTrainingStatus=false
+      this.setStatusSwitchOff("addDishStatus")
+      this.setStatusSwitchOff("addTrainingStatus")
       try {
         await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/plan/setItem",{
           "usr_id":this.user.id,
@@ -318,7 +284,7 @@ export default {
           }
         })
         this.dishDetails=res.data.details[0]
-        console.log(this.dishDetails)
+        this.setStatusSwitchOn("itemDetailsStatus")
       } catch (error) {
         console.log(error)
       }
@@ -334,19 +300,50 @@ export default {
           }
         })
         this.trainingDetails=res.data.details[0]
-        console.log(this.trainingDetails)
+        this.setStatusSwitchOn("itemDetailsStatus")
       } catch (error) {
         console.log(error)
       }
     },
-    closeTheWindow(){
-      if(this.trainingDetails){
-        this.trainingDetails=null
-        return
+    handleCloseDetailsWindow(){
+      this.setStatusSwitchOff("itemDetailsStatus")
+    },
+    openUpdateWeightWindow(){
+      this.setStatusSwitchOn("updateWeightStatus")
+    },
+    handleCloseUpdateWeight(){
+      this.setStatusSwitchOff("updateWeightStatus")
+      this.msg=""
+    },
+    async handleAllowUpdateWeight(weight){
+      this.msg=""
+      try {
+        let result=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/user/newWeight",{
+          "usr_id":this.user.id,
+          "usr_new_weight":weight
+        })
+        this.getUserBio()
+        this.updateChart=true//srediti poruku da dodje u prozor i stilizovati prozor!!! vidi UPDATE WEIGHT komponentu!!!
+        console.log(result)
+      } catch (error) {
+        this.msg=error.response.data.message
       }
-      if(this.dishDetails){
-        this.dishDetails=null
-        return
+    },
+    setStatusSwitchOn(name){
+      for(let i=0;i<this.status.length;i++){
+        if(this.status[i].name===name){
+          this.status[i].switch=true
+        }
+        else{
+          this.status[i].switch=false
+        }
+      }
+    },
+    setStatusSwitchOff(name){
+      for(let i=0;i<this.status.length;i++){
+        if(this.status[i].name===name){
+          this.status[i].switch=false
+        }
       }
     }
   },
@@ -374,6 +371,25 @@ export default {
 }
 .bio-wrapper p:hover{
   background-color: #eee;
+}
+.info{
+  text-align: left;
+}
+.weight-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.3rem;
+}
+.weight-icon{
+  flex-basis: 20%;
+  cursor: pointer;
+}
+.weight-wrapper:hover{
+  background-color: #eee;
+}
+.weight-wrapper:hover .weight-icon{
+  color: #c50000;
 }
 .day-plan .title-h2{
   writing-mode: vertical-rl;
@@ -420,20 +436,6 @@ export default {
 .adding-window .title{
   font-size: 1.5rem;
   margin: 0;
-}
-.item-details-wrapper{
-  width: 60vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-  margin: 0 auto;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
-  background-color: #eee;
-  position: fixed;
-  top: 5vh;
-  left: 20vw;
 }
 @media screen and (min-width: 768px) {
   .user-bio-wrapper{

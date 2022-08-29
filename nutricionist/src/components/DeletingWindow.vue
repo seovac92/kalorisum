@@ -1,5 +1,5 @@
 <template>
-  <div class="deleting-wrapper">
+  <div class="deleting-wrapper window-position window-style">
     <div class="btn-exit-wrapper">
         <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
     </div>
@@ -25,19 +25,26 @@ export default {
 </script>
 
 <style>
-.deleting-wrapper{
-    width: 60vw;
-    position: fixed;
-    top: 20vh;
-    left: 20vw;
-    padding: 10px;
-    background-color: #eee;
-    border-radius: 20px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
-    z-index: 1;
-}
 .deleting-wrapper .title{
     font-size: 2rem;
     margin: 0;
+}
+@media screen  and (min-width: 768px){
+    .deleting-wrapper{
+        width: 50vw;
+        left: 25vw;
+    }
+}
+@media screen  and (min-width: 992px){
+    .deleting-wrapper{
+        width: 40vw;
+        left: 30vw;
+    }
+}
+@media screen  and (min-width: 1200px){
+    .deleting-wrapper{
+        width: 30vw;
+        left: 35vw;
+    }
 }
 </style>

@@ -12,6 +12,7 @@ import { faBowlFood} from  '@fortawesome/free-solid-svg-icons'
 import { faTrash} from  '@fortawesome/free-solid-svg-icons'
 import { faWeightHanging} from  '@fortawesome/free-solid-svg-icons'
 import { faPlus} from  '@fortawesome/free-solid-svg-icons'
+import { faWeightScale} from  '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars)
 library.add(faAngleLeft)
@@ -21,5 +22,6 @@ library.add(faBowlFood)
 library.add(faTrash)
 library.add(faWeightHanging)
 library.add(faPlus)
+library.add(faWeightScale)
 
 createApp(App).use(store).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app')

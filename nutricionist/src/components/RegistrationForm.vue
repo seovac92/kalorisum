@@ -71,7 +71,7 @@ export default {
                 return
             }
             if(this.user.weight<40 || this.user.height<100){
-                this.msg="Unesite realne vrednosti"
+                this.msg="Unesite ispravne vrednosti"
                 return
             }
             try {

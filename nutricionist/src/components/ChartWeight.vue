@@ -11,6 +11,7 @@ import axios from 'axios'
 import Chart from 'chart.js/auto'
 
 export default {
+    props:["updateChart"],
     methods:{
         async getUserWeights(){
             let userDetail=await checkSession()
@@ -20,6 +21,7 @@ export default {
                     "usr_id":userDetail.data.res.id
                 })
                 this.makeAChart(this.extractArray(userWeights.data.date,"number"),this.extractArray(userWeights.data.weights,"number"))
+                console.log(userWeights)
                 } catch (error) {
                     console.log(error)
                 }
@@ -54,6 +56,14 @@ export default {
     },
     mounted(){
         this.getUserWeights()
+        console.log(this.updateChart)
+    },
+    watch:{
+        updateChart(newStatus){
+            if(newStatus){
+                this.$router.go(0)
+            }
+        }
     }
 }    
 </script>
