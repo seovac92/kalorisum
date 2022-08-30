@@ -15,9 +15,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="row" v-for="one in activities" :key="one.act_id">
-          <td class="column-1" colspan="2" @click="pickAActivity(one)">{{one.act_name}}</td>
-          <td class="column-2" colspan="2">{{one.act_kcal}}</td>
+        <tr class="row" v-for="one in activities" :key="one.id">
+          <td class="column-1" colspan="2" @click="pickAActivity(one)">{{one.name}}</td>
+          <td class="column-2" colspan="2">{{one.kcal}}</td>
         </tr>
         <tr v-if="activities.length===0">
           <td class="message-table" colspan="6">{{msg}}</td>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import checkDifferenceBetweenArrays from '../JS/checkDifferenceBetweenArrays.js'
 import axios from 'axios'
 
 export default {
@@ -82,22 +83,27 @@ export default {
           }
         },
         async filterByString(){
-          this.msg=""
-          if(this.activityString.length>1){
+          if(this.activityString.length===2){
             this.activities=[]
+          }
+          if(this.activityString.length>1){
             try {
               let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/search",{
                 params:{
                   "string":this.activityString
                 }
               })
-              this.activities=result.data.res
+              checkDifferenceBetweenArrays(this.activities,result.data.res)
             } catch (error) {
-              this.msg=error.response.data.message
+              this.activities=[]
+              if(this.msg.length===0){
+                this.msg=error.response.data.message
+              }  
             }
           }
           if(this.activityString.length<=1){
             this.getTenActivities()
+            this.msg=""
           }   
         },
         pickAActivity(one){

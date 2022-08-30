@@ -12,7 +12,7 @@
         <div class="btn-exit-wrapper">
             <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
         </div>
-        <p class="title-h2">{{activity.act_name}} {{activity.act_kcal}}Kcal</p>
+        <p class="title-h2">{{activity.name}} {{activity.kcal}}Kcal</p>
         <div class="input-wrapper">
           <label for="quantity" class="msg-instruction" v-show="time<10 || time>240">Unesite vrednost izmedju 10 i 240.</label>
           <input id="quantity" class="calculator-input" type="number" v-model="time" placeholder="Vreme trajanja u min" @keydown.enter="pushIntoPlan()">
@@ -102,7 +102,6 @@ export default {
     },
     methods:{
         handleAActivity(one){
-            console.log(one)
             this.activity=one
             this.trainingFormStatus=false
         },
@@ -116,11 +115,11 @@ export default {
             if(this.time<10 || this.time>180){
                 return
             }
-            let newActivity=new Activity(this.activity.act_id,this.activity.act_name,this.activity.act_kcal,this.time)
+            let newActivity=new Activity(this.activity.id,this.activity.name,this.activity.kcal,this.time)
             if(this.activities.length===5){
                 let result=checkId(this.activity,this.activities)
                 if(!result){
-                this.msg="Maksimalan broj aktivnosti u jelu je 5."
+                this.msg="Maksimalan broj aktivnosti u treningu je 5."
                 return
                 }
             }

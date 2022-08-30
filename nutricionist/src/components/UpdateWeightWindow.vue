@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style>
-.update-weight-wrapper .input-wrapper{
+.input-wrapper{
     margin-top: 10px;
 }
 </style>

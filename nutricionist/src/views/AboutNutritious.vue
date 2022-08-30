@@ -11,7 +11,7 @@
         <div class="btn-exit-wrapper">
             <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
         </div>
-        <p class="title-h2">{{nutrition.ntr_name}} {{nutrition.ntr_kcal}}Kcal</p>
+        <p class="title-h2">{{nutrition.name}} {{nutrition.kcal}}Kcal</p>
         <div class="input-wrapper">
           <label for="quantity" class="msg-instruction" v-show="quantity<100 || quantity>1000">Unesite vrednost izmedju 100 i 1000.</label>
           <input id="quantity" class="calculator-input" type="number" v-model="quantity" placeholder="Kolicina u g/ml" @keydown.enter="pushIntoPot()">
@@ -114,7 +114,7 @@ export default {
       if(this.quantity<100 || this.quantity>1000){
         return
       }
-      let newNutrition=new Nutrition(this.nutrition.ntr_id,this.nutrition.ntr_name,this.nutrition.ntr_kcal,this.nutrition.ntt_name,this.quantity)
+      let newNutrition=new Nutrition(this.nutrition.id,this.nutrition.name,this.nutrition.kcal,this.nutrition.ntt_name,this.quantity)
       if(this.nutritions.length===10){
         let result=checkId(this.nutrition,this.nutritions)
         if(!result){
@@ -250,7 +250,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 80%;
-  margin: 0 auto;
+  margin: 10px auto 0;
 }
 .confirm{
   margin: 10px 0;

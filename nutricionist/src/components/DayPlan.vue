@@ -115,7 +115,7 @@ export default {
 .plan-wrapper{
     display: flex;
     justify-content: space-between;
-    width: 90%;
+    width: 93%;
     min-height: 20vh;
     margin: 0 auto;
     padding: 20px 10px;

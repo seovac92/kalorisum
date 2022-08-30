@@ -113,6 +113,12 @@ export default{
     },
     closePhoneMenu(){
       this.menuStatus=false
+    },
+    checkUserStatus(){
+      if(!this.userStatus){
+        localStorage.removeItem("sid")
+        this.$router.push({name:"home"})
+      }
     }
   },
   computed:{
@@ -120,6 +126,7 @@ export default{
   },
   mounted(){
     this.checkUser()
+    //this.checkUserStatus()
   }
 }
 </script>

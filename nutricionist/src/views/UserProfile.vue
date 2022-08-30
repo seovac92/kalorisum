@@ -358,7 +358,7 @@ export default {
 .user-bio-wrapper{
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 93%;
   margin: 0 auto;
   padding: 20px 10px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);

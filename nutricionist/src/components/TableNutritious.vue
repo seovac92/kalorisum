@@ -18,9 +18,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="row" v-for="one in nutritious" :key="one.ntr_id">
-          <td class="column-1" colspan="2" @click="pickANutrition(one)">{{one.ntr_name}}</td>
-          <td class="column-2" colspan="2">{{one.ntr_kcal}}</td>
+        <tr class="row" v-for="one in nutritious" :key="one.id">
+          <td class="column-1" colspan="2" @click="pickANutrition(one)">{{one.name}}</td>
+          <td class="column-2" colspan="2">{{one.kcal}}</td>
           <td class="column-3" colspan="2">{{one.ntt_name}}</td>
         </tr>
         <tr v-if="nutritious.length===0">
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import checkDifferenceBetweenArrays from '../JS/checkDifferenceBetweenArrays.js'
 import axios from 'axios'
 export default {
     data:function(){
@@ -85,22 +86,28 @@ export default {
           }
         },
         async filterByString(){
-          this.msg=""
-          if(this.nutritionString.length>1){
+          if(this.nutritionString.length===2){
             this.nutritious=[]
+          }
+          if(this.nutritionString.length>1){
             try {
               let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/search",{
                 params:{
                   "string":this.nutritionString
                 }
               })
+              checkDifferenceBetweenArrays(this.nutritious,result.data.res)
               this.nutritious=result.data.res
             } catch (error) {
-              this.msg=error.response.data.message
+              this.nutritious=[]
+              if(this.msg.length===0){
+                this.msg=error.response.data.message
+              }
             }
           }
           if(this.nutritionString.length<=1){
             this.getTenNutritious()
+            this.msg=""
           }   
         },
         pickANutrition(one){

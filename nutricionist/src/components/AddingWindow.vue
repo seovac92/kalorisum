@@ -70,16 +70,22 @@ export default {
 
 <style>
 .window-position{
-    width: 50vw;
+    width: 70vw;
     position: fixed;
     top: 10vh;
-    left: 25vw;
+    left: 15vw;
     z-index: 1;
 }
 .window-style{
     background-color: #eee;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+}
+@media screen and (min-width: 768px) {
+    .window-position{
+        width: 50vw;
+        left: 25vw;
+    }
 }
 @media screen and (min-width: 992px) {
     .window-position{
