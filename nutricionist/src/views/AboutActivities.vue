@@ -28,6 +28,7 @@
           <p class="number-nutrition">{{activities.length}}</p>
         </div>  
       </div>
+      <transition name="form">
       <div class="meal-form-wrapper" v-if="trainingFormStatus">
         <div class="btn-exit-wrapper">
             <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTrainingForm()"/>
@@ -51,6 +52,10 @@
           </li>
         </ul>
       </div>
+      </transition>
+      <transition name="success">
+        <SuccessWindow v-if="successStatus"></SuccessWindow>
+      </transition>
     </main>
      <aside>
       <article class="food-wrapper">
@@ -64,6 +69,7 @@
 <script>
 import { mapState } from 'vuex'
 import TableActivities from '../components/TableActivities.vue'
+import SuccessWindow from '../components/SuccessWindow.vue'
 import axios from 'axios'
 import checkSession from '../JS/checkSession.js'
 
@@ -88,16 +94,18 @@ function checkId(obj,array){
 
 export default {
     components:{
-        TableActivities
+        TableActivities,
+        SuccessWindow
     },
     data:function(){
         return{
-        activity:null,
-        time:null,
-        activities:[],
-        trainingFormStatus:false,
-        trainingName:"",
-        msg:""
+          activity:null,
+          time:null,
+          activities:[],
+          trainingFormStatus:false,
+          trainingName:"",
+          msg:"",
+          successStatus:false
         }
     },
     methods:{
@@ -180,6 +188,7 @@ export default {
                 this.closeTrainingForm()
                 this.activities=[]
                 this.clearStoredActivities()
+                this.showSuccessWindow()
                 console.log(res)
             } catch (error) {
                 this.msg=error.response.data.message
@@ -202,7 +211,13 @@ export default {
         },
         clearStoredActivities(){
         sessionStorage.removeItem("activities")
-        }
+        },
+      showSuccessWindow(){
+        this.successStatus=true
+        setTimeout(()=>{
+          this.successStatus=false
+        },500)
+      }
     },
     computed:{
         ...mapState(["userStatus"]),

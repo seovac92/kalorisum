@@ -11,8 +11,8 @@
                             <td class="column-2">{{dish.kcal}}kcal</td>
                             <td><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="sendDish(plan.day_id,dish)"/></td>
                         </tr>
-                    </table>
-                </div> 
+                    </table>    
+                </div>
                 <div class="activity-table" v-if="plan.training.length>0">
                     <table>
                         <tr><th class="title column-2" colspan="3">AKTIVNOSTI</th></tr>
@@ -25,9 +25,10 @@
                 </div>
             </div>
             <div class="mathematic" v-if="plan.dishs.length>0 || plan.training.length>0">
-                <p class="tdee">TDEE: {{tdee}}Kcal</p>
-                <p class="tdee">Uneto: {{sumDishs}}Kcal</p>
-                <p >suma: <span :class="[sumDay<=0 ?'deficit':'suficit']">{{sumDay}}kcal</span></p>
+                <p>Obroci: {{sumDishs}}Kcal</p>
+                <p>-TDEE: {{tdee}}Kcal</p>
+                <p>-Aktivnosti: {{sumTraining}}Kcal</p>
+                <p class="sum-kcal">Dnevni bilans: <span :class="[sumDay<=0 ?'deficit':'suficit']">{{sumDay}}kcal</span></p>
             </div> 
         </div>
         <div class="empty-day" v-else>
@@ -92,7 +93,7 @@ export default {
             
             return sumKcal
         },
-        sumtraining(){
+        sumTraining(){
             let sumKcal=0
             for(let i=0;i<this.plan.training.length;i++){
                 sumKcal+=this.plan.training[i].kcal
@@ -100,7 +101,7 @@ export default {
             return sumKcal
         },
         sumDay(){
-            return this.sumDishs-this.tdee
+            return Math.round(this.sumDishs-this.tdee-this.sumTraining)
         }
     },
     watch:{
@@ -113,6 +114,7 @@ export default {
 
 <style>
 .plan-wrapper{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     display: flex;
     justify-content: space-between;
     width: 93%;
@@ -144,10 +146,14 @@ export default {
 .meal-table,
 .activity-table{
     margin-bottom: 30px;
+    border-collapse: collapse;
 }
 .title{
     border-bottom: 1px solid black;
     font-style: italic;
+}
+.row{
+    transition: 0.3s all ease;
 }
 .row:hover{
     background-color: #ddd;
@@ -162,6 +168,9 @@ export default {
 }
 .mathematic p{
     margin: 0 0 5px;
+}
+.sum-kcal{
+    border-top: 1px solid black;
 }
 .deficit{
     color: green;

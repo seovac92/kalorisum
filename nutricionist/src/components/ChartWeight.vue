@@ -1,7 +1,7 @@
 <template>
   <div class="chart-wrapper">
     <canvas id="myChart" width="400" height="400"></canvas>
-    <label class="msg-instruction" for="myChart">Tezinu unesite jednom u 15 dana, da biste dobili sto tacnije podatke.</label>
+    <label class="msg-instruction" for="myChart">Tezinu unesite jednom u 7 dana, da biste dobili sto tacnije podatke.</label>
   </div>
 </template>
 
@@ -21,7 +21,6 @@ export default {
                     "usr_id":userDetail.data.res.id
                 })
                 this.makeAChart(this.extractArray(userWeights.data.date,"number"),this.extractArray(userWeights.data.weights,"number"))
-                console.log(userWeights)
                 } catch (error) {
                     console.log(error)
                 }
@@ -56,7 +55,6 @@ export default {
     },
     mounted(){
         this.getUserWeights()
-        console.log(this.updateChart)
     },
     watch:{
         updateChart(newStatus){

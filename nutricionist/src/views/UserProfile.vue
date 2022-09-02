@@ -31,9 +31,18 @@
 
       <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Nedelja</h2></DayPlan>
     </div>
+    <transition name="form">
     <DeletingWindow v-if="status[0].switch" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>
+    </transition>
+    <transition name="form">
+    <DeletingWindow v-if="status[5].switch" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowRemoving"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>
+    </transition>
+    <transition name="form">
     <AddingWindow class="adding-window" v-if="status[1].switch" :dishs="user.dishs" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje obroka</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
+    </transition>
+    <transition name="form">
     <AddingWindow class="adding-window" v-if="status[2].switch" :trainings="user.trainings" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje treninga</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
+    </transition>
     <div class="adding-dish-opener-wrapper" @click="openAddDishForm()">
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Obrok</p>
@@ -42,8 +51,15 @@
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Trening</p>
     </div>
-    <ItemDetailsWindow :dishDetails="dishDetails" :trainingDetails="trainingDetails" @closeDetailsWindow="handleCloseDetailsWindow" v-if="status[3].switch"></ItemDetailsWindow>
+    <transition name="form">
+    <ItemDetailsWindow :dishDetails="dishDetails" :trainingDetails="trainingDetails" @closeDetailsWindow="handleCloseDetailsWindow" @removeUserDish="handleRemoveUserDish" @removeUserTraining="handleRemoveUserTraining" v-if="status[3].switch"></ItemDetailsWindow>
+    </transition>
+    <transition name="form">
     <UpdateWeightWindow v-if="status[4].switch" :msg="msg" @closeUpdateWeight="handleCloseUpdateWeight" @allowUpdateWeight="handleAllowUpdateWeight"></UpdateWeightWindow>
+    </transition>
+    <transition name="success">
+      <SuccessWindow v-if="successStatus"></SuccessWindow>
+    </transition>
   </div>
 </template>
 
@@ -54,7 +70,9 @@ import DeletingWindow from '../components/DeletingWindow.vue'
 import AddingWindow from '../components/AddingWindow.vue'
 import ItemDetailsWindow from '../components/ItemDetailsWindow.vue'
 import UpdateWeightWindow from '../components/UpdateWeightWindow.vue'
+import SuccessWindow from '../components/SuccessWindow.vue'
 import checkSession from '../JS/checkSession.js'
+import { mapActions } from 'vuex'
 import axios from 'axios'
 
 
@@ -65,13 +83,12 @@ export default {
     DeletingWindow,
     AddingWindow,
     ItemDetailsWindow,
-    UpdateWeightWindow
+    UpdateWeightWindow,
+    SuccessWindow
   },
-  //ZA USERA!!!
-  //napraviti izmenjivu tezinu(jednom u 7 dana minimum!),plan za svaki dan posebno,kartice za dodavanje jela u dan i treninge,proracuni za svaki dan...jela i treninzi su gotovi,samo bira u koji dan ih smesta...to su dva nova prozora koji se otvaraju preko kartica sa strane nan kojima bira jelo/trening i dan//API radi INSERT novog jela/treninga u taj dan za tog korisnika,radi brisanje jela/treninga i radi SELECT za tog korisnika za taj dan!!!
   data:function(){
     return{
-      user:{
+      user:{//sve o useru
         id:null,
         name:"",
         birthday:"",
@@ -83,7 +100,7 @@ export default {
         dishs:[],
         trainings:[]
       },
-      week:[
+      week:[//prima sve planove i rasporedjuje ih na 7 DAYPLAN komponenti
         {"day_id":1,"dishs":[],"training":[]},
         {"day_id":2,"dishs":[],"training":[]},
         {"day_id":3,"dishs":[],"training":[]},
@@ -92,22 +109,25 @@ export default {
         {"day_id":6,"dishs":[],"training":[]},
         {"day_id":7,"dishs":[],"training":[]},
       ],
-      deletingItem:null,
-      dishDetails:null,
-      trainingDetails:null,
-      status:[
+      deletingItem:null,//trenutni Item(obrok/trening) za brisanje iz odredjenog plana ili cele baze
+      dishDetails:null,//detaljan prikaz obroka u ITEM DETAILS komponenti
+      trainingDetails:null,//detaljan prikaz treninga u ITEM DETAILS komponenti
+      status:[//statusi svih importovanih komponenti
         {switch:false,name:"deleteStatus"},
         {switch:false,name:"addDishStatus"},
         {switch:false,name:"addTrainingStatus"},
         {switch:false,name:"itemDetailsStatus"},
-        {switch:false,name:"updateWeightStatus"}
+        {switch:false,name:"updateWeightStatus"},
+        {switch:false,name:"removeStatus"}
       ],
-      updateChart:false,
-      msg:""
+      updateChart:false,//informacija grafikonu da izvrsi refresh(moglo je i prostije!)
+      msg:"",//prima errore
+      successStatus:false//SUCCESS WINDOW komponenta
     }
   },
   methods:{
-    async getUserBio(){
+    ...mapActions(["setUserStatus","setUserLevel"]),
+    async getUserBio(){//dobija osnovne podatke o useru--------MOUNTED
       let userDetail=await checkSession()
       if(userDetail){
         this.user.name=userDetail.data.res.username
@@ -146,7 +166,7 @@ export default {
         }
       }
     },
-    repackArray(oldArray,newArray,key){
+    repackArray(oldArray,newArray,key){//prepakuje plan u WEEK
       for(let i=0;i<newArray.length;i++){
         for(let j=0;j<oldArray.length;j++){
           if(oldArray[j].day_id===newArray[i].day_id){
@@ -156,7 +176,7 @@ export default {
         }
       }
     },
-    searchAndSplice(item,array){
+    searchAndSpliceInDay(item,array){//poslednji ITEM u WEEKu se ne azurira nakon brisanja!!!rucno se splajsuje WEEK---pri brisanju iz plana
       for(let i=0;i<array.length;i++){
         if(array[i].day_id===item.day_id){
           for(let j=0;j<array[i][item.type].length;j++){
@@ -168,23 +188,31 @@ export default {
         }
       }
     },
-    async getUserPlan(){
+    searchAndSpliceItemInWholePlan(item,array){//poslednji ITEM u WEEKu se ne azurira nakon brisanja!!!rucno se splajsuje WEEK---pri brisanju iz baze usera
+      for(let i=0;i<array.length;i++){
+        for(let j=0;j<array[i][item.type].length;j++){
+          if(array[i][item.type][j].name===item.name){
+            array[i][item.type].splice(j,1)
+            j--
+          }
+        }
+      }
+    },
+    async getUserPlan(){//prima ceo userov plan i prepakuje u WEEK----MOUNTED
       let userDetail=await checkSession()
       if(userDetail){
         try {
           let userPlan=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/plan/getPlan",{
               "usr_id":userDetail.data.res.id
           })
-          console.log(userPlan.data)
           this.repackArray(userPlan.data.dishs,this.week,"dishs")
           this.repackArray(userPlan.data.trainings,this.week,"training")
-          console.log(this.week)
         } catch (error) {
           console.log(error)
         }
       }
     },
-    bmrSum(){
+    bmrSum(){//kalkulacija bmra...nije moglo preko computed-a!!!
       let bmrResult
       if(this.user.gender==="muski"){
         bmrResult=66.47+(13.75*this.user.weight)+(5.003*this.user.height)-(6.755*this.user.ages)
@@ -196,18 +224,20 @@ export default {
       }
       return Math.round(bmrResult) 
     },
-    handleDeleteDish(dish){
+    handleDeleteDish(dish){//poziva DELETING komponentu za brisanje obroka SAMO iz plana!!!
       this.deletingItem=dish
       this.setStatusSwitchOn("deleteStatus")
     },
-    handleDeleteActivity(activity){
+    handleDeleteActivity(activity){//poziva DELETING komponentu za brisanje treninga SAMO iz plana!!!
       this.deletingItem=activity
       this.setStatusSwitchOn("deleteStatus")
     },
-    handleCloseTheWindow(){
+    handleCloseTheWindow(){//gasi DELETING komponentu
       this.setStatusSwitchOff("deleteStatus")
+      this.setStatusSwitchOff("removeStatus")
     },
-    async handleAllowDeleting(){
+    async handleAllowDeleting(){//brisanje Itema iz PLANA i azuriranje WEEK-a
+      this.checkUser()
       try {
         await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/plan/deleteItem",{
           "usr_id":this.user.id,
@@ -216,17 +246,37 @@ export default {
           "trn_id":this.deletingItem.trn_id
         })
         this.getUserPlan()
-        this.searchAndSplice(this.deletingItem,this.week)
+        this.searchAndSpliceInDay(this.deletingItem,this.week)
         this.setStatusSwitchOff("deleteStatus")
+        this.showSuccessWindow()
       } catch (error) {
         console.log(error)
       }
     },
-    async openAddDishForm(){
+    async handleAllowRemoving(){//brisanje Itema iz BAZE i azuriranje 
+      this.checkUser()
+      try {
+        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/user/deleteItem",{
+          "usr_id":this.user.id,
+          "dsh_id":this.deletingItem.dsh_id,
+          "trn_id":this.deletingItem.trn_id
+        })
+        this.getUserPlan()
+        this.searchAndSpliceItemInWholePlan(this.deletingItem,this.week)
+        this.user.dishs=[]
+        this.user.trainings=[]
+        this.setStatusSwitchOff("removeStatus")
+        this.showSuccessWindow()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async openAddDishForm(){//poziva ADDING komponentu i prima userove obroke
+      this.checkUser()
       this.msg=""
       this.setStatusSwitchOn("addDishStatus")
       if(this.status[1].switch){
-        if(this.user.dishs.length===0){//povuci jela usera
+        if(this.user.dishs.length===0){
           try {
             let dishs=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/getDishs",{
               "usr_id":this.user.id
@@ -238,11 +288,12 @@ export default {
         }  
       }
     },
-    async openAddTrainingForm(){
+    async openAddTrainingForm(){//poziva ADDING komponentu i prima userove treninge
+      this.checkUser()
       this.msg=""
       this.setStatusSwitchOn("addTrainingStatus")
       if(this.status[2].switch){
-        if(this.user.trainings.length===0){//povuci treninge usera
+        if(this.user.trainings.length===0){
           try {
             let trainings=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/training/getTrainings",{
               "usr_id":this.user.id
@@ -254,11 +305,12 @@ export default {
         }  
       }
     },
-    handleCloseTheAddForm(){
+    handleCloseTheAddForm(){//zatvara ADDING komponentu
+      this.checkUser()
       this.setStatusSwitchOff("addDishStatus")
       this.setStatusSwitchOff("addTrainingStatus")
     },
-    async handleItemToPlan(item,day,type){
+    async handleItemToPlan(item,day,type){//salje izabran Item u plan i azurira WEEk(u ovom slucaju radi dobro!!!)
       this.setStatusSwitchOff("addDishStatus")
       this.setStatusSwitchOff("addTrainingStatus")
       try {
@@ -273,7 +325,8 @@ export default {
         console.log(error)
       }
     },
-    async handleDishDetails(dish){
+    async handleDishDetails(dish){//otvara ITEM DETAILS komponentu i prima detalje za obrok
+      this.checkUser()
       if(this.trainingDetails){
         this.trainingDetails=null
       }
@@ -289,7 +342,12 @@ export default {
         console.log(error)
       }
     },
-    async handleTrainingDetails(training){
+    handleRemoveUserDish(dish){//otvara drugu DELETING komponentu za brisanje Itema iz BAZE
+      this.deletingItem=dish
+      this.setStatusSwitchOn("removeStatus")
+    },
+    async handleTrainingDetails(training){//otvara ITEM DETAILS komponentu i prima detalje za trening
+      this.checkUser()
       if(this.dishDetails){
         this.dishDetails=null
       }
@@ -305,31 +363,39 @@ export default {
         console.log(error)
       }
     },
-    handleCloseDetailsWindow(){
+    handleRemoveUserTraining(training){//otvara drugu DELETING komponentu za brisanje Itema iz BAZE
+      this.deletingItem=training
+      this.setStatusSwitchOn("removeStatus")
+    },
+    handleCloseDetailsWindow(){//zatvara DETAILS komponentu
+      this.checkUser()
       this.setStatusSwitchOff("itemDetailsStatus")
     },
-    openUpdateWeightWindow(){
+    openUpdateWeightWindow(){//otvara UPDATE WEIGHT komponentu
+      this.checkUser()
       this.setStatusSwitchOn("updateWeightStatus")
     },
-    handleCloseUpdateWeight(){
+    handleCloseUpdateWeight(){//zatvara UPDATE WEIGHT komponentu
+      this.checkUser()
       this.setStatusSwitchOff("updateWeightStatus")
       this.msg=""
     },
-    async handleAllowUpdateWeight(weight){
+    async handleAllowUpdateWeight(weight){//salje novu tezinu u bazu,menja updateChart koji pokrece refresh(moglo je i odmah!!!)
+      this.checkUser()
       this.msg=""
       try {
-        let result=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/user/newWeight",{
+        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/user/newWeight",{
           "usr_id":this.user.id,
           "usr_new_weight":weight
         })
         this.getUserBio()
-        this.updateChart=true//srediti poruku da dodje u prozor i stilizovati prozor!!! vidi UPDATE WEIGHT komponentu!!!
-        console.log(result)
+        this.updateChart=true
+        this.showSuccessWindow()
       } catch (error) {
         this.msg=error.response.data.message
       }
     },
-    setStatusSwitchOn(name){
+    setStatusSwitchOn(name){//gasi sve prozore osim prosledjenog
       for(let i=0;i<this.status.length;i++){
         if(this.status[i].name===name){
           this.status[i].switch=true
@@ -339,10 +405,31 @@ export default {
         }
       }
     },
-    setStatusSwitchOff(name){
+    setStatusSwitchOff(name){//gasi prosledjen prozor
       for(let i=0;i<this.status.length;i++){
         if(this.status[i].name===name){
           this.status[i].switch=false
+        }
+      }
+    },
+    showSuccessWindow(){//pali i gasi SUCCESS komponentu
+      this.successStatus=true
+      setTimeout(()=>{
+        this.successStatus=false
+      },500)
+    },
+    async checkUser(){//proverava da li je istekla sesija i u tom slucaju vraca na HOME
+      const res=await checkSession()
+      if(!res){
+        this.setUserStatus(false)
+        this.setUserLevel(null)
+        this.$router.push({name:"home"})
+      }
+      else{
+        if(res.response){
+          this.setUserStatus(false)
+          this.setUserLevel(null)
+          this.router.push({name:"home"})
         }
       }
     }
@@ -356,6 +443,7 @@ export default {
 
 <style>
 .user-bio-wrapper{
+  font-family: 'Franklin Gothic', 'Arial Narrow', Arial, sans-serif;
   display: flex;
   flex-direction: column;
   width: 93%;
@@ -368,6 +456,7 @@ export default {
   font-size: 1.3rem;
   margin: 0;
   padding: 10px;
+  transition: 0.3s all ease;
 }
 .bio-wrapper p:hover{
   background-color: #eee;
@@ -384,6 +473,7 @@ export default {
 .weight-icon{
   flex-basis: 20%;
   cursor: pointer;
+  transition: 0.3s all ease;
 }
 .weight-wrapper:hover{
   background-color: #eee;
@@ -408,6 +498,7 @@ export default {
   z-index: 0;
   font-weight: 600;
   opacity: 0.7;
+  transition: 0.3s all ease;
 }
 .adding-dish-opener-wrapper:hover{
   opacity: 1;
@@ -425,6 +516,7 @@ export default {
   z-index: 0;
   font-weight: 600;
   opacity: 0.7;
+  transition: 0.3s all ease;
 }
 .adding-training-opener-wrapper:hover{
   opacity: 1;

@@ -122,6 +122,7 @@ export default {
 
 <style>
 .table-wrapper{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -158,6 +159,7 @@ export default {
 .row .column-1{
   font-weight: 600;
   color: #5B5BE4;
+  transition: 0.3s all ease;
 }
 .row .column-1:hover{
   color: #000;

@@ -27,6 +27,7 @@
           <p class="number-nutrition">{{nutritions.length}}</p>
         </div>  
       </div>
+      <transition name="form">
       <div class="meal-form-wrapper" v-if="mealFormStatus">
         <div class="btn-exit-wrapper">
             <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeMealForm()"/>
@@ -50,6 +51,10 @@
           </li>
         </ul>
       </div>
+      </transition>
+      <transition name="success">
+        <SuccessWindow v-if="successStatus"></SuccessWindow>
+      </transition>
     </main>
     <aside>
       <article class="food-wrapper">
@@ -63,6 +68,7 @@
 <script>
 import { mapState } from 'vuex'
 import TableNutritious from '../components/TableNutritious.vue'
+import SuccessWindow from '../components/SuccessWindow.vue'
 import axios from 'axios'
 import checkSession from '../JS/checkSession.js'
 
@@ -87,7 +93,8 @@ function checkId(obj,array){
 
 export default {
   components:{
-    TableNutritious
+    TableNutritious,
+    SuccessWindow
   },
   data:function(){
     return{
@@ -96,7 +103,8 @@ export default {
       nutritions:[],
       mealFormStatus:false,
       mealName:"",
-      msg:""
+      msg:"",
+      successStatus:false
     }
   },
   methods:{
@@ -178,6 +186,7 @@ export default {
         this.closeMealForm()
         this.nutritions=[]
         this.clearStoredNutritions()
+        this.showSuccessWindow()
         console.log(res)
       } catch (error) {
         this.msg=error.response.data.message
@@ -200,6 +209,12 @@ export default {
     },
     clearStoredNutritions(){
       sessionStorage.removeItem("nutritions")
+    },
+    showSuccessWindow(){
+      this.successStatus=true
+      setTimeout(()=>{
+        this.successStatus=false
+      },500)
     }
   },
   computed:{
@@ -266,6 +281,11 @@ export default {
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
   cursor: pointer;
   z-index: 0;
+  opacity: 0.8;
+  transition: 0.3s all ease;
+}
+.meal-opener-wrapper:hover{
+  opacity: 1;
 }
 .number-wrapper{
   position: absolute;
@@ -297,6 +317,46 @@ export default {
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
   z-index: 1;
 }
+/*form window transition */
+.form-enter-from{
+  opacity: 0;
+}
+.form-enter-to{
+  opacity: 1;
+}
+.form-enter-active{
+  transition: all 0.3s ease;
+}
+.form-leave-from{
+  opacity: 1;
+}
+.form-leave-to{
+  opacity: 0;
+}
+.form-leave-active{
+  transition: all 0.3s ease;
+}
+/*form window transition */
+/*success window transition */
+.success-enter-from{
+  opacity: 0;
+}
+.success-enter-to{
+  opacity: 1;
+}
+.success-enter-active{
+  transition: all 0.8s ease;
+}
+.success-leave-from{
+  opacity: 1;
+}
+.success-leave-to{
+  opacity: 0;
+}
+.success-leave-active{
+  transition: all 0.8s ease;
+}
+/*success window transition */
 .meal-form{
   margin: 0;
   padding: 0;

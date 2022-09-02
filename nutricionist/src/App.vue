@@ -7,10 +7,10 @@
           <ul class="nav-menu-device nav-menu">
             <li class="link-wrapper"><router-link to="/" class="link">Pocetna</router-link></li>
             <li class="link-wrapper">
-              <router-link to="/nutritious" class="link">Tablica namirnica</router-link>
+              <router-link to="/nutritious" class="link">Namirnice</router-link>
             </li>
             <li class="link-wrapper">
-              <router-link to="/activities" class="link">Tablica aktivnosti</router-link>
+              <router-link to="/activities" class="link">Aktivnosti</router-link>
             </li>
             <li class="link-wrapper" v-if="userStatus"><router-link to="/profile" class="link">Profil</router-link></li>
             <li class="link-wrapper" v-if="userLevel===1"><router-link to="/admin" class="link">Admin</router-link></li>
@@ -25,14 +25,14 @@
           <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
             <li><font-awesome-icon class="btn-exit" @click="closePhoneMenu()" icon="fa-solid fa-circle-xmark" /></li>
             <li class="link-wrapper"><router-link to="/" class="link" @click="closePhoneMenu()">Pocetna</router-link></li>
+            <li class="link-wrapper">
+              <router-link to="/nutritious" class="link" @click="closePhoneMenu()">Namirnice</router-link>
+            </li>
+            <li class="link-wrapper">
+              <router-link to="/activities" class="link" @click="closePhoneMenu()">Aktivnosti</router-link>
+            </li>
             <li class="link-wrapper" v-if="userStatus">
               <router-link to="/profile" class="link"  @click="closePhoneMenu()">Profil</router-link>
-            </li>
-            <li class="link-wrapper">
-              <router-link to="/nutritious" class="link" @click="closePhoneMenu()">Tablica namirnica</router-link>
-            </li>
-            <li class="link-wrapper">
-              <router-link to="/activities" class="link" @click="closePhoneMenu()">Tablica aktivnosti</router-link>
             </li>
             <li class="link-wrapper" v-if="userLevel===1"><router-link to="/admin" class="link" @click="closePhoneMenu()">Admin</router-link></li>
           </ul>
@@ -77,6 +77,11 @@ export default{
         this.setUserLevel(res.data.res.level)
         localStorage.setItem("sid",res.data.res.sid)
       }
+      else{
+        this.setUserStatus(false)
+        this.setUserLevel(null)
+        localStorage.removeItem("sid")
+      }
     },
     openRegistrationForm(){
       this.registrationStatus=true
@@ -113,12 +118,6 @@ export default{
     },
     closePhoneMenu(){
       this.menuStatus=false
-    },
-    checkUserStatus(){
-      if(!this.userStatus){
-        localStorage.removeItem("sid")
-        this.$router.push({name:"home"})
-      }
     }
   },
   computed:{
@@ -126,7 +125,6 @@ export default{
   },
   mounted(){
     this.checkUser()
-    //this.checkUserStatus()
   }
 }
 </script>
@@ -157,6 +155,7 @@ body{
   font-size: 1.3rem;
   font-weight: 600;
   cursor: pointer;
+  padding: 5px 5px;
 }
 .nav-menu-wrapper{
   background-color: lightsteelblue;
@@ -164,13 +163,19 @@ body{
 .navigation{
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 .hero{
   height: 100px;
 }
 .menu-opener{
-  font-size: 60px;
+  font-size: 50px;
   cursor: pointer;
+  transition: 0.5s all ease;
+}
+.menu-opener:hover{
+  color: #5B5BE4;
+  transform: rotate(90deg);
 }
 .nav-menu-device{
   display: none;
@@ -182,7 +187,7 @@ body{
   top: 0;
   background-color: rgba(255, 255, 255, 0.4);
   -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(0);
   z-index: 2;
 }
 .nav-menu{
@@ -228,6 +233,7 @@ body{
   background-color: #5B5BE4;
   border-radius: 20px;
   margin: 20px 0;
+  transition: 0.3s background-color ease;
 }
 .link{
   display: flex;
@@ -274,6 +280,18 @@ footer p{
 .producer a:active{
   color: #5B5BE4;
 }
+.btn-open-form{
+    padding: 5px;
+    transition: 0.3s all ease;
+  }
+  .btn-open-form:hover{
+    padding: 22px 5px;
+  }
+@media screen and (min-width:768px){
+  .nav-menu{
+    width: 55vw;
+  }
+}
 @media screen and (min-width:992px) {
   .menu-opener{
     display: none;
@@ -294,25 +312,40 @@ footer p{
   .nav-menu-device{
     display: flex;
     justify-content: space-around;
-    width: 60vw;
+    flex-basis: 60%;
   }
   .link-wrapper{
     background-color: lightsteelblue;
     color: #fff;
-    padding: 0 30px;
+    padding: 30px 15px;
     margin: 0;
+    border-radius: 0;
+    transition: 0.3s background-color ease;
   }
   .link-wrapper:hover{
-    background-color: white;
+    background-color: #5B5BE4;
+  }
+  .link-wrapper:hover .link{
+    color: whitesmoke;
   }
   .link{
     color: #5B5BE4;
+    padding: 0;
+    text-decoration: none;
+    transition: 0.5s all ease;
   }
   .link:hover{
     text-decoration: underline;
   }
   .img-wrapper{
-    margin: 0 auto;
+    flex-basis: 15%;
+  }
+  .btn-open-form{
+    padding: 5px;
+    transition: 0.3s all ease;
+  }
+  .btn-open-form:hover{
+    padding: 29px 5px;
   }
 }
 @media screen and (min-width:1200px){

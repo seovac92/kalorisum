@@ -65,4 +65,11 @@ export default {
         min-height: fit-content;
     }
 }
+@media screen and (min-width: 1200px){
+    .tdee-result-wrapper{
+        flex-direction: row;
+        min-height: fit-content;
+        padding-left: 10px;
+    }
+}
 </style>

@@ -50,18 +50,24 @@
       </div>
     </div>
     <DeletingWindow v-if="deletingItem" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>  
+    <transition name="success">
+      <SuccessWindow v-if="successStatus"></SuccessWindow>
+    </transition>
   </div>
 </template>
 
 <script>
 import DeletingWindow from '../components/DeletingWindow.vue'
+import SuccessWindow from '../components/SuccessWindow.vue'
+import chechSession from '../JS/checkSession.js'
 import checkDifferenceBetweenArrays from '../JS/checkDifferenceBetweenArrays.js'
+import { mapActions } from 'vuex'
 import axios from 'axios'
 
-export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivnosti...ostaje jos da se dodeljuju admin leveli obicnim userima...takodje napraviti ako istekne sesija da se na refresh vrati na pocetnu stranu...napraviti da obican user moze da brise svoje obroke i treninge!!!odraditi zastitu pristupa stranama na ruteru!!!
-///admin strana
+export default {
   components:{
-    DeletingWindow
+    DeletingWindow,
+    SuccessWindow
   },
   data:function(){
     return{
@@ -81,10 +87,12 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
         msgSearched:"",
         msgAlert:""
       },
-      deletingItem:null
+      deletingItem:null,
+      successStatus:false
     }
   },
   methods:{
+    ...mapActions(["setUserStatus","setUserLevel"]),
     async getNutritiousTypes(){
       try {
         let res=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/getTypes")
@@ -94,6 +102,7 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
       }
     },
     async searchForNutritions(){
+      this.checkAdmin()
       if(this.newNutrition.name.length>2){
         try {
           let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/search",{
@@ -116,6 +125,7 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
       }
     },
     async makeNewNutrition(){
+      this.checkAdmin()
       this.newNutrition.msgAlert=""
       if(this.newNutrition.name.length<3 || this.newNutrition.name.length>20){
         return
@@ -134,15 +144,15 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
         }  
       }
       try {
-        let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/newNutrition",{
+        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/newNutrition",{
           "ntr_name":this.newNutrition.name,
           "ntr_kcal":this.newNutrition.kcal,
           "ntt_id":this.newNutrition.type
         })
-        this.newNutrition.msgAlert=res.data.message
         this.newNutrition.name=""
         this.newNutrition.kcal=null
         this.newNutrition.type=null
+        this.showSuccessWindow()
       } catch (error) {
         console.log(error)
       }
@@ -156,6 +166,7 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
       return true
     },
     async searchForActivities(){
+      this.checkAdmin()
       if(this.newActivity.name.length>2){
         try {
           let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/search",{
@@ -178,6 +189,7 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
       }
     },
     async makeNewActivity(){
+      this.checkAdmin()
       this.newActivity.msgAlert=""
       if(this.newActivity.name.length<3 || this.newActivity.name.length>20){
         return
@@ -193,18 +205,19 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
         }  
       }
       try {
-        let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/newActivity",{
+        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/newActivity",{
           "act_name":this.newActivity.name,
           "act_kcal":this.newActivity.kcal
         })
-        this.newActivity.msgAlert=res.data.message
         this.newActivity.name=""
         this.newActivity.kcal=null
+        this.showSuccessWindow()
       } catch (error) {
         console.log(error)
       }
     },
     removeCoreItem(item,type){
+      this.checkAdmin()
       item.type=type
       this.deletingItem=item
       console.log(this.deletingItem)
@@ -222,6 +235,7 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
           this.newNutrition.msgAlert=res.data.message
           this.handleCloseTheWindow()
           this.searchForNutritions()
+          this.showSuccessWindow()
         } catch (error) {
           console.log(error)
         }
@@ -236,10 +250,32 @@ export default {//uradjen deo sa dodavanjem i brisanjem novih namirnica i aktivn
           this.newActivity.msgAlert=res.data.message
           this.handleCloseTheWindow()
           this.searchForActivities()
+          this.showSuccessWindow()
         } catch (error) {
           console.log(error)
         }
         return
+      }
+    },
+    showSuccessWindow(){
+      this.successStatus=true
+      setTimeout(()=>{
+        this.successStatus=false
+      },1000)
+    },
+    async checkAdmin(){
+      const res=await chechSession()
+      if(!res){
+        this.setUserStatus(false)
+        this.setUserLevel(null)
+        this.$router.push({name:"home"})
+      }
+      else{
+        if(res.response || res.data.res.level===2){
+          this.setUserStatus(false)
+          this.setUserLevel(null)
+          this.router.push({name:"home"})
+        }
       }
     }
   },

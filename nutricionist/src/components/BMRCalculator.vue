@@ -79,6 +79,7 @@ export default {
         margin-bottom: 5px;
         font-size: 1rem;
         padding: 5px;
+
     }
     .result{
         display: flex;
@@ -106,6 +107,9 @@ export default {
     @media screen and (min-width: 1200px){
         .inputs-wrapper{
             flex-basis: 30%;
+        }
+        .bmr-result-wrapper{
+            padding-left: 10px;
         }
     }
 </style>

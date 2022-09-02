@@ -3,8 +3,8 @@
     <div class="hero-wrapper">
       <div class="hero-1">
         <div class="img-wrapper">
-          <img src="../assets/hero-home2.jpg" alt="voce">
-          <p class="img-text">ISHRANA</p>
+          <img src="../assets/hero-home1.jpg" alt="voce">
+          <p class="img-text"><span class="key-words">ZDRAVA</span><br>ISHRANA</p>
         </div>
         <p class="hero-text">Tablica ishrane ce vam pomoci pri sastavljanju obroka</p>
         <!--prostor za ikonice -->
@@ -17,7 +17,7 @@
       <div class="hero-2">
         <div class="img-wrapper">
           <img src="../assets/hero-home.jpg" alt="tegovi">
-          <p class="img-text">TRENING</p>
+          <p class="img-text"><span class="key-words">REDOVAN</span><br>TRENING</p>
         </div>
           <p class="hero-text">Napravite svoj nedeljni plan aktivnosti</p>
           <!--prostor za ikonice -->  
@@ -90,18 +90,21 @@ export default {
 .hero-wrapper img{
   display: block;
   width: 100%;
+  max-height: 80vh;
 }
 .hero-1 .img-text{
+  margin: 0;
   position: absolute;
-  top: 0%;
-  left: 50%;
+  top: 10%;
+  right: 10%;
   font-size: 2.5rem;
   font-weight: 600;
   z-index: 0;
 }
 .hero-2 .img-text{
+  margin: 0;
   position: absolute;
-  top: 55%;
+  top: 10%;
   left: 10%;
   font-size: 2.5rem;
   font-weight: 600;
@@ -121,11 +124,12 @@ export default {
 }
 .key-words{
   font-size: 1.5rem;
-  color: #c50000;
+  color: #5B5BE4;
 }
 .first{
   font-weight: 600;
   text-align: left;
+  font-size: 1.1rem;
 }
 .title-h2{
   font-size: 1.7rem;
@@ -163,10 +167,10 @@ export default {
     flex-direction: row-reverse;
   }
   .hero-1 .img-text{
-    left: 40%;
+    right: 40%;
   }
   .hero-2 .img-text{
-    left: 35%;
+    left: 40%;
   }
   .hero-text{
     display: none;

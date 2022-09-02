@@ -120,7 +120,7 @@ export default {
     position: fixed;
     background-color: rgba(255, 255, 255, 0.4);
     -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(0);
     top: 0;
     z-index: 2;
 }
@@ -150,11 +150,14 @@ export default {
 .input{
     width: 80%;
     height: 30px;
-    border-radius: 30px;
+    border: 1px solid #777;
+    border-radius: 10px;
     margin: 10px 0 0;
     padding: 5px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     font-size: 1rem;
+}
+.input:hover{
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
 }
 .btn-exit{
     display: inline;
@@ -163,6 +166,10 @@ export default {
     margin: 0;
     padding: 5px;
     cursor: pointer;
+    transition: 0.3s all ease;
+}
+.btn-exit:hover{
+    color: #c50000;
 }
 .btn-registration-wrapper{
     padding: 5px;
@@ -185,6 +192,7 @@ export default {
     border-radius: 10px;
     border: transparent;
     cursor: pointer;
+    transition: 0.3s all ease;
 }
 .btn-switch:hover{
     background-color: #5B5BE4;
