@@ -50,7 +50,6 @@ export default {
                 this.setUserStatus(true)
                 this.setUserLevel(result.data.res.level)
                 this.closeLoginForm()
-                console.log(result)
             } catch (error) {
                 console.log(error)
             }

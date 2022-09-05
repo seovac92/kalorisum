@@ -72,7 +72,7 @@ export default {
 }
 @media screen and (min-width:768px){
     .chart-wrapper{
-        width: 60%;
+        width: 50%;
     }
 }
 </style>

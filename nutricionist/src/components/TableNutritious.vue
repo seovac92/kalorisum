@@ -93,7 +93,7 @@ export default {
             try {
               let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/search",{
                 params:{
-                  "string":this.nutritionString
+                  "string":this.nutritionString.toLowerCase().trim()
                 }
               })
               checkDifferenceBetweenArrays(this.nutritious,result.data.res)

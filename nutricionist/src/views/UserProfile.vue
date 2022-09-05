@@ -16,20 +16,37 @@
       </div>  
       <ChartWeight class="chart" :updateChart="updateChart"></ChartWeight>
     </div>
+    <div class="daycards-wrapper">
+      <div :class="[week[0].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(0)"><p>Pon</p></div>
+      <div :class="[week[1].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(1)"><p>Uto</p></div>
+      <div :class="[week[2].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(2)"><p>Sre</p></div>
+      <div :class="[week[3].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(3)"><p>Cet</p></div>
+      <div :class="[week[4].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(4)"><p>Pet</p></div>
+      <div :class="[week[5].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(5)"><p>Sub</p></div>
+      <div :class="[week[6].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(6)"><p>Ned</p></div>
+    </div>
     <div class="day-plan">
-      <DayPlan class="day-plan" :plan="week[0]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Ponedeljak</h2></DayPlan>
-
-      <DayPlan class="day-plan" :plan="week[1]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Utorak</h2></DayPlan>
-
-      <DayPlan class="day-plan" :plan="week[2]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Sreda</h2></DayPlan>
-
-      <DayPlan class="day-plan" :plan="week[3]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Cetvrtak</h2></DayPlan>
-
-      <DayPlan class="day-plan" :plan="week[4]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Petak</h2></DayPlan>
-
-      <DayPlan class="day-plan" :plan="week[5]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Subota</h2></DayPlan>
-
-      <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails"><h2 class="title-h2">Nedelja</h2></DayPlan>
+      <transition-group name="plan">
+      <DayPlan class="day-plan" :plan="week[0]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[0].status"><h2 class="title-h2">Ponedeljak</h2></DayPlan>
+      
+      
+      <DayPlan class="day-plan" :plan="week[1]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[1].status"><h2 class="title-h2">Utorak</h2></DayPlan>
+      
+      
+      <DayPlan class="day-plan" :plan="week[2]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[2].status"><h2 class="title-h2">Sreda</h2></DayPlan>
+      
+      
+      <DayPlan class="day-plan" :plan="week[3]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[3].status"><h2 class="title-h2">Cetvrtak</h2></DayPlan>
+      
+      
+      <DayPlan class="day-plan" :plan="week[4]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[4].status"><h2 class="title-h2">Petak</h2></DayPlan>
+      
+      
+      <DayPlan class="day-plan" :plan="week[5]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[5].status"><h2 class="title-h2">Subota</h2></DayPlan>
+      
+      
+      <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[6].status"><h2 class="title-h2">Nedelja</h2></DayPlan>
+      </transition-group>
     </div>
     <transition name="form">
     <DeletingWindow v-if="status[0].switch" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>
@@ -43,13 +60,16 @@
     <transition name="form">
     <AddingWindow class="adding-window" v-if="status[2].switch" :trainings="user.trainings" @closeAddForm="handleCloseTheAddForm" @sendItemToPlan="handleItemToPlan"><template #title><p class="title">Dodavanje treninga</p></template><template #msg><p class="msg-instruction">{{msg}}</p></template></AddingWindow>
     </transition>
-    <div class="adding-dish-opener-wrapper" @click="openAddDishForm()">
+    <div class="adding-dish-opener-wrapper card-opener" @click="openAddDishForm()">
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Obrok</p>
     </div>
-    <div class="adding-training-opener-wrapper" @click="openAddTrainingForm()">
+    <div class="adding-training-opener-wrapper card-opener" @click="openAddTrainingForm()">
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Trening</p>
+    </div>
+    <div class="sender-suggestion-wrapper card-opener" @click="openSuggestionWindow()">
+        <font-awesome-icon icon="fa-solid fa-paper-plane" />
     </div>
     <transition name="form">
     <ItemDetailsWindow :dishDetails="dishDetails" :trainingDetails="trainingDetails" @closeDetailsWindow="handleCloseDetailsWindow" @removeUserDish="handleRemoveUserDish" @removeUserTraining="handleRemoveUserTraining" v-if="status[3].switch"></ItemDetailsWindow>
@@ -59,6 +79,9 @@
     </transition>
     <transition name="success">
       <SuccessWindow v-if="successStatus"></SuccessWindow>
+    </transition>
+    <transition name="form">
+    <SuggestionWindow v-if="status[6].switch" @closeSuggestionWindow="handleCloseSuggestionWindow" @sendSuggestion="handleSendSuggestion"></SuggestionWindow>
     </transition>
   </div>
 </template>
@@ -71,6 +94,7 @@ import AddingWindow from '../components/AddingWindow.vue'
 import ItemDetailsWindow from '../components/ItemDetailsWindow.vue'
 import UpdateWeightWindow from '../components/UpdateWeightWindow.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
+import SuggestionWindow from '../components/SuggestionWindow.vue'
 import checkSession from '../JS/checkSession.js'
 import { mapActions } from 'vuex'
 import axios from 'axios'
@@ -84,9 +108,10 @@ export default {
     AddingWindow,
     ItemDetailsWindow,
     UpdateWeightWindow,
-    SuccessWindow
+    SuccessWindow,
+    SuggestionWindow
   },
-  data:function(){
+  data:function(){//napraviti komponentu koja prikazuje statistiku sa nekim grafikonima!!!ovde se ucitava,odavde joj se salju svi potrebni podaci ili moze i ona sama da ih skine preko api-a!!!I napravi za admina da moze da dodeli admin rolu obicnom useru iz liste...i to je to!!!
     return{
       user:{//sve o useru
         id:null,
@@ -101,13 +126,13 @@ export default {
         trainings:[]
       },
       week:[//prima sve planove i rasporedjuje ih na 7 DAYPLAN komponenti
-        {"day_id":1,"dishs":[],"training":[]},
-        {"day_id":2,"dishs":[],"training":[]},
-        {"day_id":3,"dishs":[],"training":[]},
-        {"day_id":4,"dishs":[],"training":[]},
-        {"day_id":5,"dishs":[],"training":[]},
-        {"day_id":6,"dishs":[],"training":[]},
-        {"day_id":7,"dishs":[],"training":[]},
+        {"day_id":1,"dishs":[],"training":[],"status":true},
+        {"day_id":2,"dishs":[],"training":[],"status":true},
+        {"day_id":3,"dishs":[],"training":[],"status":true},
+        {"day_id":4,"dishs":[],"training":[],"status":true},
+        {"day_id":5,"dishs":[],"training":[],"status":true},
+        {"day_id":6,"dishs":[],"training":[],"status":true},
+        {"day_id":7,"dishs":[],"training":[],"status":true},
       ],
       deletingItem:null,//trenutni Item(obrok/trening) za brisanje iz odredjenog plana ili cele baze
       dishDetails:null,//detaljan prikaz obroka u ITEM DETAILS komponenti
@@ -118,7 +143,8 @@ export default {
         {switch:false,name:"addTrainingStatus"},
         {switch:false,name:"itemDetailsStatus"},
         {switch:false,name:"updateWeightStatus"},
-        {switch:false,name:"removeStatus"}
+        {switch:false,name:"removeStatus"},
+        {switch:false,name:"suggestionStatus"}
       ],
       updateChart:false,//informacija grafikonu da izvrsi refresh(moglo je i prostije!)
       msg:"",//prima errore
@@ -388,6 +414,7 @@ export default {
           "usr_id":this.user.id,
           "usr_new_weight":weight
         })
+        this.setStatusSwitchOff("updateWeightStatus")
         this.getUserBio()
         this.updateChart=true
         this.showSuccessWindow()
@@ -416,7 +443,7 @@ export default {
       this.successStatus=true
       setTimeout(()=>{
         this.successStatus=false
-      },500)
+      },1300)
     },
     async checkUser(){//proverava da li je istekla sesija i u tom slucaju vraca na HOME
       const res=await checkSession()
@@ -431,6 +458,31 @@ export default {
           this.setUserLevel(null)
           this.router.push({name:"home"})
         }
+      }
+    },
+    toggleDayPlan(number){//prekidac za pojedinacne dane
+      this.week[number].status=!this.week[number].status
+    },
+    handleCloseSuggestionWindow(){
+      this.checkUser()
+      this.setStatusSwitchOff("suggestionStatus")
+    },
+    openSuggestionWindow(){
+      this.checkUser()
+      this.setStatusSwitchOn("suggestionStatus")
+    },
+    async handleSendSuggestion(suggestion){//slanje sugestija adminu
+      this.checkUser()
+      try {
+        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/user/newSuggestion",{
+          "usr_id":this.user.id,
+          "sug_subject":suggestion.subject,
+          "sug_text":suggestion.text
+        })
+        this.setStatusSwitchOff("suggestionStatus")
+        this.showSuccessWindow()
+      } catch (error) {
+        console.log(error)
       }
     }
   },
@@ -485,41 +537,35 @@ export default {
   writing-mode: vertical-rl;
   text-orientation: upright;
 }
-.adding-dish-opener-wrapper{
+.card-opener{
   width: 55px;
   position: fixed;
+  padding: 10px;
+  background-color: #212529;
+  border-radius: 10px 0 0 10px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+  cursor: pointer;
+  z-index: 0;
+  font-weight: 600;
+  opacity: 0.7;
+  transition: 0.3s all ease;
+}
+.card-opener:hover{
+  opacity: 1;
+}
+.adding-dish-opener-wrapper{
   top: 30vh;
   right: 0;
-  padding: 10px;
-  background-color: #212529;
-  border-radius: 10px 0 0 10px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
-  cursor: pointer;
-  z-index: 0;
-  font-weight: 600;
-  opacity: 0.7;
-  transition: 0.3s all ease;
-}
-.adding-dish-opener-wrapper:hover{
-  opacity: 1;
 }
 .adding-training-opener-wrapper{
-  width: 55px;
-  position: fixed;
   top: 40vh;
   right: 0;
-  padding: 10px;
-  background-color: #212529;
-  border-radius: 10px 0 0 10px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
-  cursor: pointer;
-  z-index: 0;
-  font-weight: 600;
-  opacity: 0.7;
-  transition: 0.3s all ease;
 }
-.adding-training-opener-wrapper:hover{
-  opacity: 1;
+.sender-suggestion-wrapper{
+  top:50vh;
+  right: 0;
+  font-size: 1.7rem;
+  color: whitesmoke;
 }
 .opener-title{
   color: whitesmoke;
@@ -528,6 +574,46 @@ export default {
 .adding-window .title{
   font-size: 1.5rem;
   margin: 0;
+}
+.daycards-wrapper{
+  width: 93%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 10px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+  border-radius: 0 0 10px 10px;
+}
+.daycard{
+  padding: 5px;
+  opacity: 0.7;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s all ease;
+  border-radius: 10px;
+  flex-basis: 12%;
+}
+.daycard-on{
+  background-color: #75B1FF;
+}
+.daycard-off{
+  background-color: #FCC45B;
+}
+.daycard:hover{
+  opacity: 1;
+}
+.plan-move,
+.plan-enter-active,
+.plan-leave-active{
+  transition: 0.5s all ease;
+}
+.plan-enter-from,
+.plan-leave-to{
+  opacity: 0;
+  transform: translateY(-50px);
+}
+.plan-leave-active{
+  position: absolute;
 }
 @media screen and (min-width: 768px) {
   .user-bio-wrapper{
@@ -540,6 +626,9 @@ export default {
 }
 @media screen and (min-width: 1200px) {
   .user-bio-wrapper{
+    width: 70%;
+  }
+  .daycards-wrapper{
     width: 70%;
   }
 }

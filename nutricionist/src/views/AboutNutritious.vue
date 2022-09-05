@@ -13,7 +13,7 @@
         </div>
         <p class="title-h2">{{nutrition.name}} {{nutrition.kcal}}Kcal</p>
         <div class="input-wrapper">
-          <label for="quantity" class="msg-instruction" v-show="quantity<100 || quantity>1000">Unesite vrednost izmedju 100 i 1000.</label>
+          <label for="quantity" class="msg-instruction" v-show="quantity<5 || quantity>1000">Unesite vrednost izmedju 5 i 1000.</label>
           <input id="quantity" class="calculator-input" type="number" v-model="quantity" placeholder="Kolicina u g/ml" @keydown.enter="pushIntoPot()">
           <label for="quantity" class="msg-instruction">{{msg}}</label>
         </div>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 import TableNutritious from '../components/TableNutritious.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
 import axios from 'axios'
@@ -108,6 +108,7 @@ export default {
     }
   },
   methods:{
+    ...mapActions(["setUserStatus"]),
     handleANutrition(one){
       this.nutrition=one
       this.mealFormStatus=false
@@ -119,7 +120,7 @@ export default {
     },
     pushIntoPot(){
       this.msg=""
-      if(this.quantity<100 || this.quantity>1000){
+      if(this.quantity<5 || this.quantity>1000){
         return
       }
       let newNutrition=new Nutrition(this.nutrition.id,this.nutrition.name,this.nutrition.kcal,this.nutrition.ntt_name,this.quantity)
@@ -163,6 +164,10 @@ export default {
       this.setStoredNutritions()
     },
     async makeAMeal(){
+      let user=await checkSession()
+      if(!user){
+        this.setUserStatus(false)
+      }
       this.msg=""
       if(!this.userStatus){
         this.$emit("openLoginForm")
@@ -175,7 +180,6 @@ export default {
         this.msg="Morate dodati barem jednu namirnicu."
         return
       }
-      let user=await checkSession()
       try {
         let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/newDish",{
           "user_id":user.data.res.id,
@@ -214,7 +218,7 @@ export default {
       this.successStatus=true
       setTimeout(()=>{
         this.successStatus=false
-      },500)
+      },1300)
     }
   },
   computed:{
@@ -345,7 +349,7 @@ export default {
   opacity: 1;
 }
 .success-enter-active{
-  transition: all 0.8s ease;
+  transition: all 1s ease;
 }
 .success-leave-from{
   opacity: 1;
@@ -354,7 +358,7 @@ export default {
   opacity: 0;
 }
 .success-leave-active{
-  transition: all 0.8s ease;
+  transition: all 1s ease;
 }
 /*success window transition */
 .meal-form{

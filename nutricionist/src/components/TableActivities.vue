@@ -90,7 +90,7 @@ export default {
             try {
               let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/search",{
                 params:{
-                  "string":this.activityString
+                  "string":this.activityString.toLowerCase().trim()
                 }
               })
               checkDifferenceBetweenArrays(this.activities,result.data.res)

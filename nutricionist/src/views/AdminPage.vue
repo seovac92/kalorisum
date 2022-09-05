@@ -4,7 +4,7 @@
       <h2 class="title-h2">Nova namirnica</h2>
       <div class="new-item-wrapper">
         <div class="new-item-form">
-          <label for="nameNutrition" class="msg-instruction" v-show="newNutrition.name.length<3 || newNutrition.name.length>20">Naziv mora imati izmedju 3 i 20 karaktera.</label>
+          <label for="nameNutrition" class="msg-instruction" v-show="newNutrition.name.trim().length<3 || newNutrition.name.trim().length>20">Naziv mora imati izmedju 3 i 20 karaktera.</label>
           <input id="nameNutrition" class="calculator-input" type="text" v-model="newNutrition.name" placeholder="Naziv namirnice" @keyup="searchForNutritions()">
           <label for="kcalNutrition" class="msg-instruction" v-show="newNutrition.kcal<10 || newNutrition.kcal>1000">Kalorije moraju biti izmedju 10 i 1000.</label>
           <input id="kcalNutrition" class="calculator-input" type="number" v-model="newNutrition.kcal" placeholder="Kcal na 100g">
@@ -20,9 +20,9 @@
         </div>
         <div class="check-list-item-wrapper">
           <h3 class="title-h3">Postojece namirnice:</h3>
-          <ul class="check-list-item" v-if="newNutrition.searchedNutritions.length>0">
+            <transition-group name="list" tag="ul" class="check-list-item" v-if="newNutrition.searchedNutritions.length>0">
             <li class="check-item" v-for="nutrition in newNutrition.searchedNutritions" :key="nutrition.id"><p class="check-name">{{nutrition.name}}</p><p class="check-kcal">{{nutrition.kcal}}kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeCoreItem(nutrition,'nutrition')"/></li>
-          </ul>
+            </transition-group>
           <p v-else>{{newNutrition.msgSearched}}</p>
         </div>
       </div>
@@ -31,7 +31,7 @@
       <h2 class="title-h2">Nova aktivnost</h2>
       <div class="new-item-wrapper">
         <div class="new-item-form">
-          <label for="nameActivity" class="msg-instruction" v-show="newActivity.name.length<3 || newActivity.name.length>20">Naziv mora imati izmedju 3 i 20 karaktera.</label>
+          <label for="nameActivity" class="msg-instruction" v-show="newActivity.name.trim().length<3 || newActivity.name.trim().length>20">Naziv mora imati izmedju 3 i 20 karaktera.</label>
           <input id="nameActivity" class="calculator-input" type="text" v-model="newActivity.name" placeholder="Naziv aktivnosti" @keyup="searchForActivities()">
           <label for="kcalActivity" class="msg-instruction" v-show="newActivity.kcal<1 || newActivity.kcal>100">Kalorije moraju biti izmedju 10 i 100.</label>
           <input class="calculator-input" type="number" v-model="newActivity.kcal" placeholder="Kcal na 60min/1kg tezine">
@@ -42,9 +42,9 @@
         </div>
         <div class="check-list-item-wrapper">
           <h3 class="title-h3">Postojece aktivnosti:</h3>
-          <ul class="check-list-item" v-if="newActivity.searchedActivities.length>0">
+          <transition-group name="list" tag="ul" class="check-list-item" v-if="newActivity.searchedActivities.length>0">
             <li class="check-item" v-for="activity in newActivity.searchedActivities" :key="activity.id"><p class="check-name">{{activity.name}}</p><p class="check-kcal">{{activity.kcal}}kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeCoreItem(activity,'activity')"/></li>
-          </ul>
+          </transition-group>  
           <p v-else>{{newActivity.msgSearched}}</p>
         </div>
       </div>
@@ -64,7 +64,7 @@ import checkDifferenceBetweenArrays from '../JS/checkDifferenceBetweenArrays.js'
 import { mapActions } from 'vuex'
 import axios from 'axios'
 
-export default {
+export default {//napraviti mail box za pregled poslatih sugestija
   components:{
     DeletingWindow,
     SuccessWindow
@@ -103,11 +103,11 @@ export default {
     },
     async searchForNutritions(){
       this.checkAdmin()
-      if(this.newNutrition.name.length>2){
+      if(this.newNutrition.name.trim().length>2){
         try {
           let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/search",{
             params:{
-              "string":this.newNutrition.name
+              "string":this.newNutrition.name.toLowerCase().trim()
             }
           })
           checkDifferenceBetweenArrays(this.newNutrition.searchedNutritions,result.data.res)
@@ -127,7 +127,7 @@ export default {
     async makeNewNutrition(){
       this.checkAdmin()
       this.newNutrition.msgAlert=""
-      if(this.newNutrition.name.length<3 || this.newNutrition.name.length>20){
+      if(this.newNutrition.name.trim().length<3 || this.newNutrition.name.trim().length>20){
         return
       }
       if(this.newNutrition.kcal<10 || this.newNutrition.kcal>1000){
@@ -145,7 +145,7 @@ export default {
       }
       try {
         await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/newNutrition",{
-          "ntr_name":this.newNutrition.name,
+          "ntr_name":this.newNutrition.name.toLowerCase().trim(),
           "ntr_kcal":this.newNutrition.kcal,
           "ntt_id":this.newNutrition.type
         })
@@ -167,11 +167,11 @@ export default {
     },
     async searchForActivities(){
       this.checkAdmin()
-      if(this.newActivity.name.length>2){
+      if(this.newActivity.name.trim().length>2){
         try {
           let result=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/search",{
             params:{
-              "string":this.newActivity.name
+              "string":this.newActivity.name.toLowerCase().trim()
             }
           })
           checkDifferenceBetweenArrays(this.newActivity.searchedActivities,result.data.res)
@@ -191,7 +191,7 @@ export default {
     async makeNewActivity(){
       this.checkAdmin()
       this.newActivity.msgAlert=""
-      if(this.newActivity.name.length<3 || this.newActivity.name.length>20){
+      if(this.newActivity.name.trim().length<3 || this.newActivity.name.trim().length>20){
         return
       }
       if(this.newActivity.kcal<1 || this.newActivity.kcal>100){
@@ -206,7 +206,7 @@ export default {
       }
       try {
         await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/newActivity",{
-          "act_name":this.newActivity.name,
+          "act_name":this.newActivity.name.toLowerCase().trim(),
           "act_kcal":this.newActivity.kcal
         })
         this.newActivity.name=""
@@ -261,7 +261,7 @@ export default {
       this.successStatus=true
       setTimeout(()=>{
         this.successStatus=false
-      },1000)
+      },1300)
     },
     async checkAdmin(){
       const res=await chechSession()
@@ -326,6 +326,19 @@ export default {
 .check-item:hover .remove-icon{
   color: #c50000;
 }
+.list-move,
+.list-enter-active,
+.list-leave-active{
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.list-leave-active {
+  position: absolute;
+}
 @media screen and (min-width: 768px){
   .new-item-wrapper{
     flex-direction: row;
@@ -335,6 +348,14 @@ export default {
   }
   .check-list-item-wrapper{
     width: 50%;
+  }
+}
+@media screen and (min-width: 1200px){
+  .new-item-form{
+    width: 30%;
+  }
+  .check-list-item-wrapper{
+    width: 40%;
   }
 }
 </style>

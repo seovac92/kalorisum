@@ -205,7 +205,7 @@ body{
 }
 /*menu enter classes*/ 
 .menu-enter-from{
-  opacity: 1;
+  opacity: 0;
   transform: translateX(-100vw);
 }
 .menu-enter-to{
@@ -221,8 +221,8 @@ body{
   transform: translateX(0);
 }
 .menu-leave-to{
-  opacity: 1;
-  transform: translateX(-100vw);
+  opacity: 0;
+  transform: translateX(200vw);
 }
 .menu-leave-active{
   transition: all 0.3s ease;
@@ -280,13 +280,6 @@ footer p{
 .producer a:active{
   color: #5B5BE4;
 }
-.btn-open-form{
-    padding: 5px;
-    transition: 0.3s all ease;
-  }
-  .btn-open-form:hover{
-    padding: 22px 5px;
-  }
 @media screen and (min-width:768px){
   .nav-menu{
     width: 55vw;
@@ -317,7 +310,6 @@ footer p{
   .link-wrapper{
     background-color: lightsteelblue;
     color: #fff;
-    padding: 30px 15px;
     margin: 0;
     border-radius: 0;
     transition: 0.3s background-color ease;
@@ -329,8 +321,9 @@ footer p{
     color: whitesmoke;
   }
   .link{
+    display: block;
     color: #5B5BE4;
-    padding: 0;
+    padding: 30px 20px;
     text-decoration: none;
     transition: 0.5s all ease;
   }

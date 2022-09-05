@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 import TableActivities from '../components/TableActivities.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
 import axios from 'axios'
@@ -109,6 +109,7 @@ export default {
         }
     },
     methods:{
+      ...mapActions(["setUserStatus"]),
         handleAActivity(one){
             this.activity=one
             this.trainingFormStatus=false
@@ -150,7 +151,6 @@ export default {
             this.time=null
             this.closeTheWindow()
             this.setStoredActivities()
-            console.log(this.activities)
         },
         openTrainingForm(){
             this.trainingFormStatus=!this.trainingFormStatus
@@ -165,6 +165,10 @@ export default {
             this.setStoredActivities()
         },
         async makeATraining(){
+            let user=await checkSession()
+            if(!user){
+              this.setUserStatus(false)
+            }
             this.msg=""
             if(!this.userStatus){
                 this.$emit("openLoginForm")
@@ -177,7 +181,6 @@ export default {
                 this.msg="Morate dodati barem jednu aktivnost."
                 return
             }
-            let user=await checkSession()
             try {
                 let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/training/newTraining",{
                 "user_id":user.data.res.id,
@@ -216,7 +219,7 @@ export default {
         this.successStatus=true
         setTimeout(()=>{
           this.successStatus=false
-        },500)
+        },1300)
       }
     },
     computed:{

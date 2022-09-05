@@ -7,9 +7,9 @@
                     <table>
                         <tr><th class="title column-2" colspan="3">OBROCI</th></tr>
                         <tr class="row" v-for="dish in plan.dishs" :key="dish.id">
-                            <td class="column-1" @click="getDishDetails(dish)">{{dish.name}}</td>
-                            <td class="column-2">{{dish.kcal}}kcal</td>
-                            <td><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="sendDish(plan.day_id,dish)"/></td>
+                            <td class="column-1" @click="getDishDetails(dish)" :key="dish.id">{{dish.name}}</td>
+                            <td class="column-2" :key="dish.id">{{dish.kcal}}kcal</td>
+                            <td :key="dish.id"><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="sendDish(plan.day_id,dish)"/></td>
                         </tr>
                     </table>    
                 </div>
@@ -177,6 +177,11 @@ export default {
 }
 .suficit{
     color: red;
+}
+@media screen and (min-width: 768px) {
+    .tables-wrapper{
+        flex-direction: row;
+    }
 }
 @media screen and (min-width: 1200px) {
     .plan-wrapper{
