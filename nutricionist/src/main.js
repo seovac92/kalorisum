@@ -17,6 +17,7 @@ import { faPaperPlane} from  '@fortawesome/free-solid-svg-icons'
 import { faEnvelope} from  '@fortawesome/free-solid-svg-icons'
 import { faSquare} from  '@fortawesome/free-solid-svg-icons'
 import { faSquareCheck} from  '@fortawesome/free-solid-svg-icons'
+import { faReply} from  '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars)
 library.add(faAngleLeft)
@@ -31,5 +32,6 @@ library.add(faPaperPlane)
 library.add(faEnvelope)
 library.add(faSquare)
 library.add(faSquareCheck)
+library.add(faReply)
 
 createApp(App).use(store).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app')

@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     userStatus:false,
-    userLevel:null
+    userLevel:null   //admin=1; user=2
   },
   getters: {
   },

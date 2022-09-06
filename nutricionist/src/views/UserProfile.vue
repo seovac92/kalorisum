@@ -68,7 +68,7 @@
         <p class="opener-title">Dodaj</p>
         <p class="opener-title">Trening</p>
     </div>
-    <div class="sender-suggestion-wrapper card-opener" @click="openSuggestionWindow()">
+    <div class="sender-suggestion-wrapper card-opener" @click="openSuggestionWindow()" v-if="userLevel!==1">
         <font-awesome-icon icon="fa-solid fa-paper-plane" />
     </div>
     <transition name="form">
@@ -96,7 +96,7 @@ import UpdateWeightWindow from '../components/UpdateWeightWindow.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
 import SuggestionWindow from '../components/SuggestionWindow.vue'
 import checkSession from '../JS/checkSession.js'
-import { mapActions } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 import axios from 'axios'
 
 
@@ -489,6 +489,9 @@ export default {
   mounted(){
     this.getUserBio()
     this.getUserPlan()
+  },
+  computed:{
+    ...mapState(["userLevel"])
   }
 }
 </script>

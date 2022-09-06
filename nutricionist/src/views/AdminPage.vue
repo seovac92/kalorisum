@@ -55,7 +55,9 @@
           <p class="number-suggestions">{{suggestions.suggestionsNumber}}</p>
         </div> 
     </div>
-    <AdminMailBox v-if="suggestions.mailBoxStatus" :messages="suggestions.messages" :page="suggestions.currentPage" @closeMailBox="handleCloseMailBox" @changeCheckStatus="handleChangeCheckStatus" @selectAll="handleSelectAll" @deselectAll="handleDeselectAll" @nextTenSuggestions="handleNextTenSuggestions" @previousTenSuggestions="handlePreviousTenSuggestion" @solvedSuggestions="handleSolvedSuggestions"></AdminMailBox>
+    <transition name="form">
+      <AdminMailBox v-if="suggestions.mailBoxStatus" :messages="suggestions.messages" :page="suggestions.currentPage" @closeMailBox="handleCloseMailBox" @changeCheckStatus="handleChangeCheckStatus" @selectAll="handleSelectAll" @deselectAll="handleDeselectAll" @nextTenSuggestions="handleNextTenSuggestions" @previousTenSuggestions="handlePreviousTenSuggestion" @solvedSuggestions="handleSolvedSuggestions"></AdminMailBox>
+    </transition>
     <DeletingWindow v-if="deletingItem" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>  
     <transition name="success">
       <SuccessWindow v-if="successStatus"></SuccessWindow>
@@ -72,7 +74,7 @@ import checkDifferenceBetweenArrays from '../JS/checkDifferenceBetweenArrays.js'
 import { mapActions } from 'vuex'
 import axios from 'axios'
 
-export default {//napraviti mail box za pregled poslatih sugestija
+export default {//napraviti da registracija pravi obicne usere,a da admin moze da ih nadje u listi i dodeli im admin ulogu
   components:{
     DeletingWindow,
     SuccessWindow,
