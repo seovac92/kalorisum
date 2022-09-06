@@ -35,7 +35,7 @@ export default {
             this.suggestion.text=""
         },
         sendSuggestion(){
-            if(this.suggestion.subject.length===0){
+            if(this.suggestion.subject.length===0 || this.suggestion.subject.length>15){
                 return
             }
             if(this.suggestion.text.length===0){

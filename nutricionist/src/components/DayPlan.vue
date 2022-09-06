@@ -4,7 +4,7 @@
         <div class="table-mathematic-wrapper" v-if="plan.dishs.length>0 || plan.training.length>0">
             <div class="tables-wrapper">
                 <div class="meal-table" v-if="plan.dishs.length>0">
-                    <table>
+                    <table class="table">
                         <tr><th class="title column-2" colspan="3">OBROCI</th></tr>
                         <tr class="row" v-for="dish in plan.dishs" :key="dish.id">
                             <td class="column-1" @click="getDishDetails(dish)" :key="dish.id">{{dish.name}}</td>
@@ -14,7 +14,7 @@
                     </table>    
                 </div>
                 <div class="activity-table" v-if="plan.training.length>0">
-                    <table>
+                    <table class="table">
                         <tr><th class="title column-2" colspan="3">AKTIVNOSTI</th></tr>
                         <tr class="row" v-for="activity in plan.training" :key="activity.id">
                             <td class="column-1" @click="getTrainingDetails(activity)">{{activity.name}}</td>
@@ -146,6 +146,9 @@ export default {
 .meal-table,
 .activity-table{
     margin-bottom: 30px;
+    padding: 5px;
+}
+.table{
     border-collapse: collapse;
 }
 .title{

@@ -43,7 +43,7 @@ export default {
     data:function(){
         return{
           activities:[],
-          currentPage:null,
+          currentPage:0,
           activityString:"",
           msg:""
         }
@@ -52,7 +52,7 @@ export default {
         async getTenActivities(){
           try {
               let result= await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/getTenActivities",{
-                "page":0
+                "page":this.currentPage
               })
               this.activities=result.data.res.activities
               this.currentPage=result.data.res.page
@@ -61,26 +61,12 @@ export default {
           }
         },
         async getNextTen(){
-          try {
-            let result= await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/getTenActivities",{
-              "page":this.currentPage+10
-            })
-            this.activities=result.data.res.activities
-            this.currentPage=result.data.res.page
-          } catch (error) {
-            console.log(error)
-          }
+          this.currentPage+=10
+          this.getTenActivities()
         },
         async getPreviousTen(){
-          try {
-            let result= await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/activities/getTenActivities",{
-              "page":this.currentPage-10
-            })
-            this.activities=result.data.res.activities
-            this.currentPage=result.data.res.page
-          } catch (error) {
-            console.log(error)
-          }
+          this.currentPage-=10
+          this.getTenActivities()
         },
         async filterByString(){
           if(this.activityString.length===2){

@@ -49,6 +49,13 @@
         </div>
       </div>
     </div>
+    <div class="mail-box-suggestion-wrapper card-opener" @click="openSuggestionWindow()">
+        <font-awesome-icon icon="fa-solid fa-envelope" class="icon" />
+        <div class="number-suggestions-wrapper">
+          <p class="number-suggestions">{{suggestions.suggestionsNumber}}</p>
+        </div> 
+    </div>
+    <AdminMailBox v-if="suggestions.mailBoxStatus" :messages="suggestions.messages" :page="suggestions.currentPage" @closeMailBox="handleCloseMailBox" @changeCheckStatus="handleChangeCheckStatus" @selectAll="handleSelectAll" @deselectAll="handleDeselectAll" @nextTenSuggestions="handleNextTenSuggestions" @previousTenSuggestions="handlePreviousTenSuggestion" @solvedSuggestions="handleSolvedSuggestions"></AdminMailBox>
     <DeletingWindow v-if="deletingItem" @closeTheWindow="handleCloseTheWindow" @allowDeleting="handleAllowDeleting"><p class="title-h2">{{deletingItem.name}} | {{deletingItem.kcal}}kcal</p></DeletingWindow>  
     <transition name="success">
       <SuccessWindow v-if="successStatus"></SuccessWindow>
@@ -59,6 +66,7 @@
 <script>
 import DeletingWindow from '../components/DeletingWindow.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
+import AdminMailBox from '../components/AdminMailBox.vue'
 import chechSession from '../JS/checkSession.js'
 import checkDifferenceBetweenArrays from '../JS/checkDifferenceBetweenArrays.js'
 import { mapActions } from 'vuex'
@@ -67,7 +75,8 @@ import axios from 'axios'
 export default {//napraviti mail box za pregled poslatih sugestija
   components:{
     DeletingWindow,
-    SuccessWindow
+    SuccessWindow,
+    AdminMailBox
   },
   data:function(){
     return{
@@ -88,7 +97,13 @@ export default {//napraviti mail box za pregled poslatih sugestija
         msgAlert:""
       },
       deletingItem:null,
-      successStatus:false
+      successStatus:false,
+      suggestions:{
+        suggestionsNumber:null,
+        mailBoxStatus:false,
+        messages:[],
+        currentPage:0
+      }  
     }
   },
   methods:{
@@ -277,10 +292,89 @@ export default {//napraviti mail box za pregled poslatih sugestija
           this.router.push({name:"home"})
         }
       }
+    },
+    async getNumberOfSuggestions(){
+      try {
+        let res=await axios.get("http://732u122.e2.mars-hosting.com/nutricionist/api/admin/getNumberOfSuggestions")
+        this.suggestions.suggestionsNumber=res.data.res[0].number
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    openSuggestionWindow(){
+      this.suggestions.mailBoxStatus=true
+    },
+    handleCloseMailBox(){
+      this.suggestions.mailBoxStatus=false
+    },
+    async getTenSuggestions(){
+      if(this.suggestions.suggestionsNumber===0){
+        return
+      }
+      try {
+          let result= await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/admin/getTenSuggestions",{
+              "page":this.suggestions.currentPage
+          })
+          this.suggestions.currentPage=result.data.res.page
+          this.suggestions.messages=result.data.res.suggestions
+      } catch (error) {
+          console.log(error)
+      }
+    },
+    runThroughSuggestions(bit){
+      for(let i=0;i<this.suggestions.messages.length;i++){
+        this.suggestions.messages[i].sug_isSolved=bit
+      }
+    },
+    handleChangeCheckStatus(sug_id){
+      for(let i=0;i<this.suggestions.messages.length;i++){
+        if(this.suggestions.messages[i].sug_id===sug_id){
+          if(!this.suggestions.messages[i].sug_isSolved){
+            this.suggestions.messages[i].sug_isSolved=1
+            return
+          }
+          this.suggestions.messages[i].sug_isSolved=0
+        }
+      }
+    },
+    handleSelectAll(){
+      this.runThroughSuggestions(1)
+    },
+    handleDeselectAll(){
+      this.runThroughSuggestions(0)
+    },
+    async handleNextTenSuggestions(){
+      this.suggestions.currentPage+=10
+      this.getTenSuggestions()
+    },
+    async handlePreviousTenSuggestion(){
+      this.suggestions.currentPage-=10
+      this.getTenSuggestions()
+    },
+    async handleSolvedSuggestions(){
+      let solvedSuggestions=[]
+      for(let i=0;i<this.suggestions.messages.length;i++){
+        if(this.suggestions.messages[i].sug_isSolved){
+          solvedSuggestions.push(this.suggestions.messages[i].sug_id)
+        }
+      }
+      if(solvedSuggestions.length>0){
+        try {
+          await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/admin/solvedSuggestions",{
+            "solvedSuggestions":solvedSuggestions
+          })
+          this.getTenSuggestions()
+          this.getNumberOfSuggestions()
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
   },
   mounted(){
     this.getNutritiousTypes()
+    this.getNumberOfSuggestions()
+    this.getTenSuggestions()
   }
 }
 </script>
@@ -338,6 +432,17 @@ export default {//napraviti mail box za pregled poslatih sugestija
 }
 .list-leave-active {
   position: absolute;
+}
+.mail-box-suggestion-wrapper{
+  top: 30vh;
+  right: 0;
+}
+.number-suggestions-wrapper{
+  text-align: center;
+}
+.number-suggestions{
+  color: whitesmoke;
+  margin: 0;
 }
 @media screen and (min-width: 768px){
   .new-item-wrapper{

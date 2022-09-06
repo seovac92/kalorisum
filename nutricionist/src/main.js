@@ -14,6 +14,9 @@ import { faWeightHanging} from  '@fortawesome/free-solid-svg-icons'
 import { faPlus} from  '@fortawesome/free-solid-svg-icons'
 import { faWeightScale} from  '@fortawesome/free-solid-svg-icons'
 import { faPaperPlane} from  '@fortawesome/free-solid-svg-icons'
+import { faEnvelope} from  '@fortawesome/free-solid-svg-icons'
+import { faSquare} from  '@fortawesome/free-solid-svg-icons'
+import { faSquareCheck} from  '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars)
 library.add(faAngleLeft)
@@ -25,5 +28,8 @@ library.add(faWeightHanging)
 library.add(faPlus)
 library.add(faWeightScale)
 library.add(faPaperPlane)
+library.add(faEnvelope)
+library.add(faSquare)
+library.add(faSquareCheck)
 
 createApp(App).use(store).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app')

@@ -46,7 +46,7 @@ export default {
     data:function(){
         return{
           nutritious:[],
-          currentPage:null,
+          currentPage:0,
           nutritionString:"",
           msg:""
         }
@@ -55,7 +55,7 @@ export default {
         async getTenNutritious(){
           try {
               let result= await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/getTenNutritious",{
-                "page":0
+                "page":this.currentPage
               })
               this.nutritious=result.data.res.nutritious
               this.currentPage=result.data.res.page
@@ -64,26 +64,12 @@ export default {
           }
         },
         async getNextTen(){
-          try {
-            let result= await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/getTenNutritious",{
-              "page":this.currentPage+10
-            })
-            this.nutritious=result.data.res.nutritious
-            this.currentPage=result.data.res.page
-          } catch (error) {
-            console.log(error)
-          }
+          this.currentPage+=10
+          this.getTenNutritious()
         },
         async getPreviousTen(){
-          try {
-            let result= await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/nutritious/getTenNutritious",{
-              "page":this.currentPage-10
-            })
-            this.nutritious=result.data.res.nutritious
-            this.currentPage=result.data.res.page
-          } catch (error) {
-            console.log(error)
-          }
+          this.currentPage-=10
+          this.getTenNutritious()
         },
         async filterByString(){
           if(this.nutritionString.length===2){
