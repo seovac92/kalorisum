@@ -41,7 +41,7 @@
           <li class="total"><p>{{mealSum}}Kcal</p></li>
           <li class="meal-name">
             <label for="name" class="msg-instruction" v-show="mealName.length<1 || mealName.length>15">Naziv mora imati izmedju 1 i 15 karaktera.</label>
-            <input id="name" class="input" type="text" placeholder="Naziv obroka" v-model="mealName" >
+            <input id="name" class="input" type="text" placeholder="Naziv obroka" v-model="mealName" @keydown.enter="makeAMeal()">
             <label for="name" class="msg-instruction">{{msg}}</label>
           </li>
           <li>

@@ -121,6 +121,7 @@ export default {
   margin: 20px auto;
   border-collapse: collapse;
   width: 100%;
+  min-height: 80vh;
 }
 .row-1{
   background-color: #212529;

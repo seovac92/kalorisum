@@ -12,6 +12,11 @@ import Chart from 'chart.js/auto'
 
 export default {
     props:["updateChart"],
+    data:function(){
+        return{
+            myChart:null
+        }
+    },
     methods:{
         async getUserWeights(){
             let userDetail=await checkSession()
@@ -46,11 +51,13 @@ export default {
                 tension: 0.4
                 }]
             };
-            const myChart = new Chart(ctx, {
+            this.myChart = new Chart(ctx, {
                 type:"line",
                 data:data
             });
-            myChart
+        },
+        destroyAChart(){
+            this.myChart.destroy()
         }
     },
     mounted(){
@@ -58,8 +65,9 @@ export default {
     },
     watch:{
         updateChart(newStatus){
-            if(newStatus){
-                this.$router.go(0)
+            if(!newStatus || newStatus){
+                this.destroyAChart()
+                this.getUserWeights()
             }
         }
     }

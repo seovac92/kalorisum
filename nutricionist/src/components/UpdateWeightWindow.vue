@@ -32,7 +32,6 @@ export default {
                 return
             }
             this.$emit("allowUpdateWeight",this.weight)
-            console.log(this.msg)
         }
     }
 }

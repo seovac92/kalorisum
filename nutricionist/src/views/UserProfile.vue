@@ -71,6 +71,9 @@
     <div class="sender-suggestion-wrapper card-opener" @click="openSuggestionWindow()" v-if="userLevel!==1">
         <font-awesome-icon icon="fa-solid fa-paper-plane" />
     </div>
+    <div class="statistic-opener-wrapper card-opener" @click="openOverallStatistic()">
+        <font-awesome-icon icon="fa-solid fa-chart-pie"/>
+    </div>
     <transition name="form">
     <ItemDetailsWindow :dishDetails="dishDetails" :trainingDetails="trainingDetails" @closeDetailsWindow="handleCloseDetailsWindow" @removeUserDish="handleRemoveUserDish" @removeUserTraining="handleRemoveUserTraining" v-if="status[3].switch"></ItemDetailsWindow>
     </transition>
@@ -83,6 +86,7 @@
     <transition name="form">
     <SuggestionWindow v-if="status[6].switch" @closeSuggestionWindow="handleCloseSuggestionWindow" @sendSuggestion="handleSendSuggestion"></SuggestionWindow>
     </transition>
+    <OverallStatistic :user="user" :plan="week" @closeOverallStatistic="handleCloseOverallStatistic" v-if="status[7].switch"></OverallStatistic>
   </div>
 </template>
 
@@ -95,6 +99,7 @@ import ItemDetailsWindow from '../components/ItemDetailsWindow.vue'
 import UpdateWeightWindow from '../components/UpdateWeightWindow.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
 import SuggestionWindow from '../components/SuggestionWindow.vue'
+import OverallStatistic from '../components/OverallStatistic.vue'
 import checkSession from '../JS/checkSession.js'
 import { mapState,mapActions } from 'vuex'
 import axios from 'axios'
@@ -109,7 +114,8 @@ export default {
     ItemDetailsWindow,
     UpdateWeightWindow,
     SuccessWindow,
-    SuggestionWindow
+    SuggestionWindow,
+    OverallStatistic
   },
   data:function(){//napraviti komponentu koja prikazuje statistiku sa nekim grafikonima!!!ovde se ucitava,odavde joj se salju svi potrebni podaci ili moze i ona sama da ih skine preko api-a!!!I napravi za admina da moze da dodeli admin rolu obicnom useru iz liste...i to je to!!!
     return{
@@ -144,7 +150,8 @@ export default {
         {switch:false,name:"itemDetailsStatus"},
         {switch:false,name:"updateWeightStatus"},
         {switch:false,name:"removeStatus"},
-        {switch:false,name:"suggestionStatus"}
+        {switch:false,name:"suggestionStatus"},
+        {swithc:false,name:"overallStatisticStatus"}
       ],
       updateChart:false,//informacija grafikonu da izvrsi refresh(moglo je i prostije!)
       msg:"",//prima errore
@@ -154,6 +161,7 @@ export default {
   methods:{
     ...mapActions(["setUserStatus","setUserLevel"]),
     async getUserBio(){//dobija osnovne podatke o useru--------MOUNTED
+      this.user.birthday=""
       let userDetail=await checkSession()
       if(userDetail){
         this.user.name=userDetail.data.res.username
@@ -416,7 +424,7 @@ export default {
         })
         this.setStatusSwitchOff("updateWeightStatus")
         this.getUserBio()
-        this.updateChart=true
+        this.updateChart=!this.updateChart
         this.showSuccessWindow()
       } catch (error) {
         this.msg=error.response.data.message
@@ -484,6 +492,14 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    openOverallStatistic(){
+      this.checkUser()
+      this.setStatusSwitchOn("overallStatisticStatus")
+    },
+    handleCloseOverallStatistic(){
+      this.checkUser()
+      this.setStatusSwitchOff("overallStatisticStatus")
     }
   },
   mounted(){
@@ -565,7 +581,13 @@ export default {
   right: 0;
 }
 .sender-suggestion-wrapper{
-  top:50vh;
+  top:60vh;
+  right: 0;
+  font-size: 1.7rem;
+  color: whitesmoke;
+}
+.statistic-opener-wrapper{
+  top: 50vh;
   right: 0;
   font-size: 1.7rem;
   color: whitesmoke;

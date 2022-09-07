@@ -42,7 +42,7 @@
           <li class="total"><p>{{trainingSum}}Kcal</p></li>
           <li class="meal-name">
             <label for="name" class="msg-instruction" v-show="trainingName.length<1 || trainingName.length>15">Naziv mora imati izmedju 1 i 15 karaktera.</label>
-            <input id="name" class="input" type="text" placeholder="Naziv aktivnosti" v-model="trainingName" >
+            <input id="name" class="input" type="text" placeholder="Naziv aktivnosti" v-model="trainingName" @keydown.enter="makeATraining()">
             <label for="name" class="msg-instruction">{{msg}}</label>
           </li>
           <li>
