@@ -632,12 +632,12 @@ export default {
 .plan-move,
 .plan-enter-active,
 .plan-leave-active{
-  transition: 0.5s all ease;
+  transition: 0.3s all ease;
 }
 .plan-enter-from,
 .plan-leave-to{
   opacity: 0;
-  transform: translateY(-50px);
+  transform: scale(0.2);
 }
 .plan-leave-active{
   position: absolute;

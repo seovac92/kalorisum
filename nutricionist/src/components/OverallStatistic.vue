@@ -3,9 +3,15 @@
     <div class="btn-exit-wrapper">
         <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeOverallStatistic()"/>
     </div>
-    <div class="tdee-per-day-wrapper">
-        <canvas id="bar-chart" width="400" height="400"></canvas>
-    </div>
+    <Bar :chart-options="chartOptions"
+    :chart-data="chartData"
+    :chart-id="chartId"
+    :dataset-id-key="datasetIdKey"
+    :plugins="plugins"
+    :css-classes="cssClasses"
+    :styles="styles"
+    :width="width"
+    :height="height"></Bar>
     <div class="btn-list">
      <div class="btn-wrapper">   
     <transition name="btn">
@@ -22,21 +28,71 @@
         <button class="btn-change-chart" @click="getCalorieConsumptionPerDay" v-if="!calorieConsumptionStatus">Potrosnja</button>
     </transition>
     </div>
-    </div>
+    </div> 
   </div>
 </template>
 
 <script>
-import Chart from 'chart.js/auto'
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
-    props:["user","plan"],
+    components:{ Bar },
+    props: {
+        user:{
+            type: Object
+        },
+        plan:{
+            type: Array
+        },
+        chartId: {
+        type: String,
+        default: 'bar-chart'
+        },
+        datasetIdKey: {
+        type: String,
+        default: 'label'
+        },
+        width: {
+        type: Number,
+        default: 400
+        },
+        height: {
+        type: Number,
+        default: 400
+        },
+        cssClasses: {
+        default: '',
+        type: String
+        },
+        styles: {
+        type: Object,
+        default: () => {}
+        },
+        plugins: {
+        type: Object,
+        default: () => {}
+        }
+    },
     data:function(){
         return{
-            myChart:null,
             tdeeStatus:true,
             calorieIncomeStatus:false,
-            calorieConsumptionStatus:false
+            calorieConsumptionStatus:false,
+            chartData: {
+                labels: [ 'Ponedeljak', 'Utorak', 'Sreda', 'Cetvrtak', 'Petak', 'Subota', 'Nedelja' ],
+                datasets: [ { 
+                    data: [],
+                    label:"",
+                    backgroundColor:"",
+                    borderColor:"",
+                    borderWidth: 1
+                    } ]
+            },
+            chartOptions: {
+                responsive: true
+            }
         }
     },
     methods:{
@@ -69,8 +125,10 @@ export default {
                 }
                 tdeePerDay.push(Math.round(this.coefficientActivity(kcalSum)*this.user.bmr))
             }
-            this.destroyChart(this.myChart)
-            this.makeAChart(tdeePerDay,'TDEE po danima','rgba(54, 162, 235, 0.2)','rgb(54, 162, 235)')
+            this.chartData.datasets[0].data=tdeePerDay
+            this.chartData.datasets[0].label='TDEE po danima'
+            this.chartData.datasets[0].backgroundColor='rgba(54, 162, 235, 0.2)'
+            this.chartData.datasets[0].borderColor='rgb(54, 162, 235)'
             this.tdeeStatus=true
             this.calorieIncomeStatus=false
             this.calorieConsumptionStatus=false
@@ -84,8 +142,10 @@ export default {
                 }
                 calorieIncomePerDay.push(kcalSum)
             }
-            this.destroyChart(this.myChart)
-            this.makeAChart(calorieIncomePerDay,'Unos po danima','rgba(224, 163, 74, 0.2)','rgb(224,163,74)')
+            this.chartData.datasets[0].data=calorieIncomePerDay
+            this.chartData.datasets[0].label='Unos po danima'
+            this.chartData.datasets[0].backgroundColor='rgba(224, 163, 74, 0.2)'
+            this.chartData.datasets[0].borderColor='rgb(224,163,74)'
             this.tdeeStatus=false
             this.calorieConsumptionStatus=false
             this.calorieIncomeStatus=true
@@ -99,61 +159,14 @@ export default {
                 }
                 calorieConsumptionPerDay.push(kcalSum)
             }
-            this.destroyChart(this.myChart)
-            this.makeAChart(calorieConsumptionPerDay,'Potrosnja po danima','rgba(116, 224, 63, 0.2)','rgb(116,224,63)')
+            this.chartData.datasets[0].data=calorieConsumptionPerDay
+            this.chartData.datasets[0].label='Potrosnja po danima'
+            this.chartData.datasets[0].backgroundColor='rgba(116, 224, 63, 0.2)'
+            this.chartData.datasets[0].borderColor='rgb(116,224,63)'
             this.tdeeStatus=false
             this.calorieIncomeStatus=false
             this.calorieConsumptionStatus=true
         },
-        makeAChart(array,label,color,border){
-            const ctx = document.getElementById('bar-chart');
-            const labels = ["Ponedeljak","Utorak","Sreda","Cetvrtak","Petak","Subota","Nedelja",];
-            const data = {
-                labels: labels,
-                datasets: [{
-                    label: label,
-                    data: array,
-                    backgroundColor: [
-                    color,
-                    color,
-                    color,
-                    color,
-                    color,
-                    color,
-                    color
-                    ],
-                    borderColor: [
-                    border,
-                    border,
-                    border,
-                    border,
-                    border,
-                    border,
-                    border
-                    ],
-                    borderWidth: 1
-                }]
-            }
-            this.myChart = new Chart(ctx, {
-                type:"bar",
-                data:data,
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    animation:{
-                        duration:100
-                    }
-                }
-            })
-        },
-        destroyChart(chart){
-            if(chart){
-                chart.destroy()
-            }
-        }
     },
     mounted(){
         this.getTdeePerDay()
@@ -188,15 +201,15 @@ export default {
     flex-basis: 25%;
 }
 .btn-move,
-.btn-enter-active,
-.btn-leave-active{
+.btn-enter-active{
     transition: all 0.5s ease;
 }
-.btn-enter-from{
-    opacity: 0;
-    transform: scale(0.6);
+.btn-move,
+.btn-leave-active{
+    transition: all 0.2s ease;
 }
-.btn-leave-to{
+.btn-leave-to,
+.btn-enter-from{
     opacity: 0;
     transform: scale(0.6);
 }

@@ -20,7 +20,7 @@
         </div>
         <div class="check-list-item-wrapper">
           <h3 class="title-h3">Postojece namirnice:</h3>
-            <transition-group name="list" tag="ul" class="check-list-item" v-if="newNutrition.searchedNutritions.length>0">
+            <transition-group name="plan" tag="ul" class="check-list-item" v-if="newNutrition.searchedNutritions.length>0">
             <li class="check-item" v-for="nutrition in newNutrition.searchedNutritions" :key="nutrition.id"><p class="check-name">{{nutrition.name}}</p><p class="check-kcal">{{nutrition.kcal}}kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeCoreItem(nutrition,'nutrition')"/></li>
             </transition-group>
           <p v-else>{{newNutrition.msgSearched}}</p>
@@ -42,7 +42,7 @@
         </div>
         <div class="check-list-item-wrapper">
           <h3 class="title-h3">Postojece aktivnosti:</h3>
-          <transition-group name="list" tag="ul" class="check-list-item" v-if="newActivity.searchedActivities.length>0">
+          <transition-group name="plan" tag="ul" class="check-list-item" v-if="newActivity.searchedActivities.length>0">
             <li class="check-item" v-for="activity in newActivity.searchedActivities" :key="activity.id"><p class="check-name">{{activity.name}}</p><p class="check-kcal">{{activity.kcal}}kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeCoreItem(activity,'activity')"/></li>
           </transition-group>  
           <p v-else>{{newActivity.msgSearched}}</p>
@@ -421,19 +421,6 @@ export default {//napraviti da registracija pravi obicne usere,a da admin moze d
 }
 .check-item:hover .remove-icon{
   color: #c50000;
-}
-.list-move,
-.list-enter-active,
-.list-leave-active{
-  transition: all 0.5s ease;
-}
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.list-leave-active {
-  position: absolute;
 }
 .mail-box-suggestion-wrapper{
   top: 30vh;
