@@ -35,12 +35,12 @@
             </table>
         </div>
         <div class="navigate-wrapper">
-        <div class="btn-back-wrapper" @click="previousTenSuggestions()">
-            <font-awesome-icon class="btn-back" icon="fa-solid fa-angle-left" />  
-        </div>
-        <div class="btn-next-wrapper" @click="nextTenSuggestions()">
-            <font-awesome-icon class="btn-next" icon="fa-solid fa-angle-right" />
-        </div>  
+            <div class="btn-back-wrapper" @click="previousTenSuggestions()">
+                <font-awesome-icon class="btn-back" icon="fa-solid fa-angle-left" />  
+            </div>
+            <div class="btn-next-wrapper" @click="nextTenSuggestions()">
+                <font-awesome-icon class="btn-next" icon="fa-solid fa-angle-right" />
+            </div>  
         </div>
     </div>
     <div class="single-message-wrapper" v-if="selectedMessage">

@@ -86,7 +86,9 @@
     <transition name="form">
     <SuggestionWindow v-if="status[6].switch" @closeSuggestionWindow="handleCloseSuggestionWindow" @sendSuggestion="handleSendSuggestion"></SuggestionWindow>
     </transition>
+    <transition name="form">
     <OverallStatistic :user="user" :plan="week" @closeOverallStatistic="handleCloseOverallStatistic" v-if="status[7].switch"></OverallStatistic>
+    </transition>
   </div>
 </template>
 
