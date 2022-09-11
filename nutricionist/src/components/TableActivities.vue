@@ -7,7 +7,7 @@
       <thead>
         <tr class="row-1">
           <th class="column-1" colspan="2">
-            Aktivnost(60min)
+            Aktivnost (60 min)
           </th>
           <th class="column-2" colspan="2">
             kCal(1kg tezine)

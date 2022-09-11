@@ -37,7 +37,7 @@
 </template>
 
 <script>
-export default {//nastaviti odavde brisanje obroka/treninga iz userove baze
+export default {
     props:["dishDetails","trainingDetails"],
     methods:{
         closeDetailsWindow(){

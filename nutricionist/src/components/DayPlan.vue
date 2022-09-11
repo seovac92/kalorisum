@@ -25,9 +25,9 @@
                 </div>
             </div>
             <div class="mathematic" v-if="plan.dishs.length>0 || plan.training.length>0">
+                <p>TDEE: {{tdee}}Kcal</p>
                 <p>Obroci: {{sumDishs}}Kcal</p>
-                <p>-TDEE: {{tdee}}Kcal</p>
-                <p>-Aktivnosti: {{sumTraining}}Kcal</p>
+                <p>Aktivnosti: {{sumTraining}}Kcal</p>
                 <p class="sum-kcal">Dnevni bilans: <span :class="[sumDay<=0 ?'deficit':'suficit']">{{sumDay}}kcal</span></p>
             </div> 
         </div>
@@ -180,6 +180,9 @@ export default {
 }
 .suficit{
     color: red;
+}
+.neutral{
+    color: yellow;
 }
 @media screen and (min-width: 768px) {
     .tables-wrapper{

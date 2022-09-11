@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">  
+  <div class="app-wrapper"> 
     <nav class="nav-menu-wrapper">
       <div class="navigation"><!--navigation for other devices-->
           <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="toggleMenu()" v-if="!registrationStatus && !loginStatus"/>
@@ -159,6 +159,10 @@ body{
 }
 .nav-menu-wrapper{
   background-color: lightsteelblue;
+  width: 100%;
+  z-index: 1;
+  position: fixed;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
 }
 .navigation{
   display: flex;
@@ -259,12 +263,12 @@ body{
   background-color: #fff;
 }
 footer{
-  background-color: lightsteelblue;
+  background-color: #212529;
   padding: 30px 0;
 }
 footer p{
   margin: 0;
-  color: #000;
+  color: #fff;
   font-size: 1rem;
   font-weight: 600;
 }

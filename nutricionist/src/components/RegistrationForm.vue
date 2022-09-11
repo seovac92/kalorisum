@@ -99,7 +99,7 @@ export default {
                 this.closeRegistrationForm()
                 this.$router.push({name:"home"}) 
             } catch (error) {
-                console.log(error)    
+                this.msg=error.response.data.message    
             }
             
         },

@@ -17,13 +17,13 @@
       <ChartWeight class="chart" :updateChart="updateChart"></ChartWeight>
     </div>
     <div class="daycards-wrapper">
-      <div :class="[week[0].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(0)"><p>Pon</p></div>
-      <div :class="[week[1].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(1)"><p>Uto</p></div>
-      <div :class="[week[2].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(2)"><p>Sre</p></div>
-      <div :class="[week[3].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(3)"><p>Cet</p></div>
-      <div :class="[week[4].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(4)"><p>Pet</p></div>
-      <div :class="[week[5].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(5)"><p>Sub</p></div>
-      <div :class="[week[6].status?'daycard-on':'daycard-off','daycard']" @click="toggleDayPlan(6)"><p>Ned</p></div>
+      <div :class="[week[0].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(0)"><p>Pon</p></div>
+      <div :class="[week[1].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(1)"><p>Uto</p></div>
+      <div :class="[week[2].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(2)"><p>Sre</p></div>
+      <div :class="[week[3].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(3)"><p>Cet</p></div>
+      <div :class="[week[4].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(4)"><p>Pet</p></div>
+      <div :class="[week[5].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(5)"><p>Sub</p></div>
+      <div :class="[week[6].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(6)"><p>Ned</p></div>
     </div>
     <div class="day-plan">
       <transition-group name="plan">
@@ -69,10 +69,10 @@
         <p class="opener-title">Trening</p>
     </div>
     <div class="sender-suggestion-wrapper card-opener" @click="openSuggestionWindow()" v-if="userLevel!==1">
-        <font-awesome-icon icon="fa-solid fa-paper-plane" />
+        <font-awesome-icon class="card-icon" icon="fa-solid fa-paper-plane" />
     </div>
     <div class="statistic-opener-wrapper card-opener" @click="openOverallStatistic()">
-        <font-awesome-icon icon="fa-solid fa-chart-pie"/>
+        <font-awesome-icon class="card-icon" icon="fa-solid fa-chart-pie"/>
     </div>
     <transition name="form">
     <ItemDetailsWindow :dishDetails="dishDetails" :trainingDetails="trainingDetails" @closeDetailsWindow="handleCloseDetailsWindow" @removeUserDish="handleRemoveUserDish" @removeUserTraining="handleRemoveUserTraining" v-if="status[3].switch"></ItemDetailsWindow>
@@ -107,7 +107,7 @@ import { mapState,mapActions } from 'vuex'
 import axios from 'axios'
 
 
-export default {
+export default {//uradjena ispravka na prikazu kalorija za brisanje treninga iz baze(math.round)...mozda prepraviti grafikon za prikazivanje tezina!!! ISPISATI GRESKE PRI LOGOVANJU I REGISTORVANJU!!!
   components:{
     ChartWeight,
     DayPlan,
@@ -119,9 +119,9 @@ export default {
     SuggestionWindow,
     OverallStatistic
   },
-  data:function(){//napraviti komponentu koja prikazuje statistiku sa nekim grafikonima!!!ovde se ucitava,odavde joj se salju svi potrebni podaci ili moze i ona sama da ih skine preko api-a!!!I napravi za admina da moze da dodeli admin rolu obicnom useru iz liste...i to je to!!!
+  data:function(){
     return{
-      user:{//sve o useru
+      user:{
         id:null,
         name:"",
         birthday:"",
@@ -400,6 +400,7 @@ export default {
       }
     },
     handleRemoveUserTraining(training){//otvara drugu DELETING komponentu za brisanje Itema iz BAZE
+      training.kcal=Math.round(training.kcal)
       this.deletingItem=training
       this.setStatusSwitchOn("removeStatus")
     },
@@ -502,11 +503,17 @@ export default {
     handleCloseOverallStatistic(){
       this.checkUser()
       this.setStatusSwitchOff("overallStatisticStatus")
-    }
+    },
+    goToTop(){
+        window.scroll({
+          top: 0
+        })
+      }
   },
   mounted(){
     this.getUserBio()
     this.getUserPlan()
+    this.goToTop()
   },
   computed:{
     ...mapState(["userLevel"])
@@ -560,6 +567,7 @@ export default {
 }
 .card-opener{
   width: 55px;
+  overflow: hidden;
   position: fixed;
   padding: 10px;
   background-color: #212529;
@@ -569,10 +577,17 @@ export default {
   z-index: 0;
   font-weight: 600;
   opacity: 0.7;
-  transition: 0.3s all ease;
+  transition: 0.5s all ease;
 }
 .card-opener:hover{
+  background-color: #75B1FF;
   opacity: 1;
+}
+.card-icon{
+  transition: 1s all ease;
+}
+.card-opener:hover .card-icon{
+  transform: rotate(180deg);
 }
 .adding-dish-opener-wrapper{
   top: 30vh;
@@ -620,10 +635,10 @@ export default {
   border-radius: 10px;
   flex-basis: 12%;
 }
-.daycard-on{
+.btn-on{
   background-color: #75B1FF;
 }
-.daycard-off{
+.btn-off{
   background-color: #FCC45B;
 }
 .daycard:hover{

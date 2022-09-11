@@ -220,6 +220,11 @@ export default {
         setTimeout(()=>{
           this.successStatus=false
         },1300)
+      },
+      goToTop(){
+        window.scroll({
+          top: 0
+        })
       }
     },
     computed:{
@@ -236,6 +241,7 @@ export default {
     },
     mounted(){
         this.getStoredActivities()
+        this.goToTop()
     },
     watch:{
         userStatus(newStatus){

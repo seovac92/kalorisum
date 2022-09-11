@@ -68,24 +68,30 @@ export default {
       if(!this.userStatus){
         this.$emit("openLoginForm")
       }  
+    },
+    goToTop(){
+      window.scroll({
+        top: 0
+      })
     }
   },
   computed:{
     ...mapState(["userStatus"])
+  },
+  mounted(){
+    this.goToTop()
   }
 }
 </script>
 
 <style>
-.hero-1{
-  background-color: lightsteelblue;
-}
-.hero-2{
-  background-color: #ddd;
+.wrapper{
+  padding-top: 7vh;
 }
 .hero-1,.hero-2{
   position: relative;
   z-index: 0;
+  background-color: #eee;
 }
 .hero-wrapper img{
   display: block;
@@ -97,7 +103,7 @@ export default {
   position: absolute;
   top: 10%;
   right: 10%;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 600;
   z-index: 0;
 }
@@ -106,24 +112,25 @@ export default {
   position: absolute;
   top: 10%;
   left: 10%;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 600;
   z-index: 0;
 }
 .hero-text{
   margin: 0;
   padding: 10px 0;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 .hero-bottom-text{
   padding: 10px;
   text-align: left;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
+  background-color: lightsteelblue;
 }
 .key-words{
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: #5B5BE4;
 }
 .first{
@@ -132,7 +139,7 @@ export default {
   font-size: 1.1rem;
 }
 .title-h2{
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   padding: 10px;
   margin: 0;
   background-color: #212529;
@@ -142,7 +149,7 @@ export default {
   padding: 0 10px;
 }
 .special-msg{
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-style: italic;
   margin-bottom: 0;
 }
@@ -153,6 +160,8 @@ export default {
   .wrapper{
     width: 90vw;
     margin: 0 auto;
+    padding-top: 8.5vh;
+    box-shadow: 0 16px 24px 2px rgb(0 0 0 / 14%), 0 6px 30px 5px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
   }
   .hero-1,
   .hero-2{
@@ -176,7 +185,7 @@ export default {
     display: none;
   }
   .hero-bottom-text{
-    background-color: rgb(245,245,245,0.8);
+    background-color: lightsteelblue;
   }
 }
 </style>

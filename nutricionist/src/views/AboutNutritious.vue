@@ -58,7 +58,7 @@
     </main>
     <aside>
       <article class="food-wrapper">
-        <img class="img-article" src="../assets/food.jpg" alt="food">
+        <img class="img-article" src="../assets/food2.jpg" alt="food">
         <p class="special-msg">Zdrava ishrana je stvar odluke!</p>
       </article>  
     </aside>  
@@ -219,7 +219,12 @@ export default {
       setTimeout(()=>{
         this.successStatus=false
       },1300)
-    }
+    },
+    goToTop(){
+        window.scroll({
+          top: 0
+        })
+      }
   },
   computed:{
     ...mapState(["userStatus"]),
@@ -235,6 +240,7 @@ export default {
   },
   mounted(){
     this.getStoredNutritions()
+    this.goToTop()
   },
   watch:{
     userStatus(newStatus){

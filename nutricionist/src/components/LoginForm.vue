@@ -51,7 +51,7 @@ export default {
                 this.setUserLevel(result.data.res.level)
                 this.closeLoginForm()
             } catch (error) {
-                console.log(error)
+                this.msg=error.response.data.message
             }
         },
         closeLoginForm(){

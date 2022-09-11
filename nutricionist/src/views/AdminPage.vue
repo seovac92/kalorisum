@@ -371,12 +371,18 @@ export default {//napraviti da registracija pravi obicne usere,a da admin moze d
           console.log(error)
         }
       }
-    }
+    },
+    goToTop(){
+        window.scroll({
+          top: 0
+        })
+      }
   },
   mounted(){
     this.getNutritiousTypes()
     this.getNumberOfSuggestions()
     this.getTenSuggestions()
+    this.goToTop()
   }
 }
 </script>

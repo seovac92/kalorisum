@@ -7,7 +7,7 @@
       <thead>
         <tr class="row-1">
           <th class="column-1" colspan="2">
-            Namirnica (100 g)
+            Namirnica (100g)
           </th>
           <th class="column-2" colspan="2">
             kCal
@@ -121,7 +121,6 @@ export default {
   margin: 20px auto;
   border-collapse: collapse;
   width: 100%;
-  min-height: 80vh;
 }
 .row-1{
   background-color: #212529;
