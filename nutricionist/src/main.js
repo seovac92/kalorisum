@@ -19,6 +19,7 @@ import { faSquare} from  '@fortawesome/free-solid-svg-icons'
 import { faSquareCheck} from  '@fortawesome/free-solid-svg-icons'
 import { faReply} from  '@fortawesome/free-solid-svg-icons'
 import { faChartPie} from  '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck} from  '@fortawesome/free-solid-svg-icons'
 
 library.add(faBars)
 library.add(faAngleLeft)
@@ -35,5 +36,6 @@ library.add(faSquare)
 library.add(faSquareCheck)
 library.add(faReply)
 library.add(faChartPie)
+library.add(faCircleCheck)
 
 createApp(App).use(store).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app')

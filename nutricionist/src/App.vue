@@ -1,9 +1,12 @@
 <template>
-  <div class="app-wrapper"> 
+  <div class="app-wrapper">
+    <div class="top-header-wrapper">
+      <div class="logo-wrapper"><img class="logo" src="./assets/logo.svg" alt="logo"></div>
+      <div class="slogan-wrapper"><img class="slogan" src="./assets/slogan.svg" alt="slogan"></div>
+    </div> 
     <nav class="nav-menu-wrapper">
       <div class="navigation"><!--navigation for other devices-->
           <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="toggleMenu()" v-if="!registrationStatus && !loginStatus"/>
-          <div class="img-wrapper"><h2>LOGO</h2></div>
           <ul class="nav-menu-device nav-menu">
             <li class="link-wrapper"><router-link to="/" class="link">Pocetna</router-link></li>
             <li class="link-wrapper">
@@ -16,8 +19,8 @@
             <li class="link-wrapper" v-if="userLevel===1"><router-link to="/admin" class="link">Admin</router-link></li>
           </ul>
           <div class="btn-wrapper">
-            <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijavi se</button>
-            <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjavi se</button>
+            <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijava</button>
+            <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjava</button>
           </div>  
       </div>
       <transition name="menu"><!--navigation for mobile-->
@@ -45,6 +48,7 @@
     </div>
     <router-view class="page" @openLoginForm="openLoginForm()"/>
     <footer>
+      <div class="logo-negative-wrapper"><img class="logo" src="./assets/logo-negative.svg" alt="logo"></div>
       <p class="footer-text">COPYRIGHT &copy; <span class="producer"> <a href="https://www.linkedin.com/in/marko-seovac-758a75199">MARKO SEOVAC</a></span></p>
     </footer>
   </div>  
@@ -147,6 +151,27 @@ body{
   width: 100%;
   background-color: #eee;
 }
+.top-header-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background-color: #fff;
+}
+.logo-wrapper{
+  width: 60%;
+}
+.logo-negative-wrapper{
+  width: 40%;
+  margin: 0 auto;
+}
+.slogan-wrapper{
+  width: 40%;
+}
+.logo,
+.slogan{
+  vertical-align: bottom;
+}
 .btn-open-form{
   background-color: #5B5BE4;
   border: transparent;
@@ -161,8 +186,9 @@ body{
   background-color: lightsteelblue;
   width: 100%;
   z-index: 1;
-  position: fixed;
+  position: relative;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+  padding: 10px 0;
 }
 .navigation{
   display: flex;
@@ -258,7 +284,7 @@ body{
   background-color: darkblue;
 }
 .page{
-  min-height: 90vh;
+  min-height: 75vh;
   padding-bottom: 40px;
   background-color: #fff;
 }
@@ -288,6 +314,15 @@ footer p{
   .nav-menu{
     width: 55vw;
   }
+  .top-header-wrapper{
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 5vw;
+  }
+  .logo-wrapper,
+  .slogan-wrapper{
+    flex-basis: 240px;
+  }
 }
 @media screen and (min-width:992px) {
   .menu-opener{
@@ -301,14 +336,18 @@ footer p{
     display: none;
   }
   .nav-menu-wrapper{
-    border-bottom: 1px solid #5B5BE4;
+    position: sticky;
+    top: 0;
+    padding: 0;
   }
   .navigation{
     justify-content: space-between;
+    width: 90vw;
+    margin: 0 auto;
   }
   .nav-menu-device{
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     flex-basis: 60%;
   }
   .link-wrapper{
@@ -344,6 +383,9 @@ footer p{
   .btn-open-form:hover{
     padding: 29px 5px;
   }
+  .logo-negative-wrapper{
+    width: 20%;
+  }
 }
 @media screen and (min-width:1200px){
   .page{
@@ -352,6 +394,9 @@ footer p{
   .navigation{
     width: 80vw;
     margin: 0 auto;
+  }
+  .top-header-wrapper{
+    padding: 10px 10vw;
   }
 }
 </style>

@@ -323,7 +323,7 @@ export default {
   background-color: #eee;
   text-align: left;
   border-radius: 20px;
-  padding: 10px;
+  padding: 10px 0;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
   z-index: 1;
 }
@@ -415,6 +415,9 @@ export default {
 }
 .meal-name .msg-instruction{
   margin-top: 15px;
+}
+.msg-instruction{
+  padding-left: 10px;
 }
 .img-article{
   width: 90%;

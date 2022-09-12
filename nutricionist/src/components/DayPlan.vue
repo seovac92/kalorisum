@@ -33,14 +33,15 @@
         </div>
         <div class="empty-day" v-else>
             <p>Dodajte jelo ili trening</p>    
-        </div>    
+        </div> 
+        <font-awesome-icon class="currentday-check-negative" icon="fa-solid fa-circle-check" v-show="plan.currentDay"/>   
     </div>   
 </template>
 
 <script>
 
 
-export default {
+export default {//dovrsi stilizaciju trenutnog dana preko week[i].currentDay!!!
     props:["plan","user"],
     methods:{
         coefficientActivity(kcal){
@@ -114,6 +115,7 @@ export default {
 
 <style>
 .plan-wrapper{
+    position: relative;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     display: flex;
     justify-content: space-between;
@@ -183,6 +185,13 @@ export default {
 }
 .neutral{
     color: yellow;
+}
+.currentday-check-negative{
+    color: whitesmoke;
+    position: absolute;
+    top: 30px;
+    font-size: 2rem;
+    left: 17px;
 }
 @media screen and (min-width: 768px) {
     .tables-wrapper{

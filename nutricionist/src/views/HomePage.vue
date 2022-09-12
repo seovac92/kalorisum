@@ -85,9 +85,6 @@ export default {
 </script>
 
 <style>
-.wrapper{
-  padding-top: 7vh;
-}
 .hero-1,.hero-2{
   position: relative;
   z-index: 0;
@@ -160,7 +157,6 @@ export default {
   .wrapper{
     width: 90vw;
     margin: 0 auto;
-    padding-top: 8.5vh;
     box-shadow: 0 16px 24px 2px rgb(0 0 0 / 14%), 0 6px 30px 5px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
   }
   .hero-1,

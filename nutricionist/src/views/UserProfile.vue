@@ -17,13 +17,13 @@
       <ChartWeight class="chart" :updateChart="updateChart"></ChartWeight>
     </div>
     <div class="daycards-wrapper">
-      <div :class="[week[0].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(0)"><p>Pon</p></div>
-      <div :class="[week[1].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(1)"><p>Uto</p></div>
-      <div :class="[week[2].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(2)"><p>Sre</p></div>
-      <div :class="[week[3].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(3)"><p>Cet</p></div>
-      <div :class="[week[4].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(4)"><p>Pet</p></div>
-      <div :class="[week[5].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(5)"><p>Sub</p></div>
-      <div :class="[week[6].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(6)"><p>Ned</p></div>
+      <div :class="[week[0].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(0)"><p>Pon</p><font-awesome-icon class="currentday-check" icon="fa-solid fa-circle-check" v-show="week[0].currentDay" /></div>
+      <div :class="[week[1].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(1)"><p>Uto</p><font-awesome-icon class="currentday-check" icon="fa-solid fa-circle-check" v-show="week[1].currentDay" /></div>
+      <div :class="[week[2].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(2)"><p>Sre</p><font-awesome-icon class="currentday-check" icon="fa-solid fa-circle-check" v-show="week[2].currentDay" /></div>
+      <div :class="[week[3].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(3)"><p>Cet</p><font-awesome-icon class="currentday-check" icon="fa-solid fa-circle-check" v-show="week[3].currentDay" /></div>
+      <div :class="[week[4].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(4)"><p>Pet</p><font-awesome-icon class="currentday-check" icon="fa-solid fa-circle-check" v-show="week[4].currentDay" /></div>
+      <div :class="[week[5].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(5)"><p>Sub</p><font-awesome-icon class="currentday-check" icon="fa-solid fa-circle-check" v-show="week[5].currentDay" /></div>
+      <div :class="[week[6].status?'btn-on':'btn-off','daycard']" @click="toggleDayPlan(6)"><p>Ned</p><font-awesome-icon class="currentday-check" icon="fa-solid fa-circle-check" v-show="week[6].currentDay" /></div>
     </div>
     <div class="day-plan">
       <transition-group name="plan">
@@ -508,12 +508,32 @@ export default {//uradjena ispravka na prikazu kalorija za brisanje treninga iz 
         window.scroll({
           top: 0
         })
+    },
+    currentDayOfTheWeek(){
+      let currentDay=new Date().getDay()
+      switch(currentDay){
+        case 1: this.week[0].currentDay=true;
+        break;
+        case 2: this.week[1].currentDay=true;
+        break;
+        case 3: this.week[2].currentDay=true;
+        break;
+        case 4: this.week[3].currentDay=true;
+        break;
+        case 5: this.week[4].currentDay=true;
+        break;
+        case 6: this.week[5].currentDay=true;
+        break;
+        case 0: this.week[6].currentDay=true;
+        break;
       }
+    }
   },
   mounted(){
     this.getUserBio()
     this.getUserPlan()
     this.goToTop()
+    this.currentDayOfTheWeek()
   },
   computed:{
     ...mapState(["userLevel"])
@@ -627,6 +647,7 @@ export default {//uradjena ispravka na prikazu kalorija za brisanje treninga iz 
   border-radius: 0 0 10px 10px;
 }
 .daycard{
+  position: relative;
   padding: 5px;
   opacity: 0.7;
   font-weight: 600;
@@ -634,6 +655,11 @@ export default {//uradjena ispravka na prikazu kalorija za brisanje treninga iz 
   transition: 0.3s all ease;
   border-radius: 10px;
   flex-basis: 12%;
+}
+.currentday-check{
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
 }
 .btn-on{
   background-color: #75B1FF;

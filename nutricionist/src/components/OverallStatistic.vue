@@ -5,7 +5,7 @@
     </div>
     <div class="bar-chart" v-if="!totalStatus">
         <transition name="btn">
-            <button class="btn-on btn-chart" @click="makePieChart()">Nedeljni</button>
+            <button class="btn-on btn-chart" @click="makePieChart()">Nedeljni pregled</button>
         </transition>
         <Bar :chart-options="barChart.chartOptions"
         :chart-data="barChart.chartData"
@@ -37,7 +37,7 @@
     <div class="pie-chart" v-if="totalStatus">
         <div class="btn-wrapper">
             <transition name="btn">
-                <button class="btn-on btn-chart" @click="makeBarChart()">Dnevni</button>
+                <button class="btn-on btn-chart" @click="makeBarChart()">Dnevni pregled</button>
             </transition>
         </div>
         <Pie :chart-options="pieChart.chartOptions"
@@ -57,7 +57,6 @@
     </div>  
   </div>
 </template>
-
 <script>
 import { Bar } from 'vue-chartjs'
 import { Pie } from 'vue-chartjs'
@@ -283,8 +282,8 @@ export default {//
 </script>
 
 <style>
-.statistic-wrapper{
-    padding: 10px;
+.bar-chart{
+    padding: 0 10px;
 }
 .tdee-per-day-wrapper{
     padding: 10px;
