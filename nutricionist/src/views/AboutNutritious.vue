@@ -380,6 +380,18 @@ export default {
   max-height: 400px;
   overflow-y: scroll;
 }
+.meal-form::-webkit-scrollbar{ 
+  width: 10px;
+}
+.meal-form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.meal-form::-webkit-scrollbar-thumb {
+  background: #888;
+}
+.meal-form::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 .meal-info{
   margin: 0;
   padding: 0;
