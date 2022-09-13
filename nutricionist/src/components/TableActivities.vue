@@ -1,4 +1,5 @@
 <template>
+  <div class="table-activity-wrapper">
   <div class="table-wrapper">
      <div class="search-box-wrapper">
       <input class="input" type="text" v-model="activityString" @keyup="filterByString()" placeholder="Pretraga">
@@ -23,15 +24,16 @@
           <td class="message-table" colspan="6">{{msg}}</td>
         </tr>
       </tbody>
-    </table>
-    <div class="navigate-wrapper">
+    </table> 
+  </div>
+  <div class="navigate-wrapper">
       <div class="btn-back-wrapper" @click="getPreviousTen()" v-if="currentPage">
         <font-awesome-icon class="btn-back" icon="fa-solid fa-angle-left" />  
       </div>
       <div class="btn-next-wrapper" @click="getNextTen()" v-if="activities.length===10">
         <font-awesome-icon class="btn-next" icon="fa-solid fa-angle-right" />
       </div>  
-    </div> 
+    </div>
   </div>
 </template>
 

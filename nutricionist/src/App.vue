@@ -6,7 +6,7 @@
     </div> 
     <nav class="nav-menu-wrapper">
       <div class="navigation"><!--navigation for other devices-->
-          <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="toggleMenu()" v-if="!registrationStatus && !loginStatus"/>
+          <font-awesome-icon  class="menu-opener" icon="fa-solid fa-bars" @click="openPhoneMenu()"/>
           <ul class="nav-menu-device nav-menu">
             <li class="link-wrapper"><router-link to="/" class="link">Pocetna</router-link></li>
             <li class="link-wrapper">
@@ -19,7 +19,7 @@
             <li class="link-wrapper" v-if="userLevel===1"><router-link to="/admin" class="link">Admin</router-link></li>
           </ul>
           <div class="btn-wrapper">
-            <button class="btn-open-form" @click="openLoginForm()" v-if="!loginStatus && !userStatus && !registrationStatus">Prijava</button>
+            <button class="btn-open-form" @click="openLoginForm()" v-if="!userStatus">Prijava</button>
             <button class="btn-open-form" @click="logout()" v-if="userStatus">Odjava</button>
           </div>  
       </div>
@@ -87,13 +87,8 @@ export default{
         localStorage.removeItem("sid")
       }
     },
-    openRegistrationForm(){
-      this.registrationStatus=true
-      this.loginStatus=false
-    },
     openLoginForm(){
       this.loginStatus=true
-      this.registrationStatus=false
     },
     handleCloseRegistrationForm(){
       this.registrationStatus=false
@@ -117,7 +112,7 @@ export default{
         this.$router.push({name:"home"})
       }  
     },
-    toggleMenu(){
+    openPhoneMenu(){
       this.menuStatus=true
     },
     closePhoneMenu(){
@@ -167,6 +162,7 @@ body{
 }
 .slogan-wrapper{
   width: 40%;
+  opacity: 0.4;
 }
 .logo,
 .slogan{
@@ -284,8 +280,8 @@ body{
   background-color: darkblue;
 }
 .page{
+  border-bottom: 3px solid #ccc;
   min-height: 75vh;
-  padding-bottom: 40px;
   background-color: #fff;
 }
 footer{

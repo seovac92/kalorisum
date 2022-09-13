@@ -17,8 +17,8 @@
                 <input id="date" type="date" v-model="user.birthday">
             </div>
             <div class="gender-wrapper">
-                <label for="gender">Izaberite pol</label>  
-                <select id="gender" class="input" v-model="user.gender">
+                <select class="input" v-model="user.gender">
+                    <option value="null" selected disabled>Izaberite pol</option>
                     <option value="male">Muski</option>
                     <option value="female">Zenski</option>
                 </select>
@@ -72,6 +72,10 @@ export default {
             }
             if(this.user.weight<40 || this.user.height<100){
                 this.msg="Unesite ispravne vrednosti"
+                return
+            }
+            if(this.user.name.trim().length>20 || this.user.password.length>20){
+                this.msg="Maksimalan broj karaktera za korisnicko ime i sifru je 20"
                 return
             }
             try {
@@ -134,6 +138,9 @@ export default {
     border-radius: 20px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     background-color: #eee;
+    position: absolute;
+    top: 13%;
+    left: 10%;
 }
 .gender-wrapper{
     width: 100%;
@@ -211,16 +218,20 @@ export default {
 @media screen and (min-width: 768px){
     .form-wrapper{
         width: 50%;
+        top: 9%;
+        left: 25%;
     }
 }
 @media screen and (min-width: 992px){
     .form-wrapper{
-        width: 30%;
+        width: 40%;
+        left: 30%;
     }
 }
 @media screen and (min-width: 1200px){
     .form-wrapper{
-        width: 25%;
+        width: 30%;
+        left: 35%;
     }
 }
 </style>

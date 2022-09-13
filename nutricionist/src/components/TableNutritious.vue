@@ -1,4 +1,5 @@
 <template>
+  <div class="table-nutrition-wrapper">
   <div class="table-wrapper">
     <div class="search-box-wrapper">
       <input class="input" type="text" v-model="nutritionString" @keyup="filterByString()" placeholder="Pretraga">
@@ -27,15 +28,16 @@
           <td class="message-table" colspan="6">{{msg}}</td>
         </tr>
       </tbody>
-    </table>
-    <div class="navigate-wrapper">
+    </table>  
+  </div>
+  <div class="navigate-wrapper">
       <div class="btn-back-wrapper" @click="getPreviousTen()" v-if="currentPage">
         <font-awesome-icon class="btn-back" icon="fa-solid fa-angle-left" />  
       </div>
       <div class="btn-next-wrapper" @click="getNextTen()" v-if="nutritious.length===10">
         <font-awesome-icon class="btn-next" icon="fa-solid fa-angle-right" />
       </div>  
-    </div>  
+    </div>
   </div>
 </template>
 
@@ -112,7 +114,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-height: 80vh;
+  min-height: 70vh;
 }
 .search-box-wrapper{
   width: 60%;

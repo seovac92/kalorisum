@@ -58,8 +58,7 @@
       </transition>
     </main>
      <aside>
-      <article class="food-wrapper">
-        <img class="img-article" src="../assets/aktivnost2.jpg" alt="food">
+      <article class="activity-hero-wrapper">
         <p class="special-msg">Za aktivnost uvek ima vremena!</p>
       </article>  
     </aside>    
@@ -257,5 +256,39 @@ export default {
 .icon{
     font-size: 40px;
 }
-
+.activity-hero-wrapper{
+  background: url("../assets/activity3.jpg");
+  background-size: cover;
+  width: 100%;
+  height: 814px;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  z-index: 0;
+  border-top: 3px solid #ccc;
+  margin-top: 20px;
+}
+.activity-hero-wrapper .special-msg{
+  position: absolute;
+  font-size: 3rem;
+  opacity: 0.9;
+  color: #ddd;
+  font-style: italic;
+  font-weight: 600;
+  transition: 1s all ease;
+}
+.activity-hero-wrapper:hover .special-msg{
+  color: #000;
+}
+@media screen and (min-width: 768px) {
+  .activity-hero-wrapper .special-msg{
+    top: 10%;
+    left: 10%;
+  }
+}
+@media screen and (min-width: 992px) {
+  .activity-hero-wrapper .special-msg{
+    left: 15%;
+  }
+}
 </style>

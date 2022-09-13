@@ -149,6 +149,7 @@ export default {
   font-size: 1.5rem;
   font-style: italic;
   margin-bottom: 0;
+  font-weight: 600;
 }
 .interactive-word{
   cursor: pointer;

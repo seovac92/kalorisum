@@ -57,8 +57,7 @@
       </transition>
     </main>
     <aside>
-      <article class="food-wrapper">
-        <img class="img-article" src="../assets/food2.jpg" alt="food">
+      <article class="food-hero-wrapper">
         <p class="special-msg">Zdrava ishrana je stvar odluke!</p>
       </article>  
     </aside>  
@@ -290,7 +289,7 @@ export default {
   border-radius: 10px 0 0 10px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
   cursor: pointer;
-  z-index: 0;
+  z-index: 1;
   opacity: 0.8;
   transition: 0.3s all ease;
 }
@@ -419,6 +418,29 @@ export default {
 .msg-instruction{
   padding-left: 10px;
 }
+.food-hero-wrapper{
+  background: url("../assets/food2.jpg");
+  background-size: cover;
+  width: 100%;
+  height: 814px;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  z-index: 0;
+  border-top: 3px solid #ccc;
+  margin-top: 20px;
+}
+.food-hero-wrapper .special-msg{
+  position: absolute;
+  font-size: 3rem;
+  opacity: 0.3;
+  font-style: italic;
+  font-weight: 600;
+  transition: 1s all ease;
+}
+.food-hero-wrapper:hover .special-msg{
+  opacity: 0.8;
+}
 .img-article{
   width: 90%;
 }
@@ -440,6 +462,10 @@ export default {
   .img-article{
     width: 60%;
   }
+  .food-hero-wrapper .special-msg{
+    top: 10%;
+    left: 10%;
+  }
 }
 @media screen and (min-width: 992px){
   .nutrition-quantity-wrapper{
@@ -455,6 +481,9 @@ export default {
   }
   .img-article{
     width: 45%;
+  }
+  .food-hero-wrapper .special-msg{
+    left: 15%;
   }
 }
 @media screen and (min-width: 1200px){
