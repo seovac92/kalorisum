@@ -38,6 +38,8 @@
           <li class="nutrition" v-for="(activity,index) in activities" :key="activity.id">
             <p>{{activity.name}} | {{activity.time}}(min) | {{activity.kcalSum}}Kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeActivity(index)"/>
           </li>
+        </ul>
+        <ul class="meal-info">
           <li class="msg-instruction" v-if="activities.length>0"><p>Broj dozvoljenih aktivnosti {{5-activities.length}}</p></li>
           <li class="total"><p>{{trainingSum}}Kcal</p></li>
           <li class="meal-name">

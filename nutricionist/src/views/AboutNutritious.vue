@@ -37,6 +37,8 @@
           <li class="nutrition" v-for="(nutrition,index) in nutritions" :key="nutrition.id">
             <p>{{nutrition.name}} | {{nutrition.quantity}}g(ml) | {{nutrition.kcalSum}}Kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeNutrition(index)"/>
           </li>
+        </ul>
+        <ul class="meal-info">
           <li class="msg-instruction" v-if="nutritions.length>0"><p>Broj dozvoljenih namirnica {{10-nutritions.length}}</p></li>
           <li class="total"><p>{{mealSum}}Kcal</p></li>
           <li class="meal-name">
@@ -372,6 +374,13 @@ export default {
 }
 /*success window transition */
 .meal-form{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.meal-info{
   margin: 0;
   padding: 0;
   list-style: none;
