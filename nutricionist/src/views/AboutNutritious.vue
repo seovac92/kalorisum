@@ -83,7 +83,7 @@ class Nutrition{
 }
 function checkId(obj,array){
   for(let i=0;i<array.length;i++){
-    if(array[i].id===obj.ntr_id){
+    if(array[i].id===obj.id){
       return true
     }
   }
@@ -109,6 +109,9 @@ export default {
   methods:{
     ...mapActions(["setUserStatus"]),
     handleANutrition(one){
+      if(this.successStatus){
+        this.successStatus=false
+      }
       this.nutrition=one
       this.mealFormStatus=false
     },
@@ -134,6 +137,7 @@ export default {
         this.nutritions.push(newNutrition)
         this.quantity=null
         this.closeTheWindow()
+        this.showSuccessWindow()
         return
       }
       for(let i=0;i<this.nutritions.length;i++){
@@ -142,6 +146,7 @@ export default {
           this.nutritions[i].kcalSum=Math.round(this.nutritions[i].kcal/100*this.nutritions[i].quantity)
           this.quantity=null
           this.closeTheWindow()
+          this.showSuccessWindow()
           return
         }
       }
@@ -149,6 +154,7 @@ export default {
       this.quantity=null
       this.closeTheWindow()
       this.setStoredNutritions()
+      this.showSuccessWindow()
     },
     openMealForm(){
       this.mealFormStatus=!this.mealFormStatus
@@ -180,7 +186,7 @@ export default {
         return
       }
       try {
-        let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/newDish",{
+        await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/newDish",{
           "user_id":user.data.res.id,
           "meal_name":this.mealName,
           "meal_sum":this.mealSum,
@@ -190,7 +196,6 @@ export default {
         this.nutritions=[]
         this.clearStoredNutritions()
         this.showSuccessWindow()
-        console.log(res)
       } catch (error) {
         this.msg=error.response.data.message
       }
@@ -317,8 +322,8 @@ export default {
 .meal-form-wrapper{
   width: 80vw;
   position: fixed;
-  top: 10vh;
-  left: 8vw;
+  top: 2vh;
+  left: 10vw;
   background-color: #eee;
   text-align: left;
   border-radius: 20px;
@@ -454,6 +459,7 @@ export default {
   }
   .meal-form-wrapper{
     width: 70vw;
+    top: 7vh;
     left: 15vw;
   }
   .meal-name .input{

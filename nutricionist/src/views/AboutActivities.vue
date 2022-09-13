@@ -84,7 +84,7 @@ class Activity{
 }
 function checkId(obj,array){
   for(let i=0;i<array.length;i++){
-    if(array[i].id===obj.act_id){
+    if(array[i].id===obj.id){
       return true
     }
   }
@@ -110,6 +110,9 @@ export default {
     methods:{
       ...mapActions(["setUserStatus"]),
         handleAActivity(one){
+            if(this.successStatus){
+              this.successStatus=false
+            }
             this.activity=one
             this.trainingFormStatus=false
         },
@@ -125,31 +128,34 @@ export default {
             }
             let newActivity=new Activity(this.activity.id,this.activity.name,this.activity.kcal,this.time)
             if(this.activities.length===5){
-                let result=checkId(this.activity,this.activities)
-                if(!result){
-                this.msg="Maksimalan broj aktivnosti u treningu je 5."
-                return
-                }
+              let result=checkId(this.activity,this.activities)
+              if(!result){
+              this.msg="Maksimalan broj aktivnosti u treningu je 5."
+              return
+              }
             }
             if(!this.activities){
-                this.activities.push(newActivity)
-                this.time=null
-                this.closeTheWindow()
-                return
+              this.activities.push(newActivity)
+              this.time=null
+              this.closeTheWindow()
+              this.showSuccessWindow()
+              return
             }
             for(let i=0;i<this.activities.length;i++){
-                if(this.activities[i].id===newActivity.id){
-                this.activities[i].time+=newActivity.time
-                this.activities[i].kcalSum=Math.round(this.activities[i].kcal/100*this.activities[i].time)
-                this.time=null
-                this.closeTheWindow()
-                return
-                }
+              if(this.activities[i].id===newActivity.id){
+              this.activities[i].time+=newActivity.time
+              this.activities[i].kcalSum=Math.round(this.activities[i].kcal/100*this.activities[i].time)
+              this.time=null
+              this.closeTheWindow()
+              this.showSuccessWindow()
+              return
+              }
             }
             this.activities.push(newActivity)
             this.time=null
             this.closeTheWindow()
             this.setStoredActivities()
+            this.showSuccessWindow()
         },
         openTrainingForm(){
             this.trainingFormStatus=!this.trainingFormStatus
@@ -181,7 +187,7 @@ export default {
                 return
             }
             try {
-                let res=await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/training/newTraining",{
+                await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/training/newTraining",{
                 "user_id":user.data.res.id,
                 "training_name":this.trainingName,
                 "training_sum":this.trainingSum,
@@ -191,7 +197,6 @@ export default {
                 this.activities=[]
                 this.clearStoredActivities()
                 this.showSuccessWindow()
-                console.log(res)
             } catch (error) {
                 this.msg=error.response.data.message
             }

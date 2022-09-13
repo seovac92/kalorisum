@@ -27,7 +27,7 @@
     </div>
     <div class="day-plan">
       <transition-group name="plan">
-      <DayPlan class="day-plan" :plan="week[0]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[0].status"><h2 class="title-h2">Ponedeljak</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[0]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[0].status"><h2 class="title-h2">Ponede<span class="joined-letters">lj</span>ak</h2></DayPlan>
       
       
       <DayPlan class="day-plan" :plan="week[1]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[1].status"><h2 class="title-h2">Utorak</h2></DayPlan>
@@ -45,7 +45,7 @@
       <DayPlan class="day-plan" :plan="week[5]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[5].status"><h2 class="title-h2">Subota</h2></DayPlan>
       
       
-      <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[6].status"><h2 class="title-h2">Nedelja</h2></DayPlan>
+      <DayPlan class="day-plan" :plan="week[6]" :user="user" @deleteDish="handleDeleteDish" @deleteActivity="handleDeleteActivity" @getDishDetails="handleDishDetails" @getTrainingDetails="handleTrainingDetails" v-if="week[6].status"><h2 class="title-h2">Nede<span class="joined-letters">lj</span>a</h2></DayPlan>
       </transition-group>
     </div>
     <transition name="form">
@@ -107,7 +107,7 @@ import { mapState,mapActions } from 'vuex'
 import axios from 'axios'
 
 
-export default {//uradjena ispravka na prikazu kalorija za brisanje treninga iz baze(math.round)...mozda prepraviti grafikon za prikazivanje tezina!!! ISPISATI GRESKE PRI LOGOVANJU I REGISTORVANJU!!!
+export default {//popraviti obelezivac trenutnog dana
   components:{
     ChartWeight,
     DayPlan,
@@ -584,6 +584,9 @@ export default {//uradjena ispravka na prikazu kalorija za brisanje treninga iz 
 .day-plan .title-h2{
   writing-mode: vertical-rl;
   text-orientation: upright;
+}
+.joined-letters{
+  writing-mode: horizontal-tb;
 }
 .card-opener{
   width: 55px;

@@ -8,8 +8,8 @@
             <h2 class="title">Registracija</h2>  
             <input class="input" type="text" v-model="user.name" placeholder="Korisnicko ime">
             <input class="input" type="text" v-model="user.email" placeholder="Korisnicki email">
-            <input class="input" type="text" v-model="user.password" placeholder="Korisnicka sifra">
-            <input class="input" type="text" v-model="user.repeatPassword" placeholder="Ponovite sifru">
+            <input class="input" type="password" v-model="user.password" placeholder="Korisnicka sifra">
+            <input class="input" type="password" v-model="user.repeatPassword" placeholder="Ponovite sifru">
             <input class="input" type="number" v-model="user.weight" placeholder="Tezina(kg)">
             <input class="input" type="number" v-model="user.height" placeholder="Visina(cm)">
             <div class="birthday-wrapper">
@@ -59,6 +59,10 @@ export default {
     methods:{
         ...mapActions(["setUserStatus","setUserLevel"]),
         async sendRegistrationForm(){
+            let yearOfBirth=new Date(this.user.birthday).getFullYear()
+            let currentYear=new Date().getFullYear()
+            let maxYear=currentYear-80
+            let minYear=currentYear-14
             this.msg=""
             if(!this.user.name.trim() || !this.user.email.trim() || !this.user.password || !this.user.repeatPassword
             || !this.user.birthday || !this.user.weight || !this.user.height
@@ -66,16 +70,20 @@ export default {
                 this.msg="Sva polja moraju biti popunjena pri registraciji"
                 return
             }
+            if(this.user.name.trim().length>20 || this.user.password.length>20){
+                this.msg="Maksimalan broj karaktera za korisnicko ime i sifru je 20"
+                return
+            }
             if(this.user.password!==this.user.repeatPassword){
                 this.msg="Sifre se ne poklapaju"
                 return
             }
-            if(this.user.weight<40 || this.user.height<100){
+            if(this.user.weight<40 || this.user.weight>240 || this.user.height<40 || this.user.height>240){
                 this.msg="Unesite ispravne vrednosti"
                 return
             }
-            if(this.user.name.trim().length>20 || this.user.password.length>20){
-                this.msg="Maksimalan broj karaktera za korisnicko ime i sifru je 20"
+            if(yearOfBirth<maxYear || yearOfBirth>minYear){
+                this.msg="Godine moraju biti izmedju 14 i 80"
                 return
             }
             try {
@@ -96,14 +104,14 @@ export default {
                 this.user.weight=null
                 this.user.height=null
                 this.user.gender=null
-                console.log(result)
                 localStorage.setItem("sid",result.data.res.sid)
                 this.setUserStatus(true)
                 this.setUserLevel(result.data.res.level)
                 this.closeRegistrationForm()
                 this.$router.push({name:"home"}) 
             } catch (error) {
-                this.msg=error.response.data.message    
+                console.log(error)
+                this.msg="Korisnicki email nije ispravan"    
             }
             
         },
@@ -133,13 +141,11 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px;
     margin: 0 auto;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
     background-color: #eee;
     position: absolute;
-    top: 13%;
     left: 10%;
 }
 .gender-wrapper{
@@ -212,6 +218,8 @@ export default {
     padding: 10px;
 }
 .message{
+    margin-top: 0;
+    padding: 0 10px;
     font-size: 20px;
     color: red;
 }

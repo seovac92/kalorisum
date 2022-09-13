@@ -104,11 +104,6 @@ export default {//dovrsi stilizaciju trenutnog dana preko week[i].currentDay!!!
         sumDay(){
             return Math.round(this.sumDishs-this.tdee-this.sumTraining)
         }
-    },
-    watch:{
-        plan(newPlan){
-            console.log(newPlan.dishs)
-        }
     }
 }
 </script>
@@ -187,11 +182,11 @@ export default {//dovrsi stilizaciju trenutnog dana preko week[i].currentDay!!!
     color: yellow;
 }
 .currentday-check-negative{
-    color: whitesmoke;
+    color: #212529;
     position: absolute;
-    top: 30px;
+    bottom: 30px;
     font-size: 2rem;
-    left: 17px;
+    right: 17px;
 }
 @media screen and (min-width: 768px) {
     .tables-wrapper{

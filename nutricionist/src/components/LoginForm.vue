@@ -7,7 +7,7 @@
             </div>
             <h2 class="title">Prijava</h2>
             <input class="input" type="text" v-model="email" placeholder="Korisnicki email">
-            <input class="input" type="text" v-model="password" placeholder="Korisnicka sifra" @keydown.enter="sendLoginForm()">
+            <input class="input" type="password" v-model="password" placeholder="Korisnicka sifra" @keydown.enter="sendLoginForm()">
             <div class="btn-registration-wrapper">
                 <button @click="sendLoginForm()" class="btn-registration">Prijavi se</button>    
             </div>

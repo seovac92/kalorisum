@@ -237,7 +237,6 @@ export default {//napraviti da registracija pravi obicne usere,a da admin moze d
       this.checkAdmin()
       item.type=type
       this.deletingItem=item
-      console.log(this.deletingItem)
     },
     handleCloseTheWindow(){
       this.deletingItem=null

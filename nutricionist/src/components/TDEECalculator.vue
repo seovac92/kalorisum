@@ -13,7 +13,7 @@
                 <option value=1.9>Ekstremno aktivan</option>
             </select>
             <label for="kcal-result" class="msg-instruction" v-show="bmrKcal<922 || bmrKcal>4474">Unesite vrednost izmedju 923 i 4473.</label>
-            <input id="kcal-result" class="calculator-input" type="number" v-model="bmrKcal">
+            <input id="kcal-result" class="calculator-input" type="number" v-model="bmrKcal" placeholder="Bmr (kcal)">
         </div>
         <div class="result">
             <p class="sum">{{tdeeSum}}</p>
