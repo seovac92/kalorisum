@@ -99,4 +99,10 @@ export default {
         left: 35vw;
     }
 }
+@media screen and (min-width: 1920px) {
+    .window-position{
+        width: 20vw;
+        left: 40vw;
+    }
+}
 </style>

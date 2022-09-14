@@ -242,4 +242,10 @@ export default {
         left: 35%;
     }
 }
+@media screen and (min-width: 1920px){
+    .form-wrapper{
+        width: 20%;
+        left: 40%;
+    }
+}
 </style>

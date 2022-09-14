@@ -138,7 +138,20 @@ body{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
-
+::-webkit-scrollbar{
+    width: 7px;
+}
+::-webkit-scrollbar-track{
+    background-color: rgb(0, 0, 0);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb{
+    background: linear-gradient(transparent, lightsteelblue);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover{
+    background: linear-gradient(transparent, #5B5BE4);
+}
 </style>
 <style scoped>
 .app-wrapper{
@@ -393,6 +406,14 @@ footer p{
   }
   .top-header-wrapper{
     padding: 10px 10vw;
+  }
+}
+@media screen and (min-width:1920px){
+  .page,.navigation{
+    width: 60vw;
+  }
+  .top-header-wrapper{
+    padding: 10px 20vw;
   }
 }
 </style>

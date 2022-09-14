@@ -546,11 +546,16 @@ export default {//popraviti obelezivac trenutnog dana
   font-family: 'Franklin Gothic', 'Arial Narrow', Arial, sans-serif;
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 93%;
   margin: 0 auto;
   padding: 20px 10px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
   border-radius: 0 0 10px 10px;
+}
+.bio-wrapper{
+  border: 1px solid #eee;
+  padding-bottom: 10px;
 }
 .bio-wrapper p{
   font-size: 1.3rem;
@@ -690,6 +695,7 @@ export default {//popraviti obelezivac trenutnog dana
   .user-bio-wrapper{
     flex-direction: row;
     justify-content: space-around;
+    align-items: flex-start;
   }
   .bio-wrapper{
     flex-basis: 30%;
