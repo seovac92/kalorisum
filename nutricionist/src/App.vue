@@ -410,10 +410,10 @@ footer p{
 }
 @media screen and (min-width:1920px){
   .page,.navigation{
-    width: 60vw;
+    width: 62vw;
   }
   .top-header-wrapper{
-    padding: 10px 20vw;
+    padding: 10px 19vw;
   }
 }
 </style>
