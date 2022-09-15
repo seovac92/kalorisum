@@ -24,8 +24,8 @@
           </div>  
       </div>
       <transition name="menu"><!--navigation for mobile-->
-        <div class="mobile-nav-blocker" v-if="menuStatus">
-          <ul class="nav-menu-mobile nav-menu" v-if="menuStatus">
+        <div class="mobile-nav-blocker" v-if="menuStatus" @click="closePhoneMenu()">
+          <ul class="nav-menu-mobile nav-menu">
             <li><font-awesome-icon class="btn-exit" @click="closePhoneMenu()" icon="fa-solid fa-circle-xmark" /></li>
             <li class="link-wrapper"><router-link to="/" class="link" @click="closePhoneMenu()">Pocetna</router-link></li>
             <li class="link-wrapper">

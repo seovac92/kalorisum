@@ -92,7 +92,7 @@ export default {
         },
         handleSendToBasket(time){
             this.msg=""
-            if(time<10 || time>180){
+            if(time<10 || time>240){
                 return
             }
             let newActivity=new Activity(this.activity.id,this.activity.name,this.activity.kcal,time)
