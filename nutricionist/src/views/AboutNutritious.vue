@@ -7,20 +7,9 @@
         <p>Pred vama se nalazi baza sa mnogobrojnim <span class="key-words">namirnicama</span> od kojih mozete napraviti obroke, koje cete koristiti u <span class="key-words">svom dnevnom planu</span> zajedno sa aktivnostima, a na osnovu toga cete dobijati dnevni bilans kalorija.</p>
       </article>
       <TableNutritious @pickANutrition="handleANutrition"></TableNutritious>
-      <div class="nutrition-quantity-wrapper" v-if="nutrition">
-        <div class="btn-exit-wrapper">
-            <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
-        </div>
-        <p class="title-h2">{{nutrition.name}} {{nutrition.kcal}}Kcal</p>
-        <div class="input-wrapper">
-          <label for="quantity" class="msg-instruction" v-show="quantity<5 || quantity>1000">Unesite vrednost izmedju 5 i 1000.</label>
-          <input id="quantity" class="calculator-input" type="number" v-model="quantity" placeholder="Kolicina u g/ml" @keydown.enter="pushIntoPot()">
-          <label for="quantity" class="msg-instruction">{{msg}}</label>
-        </div>
-        <div class="btn-wrapper">
-          <button class="btn-registration confirm" @click="pushIntoPot()">Potvrdi</button>
-        </div>  
-      </div>
+      <transition name="form">
+      <QuantityForm :nutrition="nutrition" :msg="msg" @closeTheWindow="handleCloseTheWindow" @sendToBasket="handleSendToBasket" v-if="nutrition"><template #nutrition><p class="title-h2">{{nutrition.name}} {{nutrition.kcal}}Kcal</p></template></QuantityForm>
+      </transition>
       <div class="meal-opener-wrapper" @click="openMealForm()">
         <font-awesome-icon class="icon" icon="fa-solid fa-bowl-food" />
         <div class="number-wrapper">
@@ -28,31 +17,7 @@
         </div>  
       </div>
       <transition name="form">
-      <div class="meal-form-wrapper" v-if="mealFormStatus">
-        <div class="btn-exit-wrapper">
-            <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeMealForm()"/>
-        </div>
-        <ul class="meal-form">
-          <li class="msg-instruction nutrition" v-if="nutritions.length===0"><p>Broj dozvoljenih namirnica je 10.</p></li>
-          <li class="nutrition" v-for="(nutrition,index) in nutritions" :key="nutrition.id">
-            <p>{{nutrition.name}} | {{nutrition.quantity}}g(ml) | {{nutrition.kcalSum}}Kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeNutrition(index)"/>
-          </li>
-        </ul>
-        <ul class="meal-info">
-          <li class="msg-instruction" v-if="nutritions.length>0"><p>Broj dozvoljenih namirnica {{10-nutritions.length}}</p></li>
-          <li class="total"><p>{{mealSum}}Kcal</p></li>
-          <li class="meal-name">
-            <label for="name" class="msg-instruction" v-show="mealName.length<1 || mealName.length>15">Naziv mora imati izmedju 1 i 15 karaktera.</label>
-            <input id="name" class="input" type="text" placeholder="Naziv obroka" v-model="mealName" @keydown.enter="makeAMeal()">
-            <label for="name" class="msg-instruction">{{msg}}</label>
-          </li>
-          <li>
-            <div class="btn-wrapper">
-              <button class="btn-registration confirm" @click="makeAMeal()">Potvrdi</button>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <BasketForm :nutritions="nutritions" :msg="msg" @closeBasketForm="handleCloseBasketForm" @removeNutrition="handleRemoveNutrition" @makeUserItem="handleMakeUserItem" v-if="mealFormStatus"></BasketForm>
       </transition>
       <transition name="success">
         <SuccessWindow v-if="successStatus"></SuccessWindow>
@@ -70,6 +35,8 @@
 import { mapState,mapActions } from 'vuex'
 import TableNutritious from '../components/TableNutritious.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
+import QuantityForm from '../components/QuantityForm.vue'
+import BasketForm from '../components/BasketForm.vue'
 import axios from 'axios'
 import checkSession from '../JS/checkSession.js'
 
@@ -95,15 +62,15 @@ function checkId(obj,array){
 export default {
   components:{
     TableNutritious,
-    SuccessWindow
+    SuccessWindow,
+    QuantityForm,
+    BasketForm
   },
   data:function(){
     return{
       nutrition:null,
-      quantity:null,
       nutritions:[],
       mealFormStatus:false,
-      mealName:"",
       msg:"",
       successStatus:false
     }
@@ -117,17 +84,17 @@ export default {
       this.nutrition=one
       this.mealFormStatus=false
     },
-    closeTheWindow(){
+    handleCloseTheWindow(){
       this.quantity=null
       this.nutrition=null
       this.msg=""
     },
-    pushIntoPot(){
+    handleSendToBasket(quantity){
       this.msg=""
-      if(this.quantity<5 || this.quantity>1000){
+      if(quantity<5 || quantity>1000){
         return
       }
-      let newNutrition=new Nutrition(this.nutrition.id,this.nutrition.name,this.nutrition.kcal,this.nutrition.ntt_name,this.quantity)
+      let newNutrition=new Nutrition(this.nutrition.id,this.nutrition.name,this.nutrition.kcal,this.nutrition.ntt_name,quantity)
       if(this.nutritions.length===10){
         let result=checkId(this.nutrition,this.nutritions)
         if(!result){
@@ -138,7 +105,7 @@ export default {
       if(!this.nutritions){
         this.nutritions.push(newNutrition)
         this.quantity=null
-        this.closeTheWindow()
+        this.handleCloseTheWindow()
         this.showSuccessWindow()
         return
       }
@@ -147,14 +114,14 @@ export default {
           this.nutritions[i].quantity+=newNutrition.quantity
           this.nutritions[i].kcalSum=Math.round(this.nutritions[i].kcal/100*this.nutritions[i].quantity)
           this.quantity=null
-          this.closeTheWindow()
+          this.handleCloseTheWindow()
           this.showSuccessWindow()
           return
         }
       }
       this.nutritions.push(newNutrition)
       this.quantity=null
-      this.closeTheWindow()
+      this.handleCloseTheWindow()
       this.setStoredNutritions()
       this.showSuccessWindow()
     },
@@ -162,15 +129,15 @@ export default {
       this.mealFormStatus=!this.mealFormStatus
       this.nutrition=null
     },
-    closeMealForm(){
+    handleCloseBasketForm(){
       this.mealName=""
       this.mealFormStatus=false
     },
-    removeNutrition(nutritionIndex){
+    handleRemoveNutrition(nutritionIndex){
       this.nutritions.splice(nutritionIndex,1)
       this.setStoredNutritions()
     },
-    async makeAMeal(){
+    async handleMakeUserItem(mealName,mealSum){
       let user=await checkSession()
       if(!user){
         this.setUserStatus(false)
@@ -180,7 +147,7 @@ export default {
         this.$emit("openLoginForm")
         return
       }
-      if(!this.mealName || this.mealName.length>15){
+      if(!mealName || mealName.length>15){
         return
       }
       if(this.nutritions.length===0){
@@ -190,11 +157,11 @@ export default {
       try {
         await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/dish/newDish",{
           "user_id":user.data.res.id,
-          "meal_name":this.mealName,
-          "meal_sum":this.mealSum,
+          "meal_name":mealName,
+          "meal_sum":mealSum,
           "ingredients":this.nutritions
         })
-        this.closeMealForm()
+        this.handleCloseBasketForm()
         this.nutritions=[]
         this.clearStoredNutritions()
         this.showSuccessWindow()
@@ -233,16 +200,7 @@ export default {
       }
   },
   computed:{
-    ...mapState(["userStatus"]),
-    mealSum(){
-      let mealKcal=0
-      if(this.nutritions){
-        for(let i=0;i<this.nutritions.length;i++){
-          mealKcal+=this.nutritions[i].kcalSum
-        }
-      }
-      return mealKcal
-    }
+    ...mapState(["userStatus"])
   },
   mounted(){
     this.getStoredNutritions()
@@ -267,7 +225,7 @@ export default {
   position: fixed;
   top: 20vh;
   left: 20vw;
-  padding: 10px;
+  padding: 10px 0;
   background-color: #eee;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);

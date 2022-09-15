@@ -8,20 +8,9 @@
         <p>Ispod je tabela sa raznim <span class="key-words">aktivnostima</span> od kojih mozete praviti treninge, koje cete, pored obroka, koristiti u <span class="key-words">svom dnevnom planu</span>, a na osnovu toga cete dobijati dnevni bilans kalorija.</p>
         </article>
         <TableActivities @pickAActivity="handleAActivity"></TableActivities>
-        <div class="nutrition-quantity-wrapper" v-if="activity">
-        <div class="btn-exit-wrapper">
-            <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTheWindow()"/>
-        </div>
-        <p class="title-h2">{{activity.name}} {{activity.kcal}}Kcal</p>
-        <div class="input-wrapper">
-          <label for="quantity" class="msg-instruction" v-show="time<10 || time>240">Unesite vrednost izmedju 10 i 240.</label>
-          <input id="quantity" class="calculator-input" type="number" v-model="time" placeholder="Vreme trajanja u min" @keydown.enter="pushIntoPlan()">
-          <label for="quantity" class="msg-instruction">{{msg}}</label>
-        </div>
-        <div class="btn-wrapper">
-          <button class="btn-registration confirm" @click="pushIntoPlan()">Potvrdi</button>
-        </div>  
-      </div>
+      <transition name="form">  
+      <QuantityForm :activity="activity" :msg="msg" @closeTheWindow="handleCloseTheWindow" @sendToBasket="handleSendToBasket" v-if="activity"><template #activity><p class="title-h2">{{activity.name}} {{activity.kcal}}Kcal</p></template></QuantityForm>
+      </transition>
       <div class="meal-opener-wrapper" @click="openTrainingForm()">
         <font-awesome-icon class="icon" icon="fa-solid fa-weight-hanging" />
         <div class="number-wrapper">
@@ -29,31 +18,7 @@
         </div>  
       </div>
       <transition name="form">
-      <div class="meal-form-wrapper" v-if="trainingFormStatus">
-        <div class="btn-exit-wrapper">
-            <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeTrainingForm()"/>
-        </div>
-        <ul class="meal-form">
-          <li class="msg-instruction nutrition" v-if="activities.length===0"><p>Broj dozvoljenih aktivnosti je 5.</p></li>
-          <li class="nutrition" v-for="(activity,index) in activities" :key="activity.id">
-            <p>{{activity.name}} | {{activity.time}}(min) | {{activity.kcalSum}}Kcal</p><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="removeActivity(index)"/>
-          </li>
-        </ul>
-        <ul class="meal-info">
-          <li class="msg-instruction" v-if="activities.length>0"><p>Broj dozvoljenih aktivnosti {{5-activities.length}}</p></li>
-          <li class="total"><p>{{trainingSum}}Kcal</p></li>
-          <li class="meal-name">
-            <label for="name" class="msg-instruction" v-show="trainingName.length<1 || trainingName.length>15">Naziv mora imati izmedju 1 i 15 karaktera.</label>
-            <input id="name" class="input" type="text" placeholder="Naziv aktivnosti" v-model="trainingName" @keydown.enter="makeATraining()">
-            <label for="name" class="msg-instruction">{{msg}}</label>
-          </li>
-          <li>
-            <div class="btn-wrapper">
-              <button class="btn-registration confirm" @click="makeATraining()">Potvrdi</button>
-            </div>
-          </li>
-        </ul>
-      </div>
+        <BasketForm :activities="activities" :msg="msg" @closeBasketForm="handleCloseBasketForm" @removeActivity="handleRemoveActivity" @makeUserItem="handleMakeUserItem" v-if="trainingFormStatus"></BasketForm>
       </transition>
       <transition name="success">
         <SuccessWindow v-if="successStatus"></SuccessWindow>
@@ -71,6 +36,8 @@
 import { mapState,mapActions } from 'vuex'
 import TableActivities from '../components/TableActivities.vue'
 import SuccessWindow from '../components/SuccessWindow.vue'
+import QuantityForm from '../components/QuantityForm.vue'
+import BasketForm from '../components/BasketForm.vue'
 import axios from 'axios'
 import checkSession from '../JS/checkSession.js'
 
@@ -96,15 +63,15 @@ function checkId(obj,array){
 export default {
     components:{
         TableActivities,
-        SuccessWindow
+        SuccessWindow,
+        QuantityForm,
+        BasketForm
     },
     data:function(){
         return{
           activity:null,
-          time:null,
           activities:[],
           trainingFormStatus:false,
-          trainingName:"",
           msg:"",
           successStatus:false
         }
@@ -118,17 +85,17 @@ export default {
             this.activity=one
             this.trainingFormStatus=false
         },
-        closeTheWindow(){
+        handleCloseTheWindow(){
             this.time=null
             this.activity=null
             this.msg=""
         },
-        pushIntoPlan(){
+        handleSendToBasket(time){
             this.msg=""
-            if(this.time<10 || this.time>180){
+            if(time<10 || time>180){
                 return
             }
-            let newActivity=new Activity(this.activity.id,this.activity.name,this.activity.kcal,this.time)
+            let newActivity=new Activity(this.activity.id,this.activity.name,this.activity.kcal,time)
             if(this.activities.length===5){
               let result=checkId(this.activity,this.activities)
               if(!result){
@@ -139,7 +106,7 @@ export default {
             if(!this.activities){
               this.activities.push(newActivity)
               this.time=null
-              this.closeTheWindow()
+              this.handleCloseTheWindow()
               this.showSuccessWindow()
               return
             }
@@ -148,14 +115,14 @@ export default {
               this.activities[i].time+=newActivity.time
               this.activities[i].kcalSum=Math.round(this.activities[i].kcal/100*this.activities[i].time)
               this.time=null
-              this.closeTheWindow()
+              this.handleCloseTheWindow()
               this.showSuccessWindow()
               return
               }
             }
             this.activities.push(newActivity)
             this.time=null
-            this.closeTheWindow()
+            this.handleCloseTheWindow()
             this.setStoredActivities()
             this.showSuccessWindow()
         },
@@ -163,15 +130,15 @@ export default {
             this.trainingFormStatus=!this.trainingFormStatus
             this.activity=null
         },
-        closeTrainingForm(){
+        handleCloseBasketForm(){
             this.trainingName=""
             this.trainingFormStatus=false
         },
-        removeActivity(activityIndex){
+        handleRemoveActivity(activityIndex){
             this.activities.splice(activityIndex,1)
             this.setStoredActivities()
         },
-        async makeATraining(){
+        async handleMakeUserItem(trainingName,trainingSum){
             let user=await checkSession()
             if(!user){
               this.setUserStatus(false)
@@ -181,7 +148,7 @@ export default {
                 this.$emit("openLoginForm")
                 return
             }
-            if(!this.trainingName || this.trainingName.length>15){
+            if(!trainingName || trainingName.length>15){
                 return
             }
             if(this.activities.length===0){
@@ -191,11 +158,11 @@ export default {
             try {
                 await axios.post("http://732u122.e2.mars-hosting.com/nutricionist/api/training/newTraining",{
                 "user_id":user.data.res.id,
-                "training_name":this.trainingName,
-                "training_sum":this.trainingSum,
+                "training_name":trainingName,
+                "training_sum":trainingSum,
                 "activities":this.activities
                 })
-                this.closeTrainingForm()
+                this.handleCloseBasketForm()
                 this.activities=[]
                 this.clearStoredActivities()
                 this.showSuccessWindow()
@@ -234,16 +201,7 @@ export default {
       }
     },
     computed:{
-        ...mapState(["userStatus"]),
-        trainingSum(){
-            let trainingKcal=0
-            if(this.activities){
-                for(let i=0;i<this.activities.length;i++){
-                    trainingKcal+=this.activities[i].kcalSum
-                }
-            }
-            return (Math.round(trainingKcal*100))/100
-        }
+        ...mapState(["userStatus"])
     },
     mounted(){
         this.getStoredActivities()

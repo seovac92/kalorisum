@@ -3,36 +3,32 @@
       <div class="btn-exit-wrapper">
         <font-awesome-icon class="btn-exit" icon="fa-solid fa-circle-xmark" @click="closeDetailsWindow()"/>
       </div>
-      <table class="item-details" v-if="dishDetails">
-        <tr class="row-1"><th class="column-1" colspan="2"><div class="first-row"><div class="first-row-name">{{dishDetails.name}}</div><div class="remove-icon-wrapper"><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="deleteDish(dishDetails)"/></div></div></th></tr>
-        <tr class="row">
-          <th class="column-2">
-            Sastojak
-          </th>
-          <th class="column-2">
-            Kolicina
-          </th>
-        </tr>
-        <tr class="row" v-for="nutrition in dishDetails.details" :key="nutrition.ntr_id">
-          <td class="column-2">{{nutrition.ntr_name}}</td>
-          <td class="column-2">{{nutrition.ntr_quantity}}g</td>
-        </tr>
-      </table>
-      <table class="item-details" v-if="trainingDetails">
-        <tr class="row-1"><th class="column-1" colspan="2"><div class="first-row"><div class="first-row-name">{{trainingDetails.name}}</div><div class="remove-icon-wrapper"><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="deleteTraining(trainingDetails)"/></div></div></th></tr>
-        <tr class="row">
-          <th class="column-2">
-            Aktivnost
-          </th>
-          <th class="column-2">
-            Vreme
-          </th>
-        </tr>
-        <tr class="row" v-for="activity in trainingDetails.details" :key="activity.act_id">
-          <td class="column-2">{{activity.act_name}}</td>
-          <td class="column-2">{{activity.tra_time}}min</td>
-        </tr>
-      </table>
+      <div class="item-details" v-if="dishDetails">
+        <div class="first-row title-h2">
+          <div class="first-row-name">{{dishDetails.name}}</div><div class="remove-icon-wrapper"><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="deleteDish(dishDetails)"/></div>
+        </div>
+        <div class="row-details">
+          <p class="title">Sastojak</p>
+          <p class="title">Kolicina</p>
+        </div>
+        <div class="row-details" v-for="nutrition in dishDetails.details" :key="nutrition.ntr_id">
+          <p>{{nutrition.ntr_name}}</p>
+          <p>{{nutrition.ntr_quantity}}g</p>
+        </div>
+      </div>
+      <div class="item-details" v-if="trainingDetails">
+        <div class="first-row title-h2">
+          <div class="first-row-name">{{trainingDetails.name}}</div><div class="remove-icon-wrapper"><font-awesome-icon class="remove-icon" icon="fa-solid fa-trash" @click="deleteTraining(trainingDetails)"/></div>
+        </div>
+        <div class="row-details">
+          <p class="title">Aktivnost</p>
+          <p class="title">Vreme</p>
+        </div>
+        <div class="row-details" v-for="activity in trainingDetails.details" :key="activity.act_id">
+          <p>{{activity.act_name}}</p>
+          <p>{{activity.tra_time}}min</p>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -57,11 +53,14 @@ export default {
 
 <style>
 .item-details-wrapper{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80vw;
+  left: 10vw;
 }
 .item-details{
+  width: 100%;
   border-collapse: collapse;
 }
 .first-row{
@@ -73,5 +72,16 @@ export default {
 }
 .remove-icon-wrapper:hover{
   color: #c50000;
+}
+.row-details{
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-top: 1px solid #ddd;
+  padding: 0 10px;
+}
+.row-details p{
+  margin: 20px 0;
 }
 </style>
